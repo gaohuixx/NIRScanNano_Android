@@ -1,0 +1,157 @@
+<resources>
+    <string name="app_name">NIRScan Nano</string>
+
+    <string name="action_info">信息</string>
+    <string name="action_settings">设置</string>
+    <string name="action_scan">扫描</string>
+
+    <string name="search_hint">搜索</string>
+    <string name="title_activity_info">更多信息</string>
+
+    <string name="title_activity_settings">设置</string>
+
+    <string-array name="info_title_array">
+        <item>TI DLP 网站</item>
+        <item>KST DLP 网站</item>
+        <item>购买NIRScan Nano</item>
+        <item>论坛支持</item>
+    </string-array>
+
+    <string-array name="info_body_array">
+        <item>了解TI是如何革新移动光谱技术</item>
+        <item>了解KST，TI的战略设计合作伙伴</item>
+        <item>了解如何购买你自己的估值模块</item>
+        <item>加入TI的E2E技术支持论坛</item>
+    </string-array>
+
+    <string-array name="info_url_array">
+        <item>http://www.ti.com/lsds/ti/dlp/advanced-light-control/wavelength-control.page</item>
+        <item>https://www.kstechnologies.com/spectroscopy</item>
+        <item>http://www.ti.com/tool/dlpnirnanoevm</item>
+        <item>http://e2e.ti.com/support/dlp__mems_micro-electro-mechanical_systems/f/983</item>
+    </string-array>
+
+    <string name="temperature">温度</string>
+    <string name="spatial_freq">空间频率</string>
+    <string name="set_nano">设置我的Nano</string>
+    <string name="clear_nano">清除我的Nano</string>
+    <string name="go">设置!</string>
+    <string name="forget">清除</string>
+
+    <string name="title_activity_graph">图表</string>
+
+    <string name="reflectance">反射率</string>
+    <string name="intensity">强度</string>
+    <string name="absorbance">吸光率</string>
+
+    <string-array name="graph_tab_index">
+        <item>反射率</item>
+        <item>吸光率</item>
+        <item>强度</item>
+    </string-array>
+
+    <string name="aspirin">aspirin</string>
+    <string name="bc">bc</string>
+    <string name="bellpepper">bellpepper</string>
+    <string name="coconutoil">coconutoil</string>
+    <string name="coffee">coffee</string>
+    <string name="corn_starch">corn_starch</string>
+    <string name="eucerin_lotion">eucerin_lotion</string>
+    <string name="flour">flour</string>
+    <string name="glucose">glucose</string>
+    <string name="out_of_spec_aspirin">out_of_spec_aspirin</string>
+
+    <string name="delete">删除</string>
+    <string name="ok">确定</string>
+    <string name="not_connected_title">无连接</string>
+    <string name="not_connected_message">请确保你的安卓设备和Nano的蓝牙都开启了, 然后再点击屏幕上的扫描按钮.</string>
+
+    <string name="battery">电池</string>
+    <string name="humidity">湿度</string>
+    <string name="device_status">设备状态</string>
+    <string name="error_status">错误状态</string>
+    <string name="temp_threshold">温度阈值</string>
+    <string name="deg_c">deg C</string>
+    <string name="deg_f">deg F</string>
+    <string name="humid_threshold">湿度阈值</string>
+    <string name="relative_humid">% RH</string>
+    <string name="not_supported">不支持</string>
+
+    <string name="version">v%1$s (%2$d)</string>
+
+    <string-array name="configure_options">
+        <item>设备信息</item>
+        <item>设备状态</item>
+        <item>扫描配置</item>
+        <item>保存扫描数据</item>
+    </string-array>
+
+    <string name="range_start_value">%1$d nm</string>
+    <string name="range_end_value">%1$d nm</string>
+    <string name="width_value">%1$d nm</string>
+    <string name="patterns_value">%1$d</string>
+    <string name="repeats_value">%1$d</string>
+
+    <string name="manufacturer">制造商</string>
+    <string name="range_start">光谱范围开始</string>
+    <string name="range_end">光谱范围结束</string>
+    <string name="width">宽度</string>
+    <string name="number_patterns">模式次数</string>
+    <string name="number_repeats">重复次数</string>
+    <string name="serial_sn">Nano SN</string>
+
+    <string name="scan">扫描</string>
+    <string name="prefix">文件名前缀</string>
+    <string name="data">数据</string>
+    <string name="nano">Nano</string>
+    <string name="save_to_sd">保存到SD卡么?</string>
+    <string name="save_to_android">保存到安卓设备么?</string>
+    <string name="cont_scan">继续扫描么?</string>
+    <string name="scan_conf">扫描配置</string>
+    <string name="col_1">Column 1</string>
+    <string name="hadamard">Hadamard</string>
+
+    <string name="model">型号</string>
+    <string name="serial">序列号</string>
+    <string name="hw_rev">硬件版本</string>
+    <string name="tiva_rev">Tiva 版本</string>
+    <string name="spectrum_rev">光谱版本</string>
+
+    <string name="batt_level_value">%1$d%%</string>
+    <string name="temp_value_c">%1$s&#x2103;</string>
+    <string name="temp_value_f">%1$s&#x2109;</string>
+    <string name="humid_value">%1$s%%RH</string>
+
+    <string name="stored_configurations">保存配置</string>
+    <string name="reading_configurations">读取扫描配置中…</string>
+    <string name="stored_scan_data">保存扫描数据</string>
+    <string name="reading_sd_card">读取SD卡中…</string>
+
+    <string name="time_format_at">\'at\'</string>
+    <string name="new_scan">新扫描</string>
+    <string name="newScan">新扫描</string>
+    <string name="nano_disconnected">"Nano 连接断开!"</string>
+    <string name="configure">配置</string>
+    <string name="device_information">设备信息</string>
+    <string name="file_not_found">找不到文件!</string>
+
+    <string name="emailing">"Emailing "</string>
+    <string name="send_mail">"分享"</string>
+    <string name="no_email_clients">您没有安装邮件客户端</string>
+    <string name="update_thresholds">更新阈值</string>
+    <string name="scanning">扫描中…</string>
+
+    <string name="dl_ref_cal">下载引用计算</string>
+    <string name="dl_cal_matrix">下载计算矩阵</string>
+    <string name="select_nano">选择Nano</string>
+    <string name="nano_confirmation_title">你确定么?</string>
+    <string name="nano_confirmation_msg">你确定想要设置MAC地址为：%1$s 的Nano为你的主设备么?</string>
+    <string name="nano_forget_msg">你确定你想要取消MAC地址为：%1$s 的Nano为你的主设备么?</string>
+    <string name="cancel">取消</string>
+    <string name="no_sd_scans">SD卡中没有保存扫描数据!</string>
+
+    <string name="desc_icon">App icon</string>
+    <string name="desc_splash">TI, DLP, and KST logo</string>
+    <string name="desc_info">Info icon</string>
+
+</resources>

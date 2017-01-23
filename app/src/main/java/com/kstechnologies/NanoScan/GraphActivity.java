@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gaohui.utils.ScanListDictionaryUtil;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -131,18 +132,17 @@ public class GraphActivity extends Activity {
     public void onResume() {
         super.onResume();
 
-        //Initialize pager adapter
+        // 初始化 pager adapter
         CustomPagerAdapter pagerAdapter = new CustomPagerAdapter(this);
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.invalidate();
 
-        //Set page change listener for pager to show proper tab when selected
+        // 设置页面改变监听器，为了当页面改变时显示新页面
         mViewPager.setOnPageChangeListener(
                 new ViewPager.SimpleOnPageChangeListener() {
                     @Override
                     public void onPageSelected(int position) {
-                        // When swiping between pages, select the
-                        // corresponding tab.
+                        // 当在两个页面间切换时，选择相应的tab
                         ActionBar ab = getActionBar();
                         if (ab != null) {
                             ab.setSelectedNavigationItem(position);
@@ -182,7 +182,7 @@ public class GraphActivity extends Activity {
             }
         }
 
-        //Read lines in from the file
+        //从文件中读一行
         try {
             String line;
             if (reader != null) {
@@ -215,14 +215,14 @@ public class GraphActivity extends Activity {
                 }
             }
         } catch (IOException ex) {
-            // handle exception
+            // 处理异常
         } finally {
             try {
                 if (is != null) {
                     is.close();
                 }
             } catch (IOException e) {
-                // handle exception
+                // 处理异常
             }
         }
 
@@ -234,19 +234,19 @@ public class GraphActivity extends Activity {
                     graphDict.add(new KSTNanoSDK.ScanListManager(RowData[0], RowData[1]));
                 }
             } catch (IOException ex) {
-                // handle exception
+                // 处理异常
             } finally {
                 try {
                     if (is != null) {
                         is.close();
                     }
                 } catch (IOException e) {
-                    // handle exception
+                    // 处理异常
                 }
             }
         }
 
-        //Remove the first items since these are column labels
+        //移除第一行，因为第一行是列名
         mXValues.remove(0);
         mIntensityString.remove(0);
         mAbsorbanceString.remove(0);
@@ -307,7 +307,8 @@ public class GraphActivity extends Activity {
 
         //注意：对于那些默认的数据，它是通过 ScanListDictionary 这个类来获取“详情”数据，数据是写死的！
         //这里就是获取每个文件对应的 “详情” 数据，如：aspirin
-        ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionary(this).getScanList(fileName);
+        //ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionary(this).getScanList(fileName);
+        ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionaryUtil().getScanList(fileName);
         ScanListAdapter mAdapter;
         if (graphList != null) {
             mAdapter = new ScanListAdapter(this, R.layout.row_graph_list_item, graphList);
@@ -392,7 +393,7 @@ public class GraphActivity extends Activity {
                             output.close();
                         }
                     } catch (Exception e) {
-                        e.printStackTrace(); // handle exception, define IOException and others
+                        e.printStackTrace(); // 处理异常, define IOException and others
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

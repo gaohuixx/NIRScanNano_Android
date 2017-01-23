@@ -6,6 +6,7 @@
 
     tools:context="com.kstechnologies.NanoScan.GraphActivity">
 
+    <!--上方的图表-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,6 +29,7 @@
 
     </RelativeLayout>
 
+    <!--下方的详情列表-->
     <RelativeLayout
         android:id="@+id/rl_graph_list"
         android:layout_width="match_parent"

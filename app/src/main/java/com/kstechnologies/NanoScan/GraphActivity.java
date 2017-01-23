@@ -321,28 +321,21 @@ public class GraphActivity extends Activity {
 
     }
 
-    /*
-     * 当activity被销毁的时候，没什么需要做的
-     */
     @Override
     public void onDestroy() {
         super.onDestroy();
     }
 
-    /*
-     * Inflate the options menu so that user actions are present
-     */
+    //设置菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_graph, menu);
         return true;
     }
 
     /*
-     * Handle the selection of a menu item.
-     * In this case, the user has the ability to email a file as well as navigate backwards.
-     * When the email icon is clicked, the file is attached and an email template is created
+     * 为菜单项添加监听
+     * 只有一个选项，是用来发送邮件的
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -695,7 +688,7 @@ public class GraphActivity extends Activity {
     }
 
     /**
-     * Set the X-axis and Y-axis data for a specified chart
+     * 为一个指定的图表设置X 轴，Y 轴数据
      * @param mChart the chart to update the data for
      * @param xValues the X -axis values to be plotted
      * @param yValues the Y-axis values to be plotted
@@ -823,8 +816,8 @@ public class GraphActivity extends Activity {
         INTENSITY
     }
 
-    /** Function to find a file in the external storage directory with the specified name
-     *
+    /**
+     * 通过名字在额外存储目录中找寻找一个文件
      * @param name the name of the file to search for
      * @return File with the specified name
      */
@@ -856,4 +849,5 @@ public class GraphActivity extends Activity {
             return String.format("%.02f", (10000000 / floatFreq));
         }
     }
+
 }

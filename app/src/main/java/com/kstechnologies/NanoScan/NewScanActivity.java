@@ -63,26 +63,16 @@ import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 import com.kstechnologies.nirscannanolibrary.SettingsManager;
 
 /**
- * Activity controlling the Nano once it is connected
- * This activity allows a user to initiate a scan, as well as access other "connection-only"
- * settings. When first launched, the app will scan for a preferred device
- * for {@link NanoBLEService#SCAN_PERIOD}, if it is not found, then it will start another "open"
- * scan for any Nano.
  * 一旦发生了连接，这个Activity将控制这个Nano，这个Activity允许用户去初始化一个扫描，也允许用户访问其它的“只连
  * 接”设置。当这个Activity被启动的时候，app将扫描一个preferred设备，{@link NanoBLEService#SCAN_PERIOD}，
  * 如果没有发现，它将开始另一个"open"，去扫描任何Nano
- * If a preferred Nano has not been set, it will start a single scan. If at the end of scanning, a
- * Nano has not been found, a message will be presented to the user indicating and error, and the
- * activity will finish
  * 如果一个偏好Nano还没有被设置，它将开启一个单独的扫描。如果在扫描结束的时候，一个Nano还没有被发现，一个信息将
  * 被显示给用户，来告诉用户出错信息，并且这个Activity将完毕
  *
- * WARNING: This activity uses JNI function calls for communicating with the Spectrum C library, It
- * is important that the name and file structure of this activity remain unchanged, or the functions
- * will NOT work
  * 警告：这个Activity使用了JNI函数调用来完成和Spectrum（光谱）C语言库的通信，这个Activity的名字和结构保持不变
  * 是非常重要的，否则它的功能将会不好使
  *
+ * 这个界面也能显示图表，但是它是又单独写了一遍，和{@link GraphActivity} 没关系
  * @author collinmast
  */
 public class NewScanActivity extends Activity {
@@ -165,11 +155,11 @@ public class NewScanActivity extends Activity {
             }
         });
 
-        //Set the filename from the intent
+        //从intent 中获取文件名并设置
         Intent intent = getIntent();
         fileName = intent.getStringExtra("file_name");
 
-        //Set up action bar enable tab navigation
+        //设置 action bar
         ActionBar ab = getActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);//设置返回箭头
@@ -563,7 +553,7 @@ public class NewScanActivity extends Activity {
             return CustomPagerEnum.values().length;
         }
 
-        /**
+        /*
          * 用于判断是否由对象生成界面
          */
         @Override

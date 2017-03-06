@@ -88,7 +88,7 @@ public class ScanListDictionaryUtil {
             graphList.add(new KSTNanoSDK.ScanListManager("平均扫描数", "1"));
             graphList.add(new KSTNanoSDK.ScanListManager("总测量时间 (s)", "2.00"));
             return graphList;
-        } else if(fileName.equals("string.flour")) {
+        } else if(fileName.equals("flour")) {
             graphList = new ArrayList();
             graphList.add(new KSTNanoSDK.ScanListManager("测量方法", "col8"));
             graphList.add(new KSTNanoSDK.ScanListManager("时间戳", "3/3/2015 @ 15:01:58"));

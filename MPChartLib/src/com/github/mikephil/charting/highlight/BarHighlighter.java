@@ -170,11 +170,11 @@ public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
 		int setCount = mChart.getBarData().getDataSetCount();
 
 		// calculate how often the group-space appears
-		int steps = (int) ((float) xVal / ((float) setCount + mChart.getBarData().getGroupSpace()));
+		int steps = (int) (xVal / ((float) setCount + mChart.getBarData().getGroupSpace()));
 
 		float groupSpaceSum = mChart.getBarData().getGroupSpace() * (float) steps;
 
-		float baseNoSpace = (float) xVal - groupSpaceSum;
+		float baseNoSpace = xVal - groupSpaceSum;
 		return baseNoSpace;
 	}
 

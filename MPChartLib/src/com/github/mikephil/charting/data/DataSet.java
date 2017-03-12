@@ -199,7 +199,7 @@ public abstract class DataSet<T extends Entry> {
      * @return
      */
     public float getAverage() {
-        return (float) getYValueSum() / (float) getValueCount();
+        return getYValueSum() / (float) getValueCount();
     }
 
     /**
@@ -846,10 +846,8 @@ public abstract class DataSet<T extends Entry> {
     public boolean needsDefaultFormatter() {
         if (mValueFormatter == null)
             return true;
-        if (mValueFormatter instanceof DefaultValueFormatter)
-            return true;
+        return mValueFormatter instanceof DefaultValueFormatter;
 
-        return false;
     }
 
     /**

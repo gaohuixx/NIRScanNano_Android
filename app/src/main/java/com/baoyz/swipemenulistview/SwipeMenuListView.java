@@ -256,17 +256,17 @@ public class SwipeMenuListView extends ListView {
         mOnMenuStateChangeListener = onMenuStateChangeListener;
     }
 
-    public static interface OnMenuItemClickListener {
+    public interface OnMenuItemClickListener {
         boolean onMenuItemClick(int position, SwipeMenu menu, int index);
     }
 
-    public static interface OnSwipeListener {
+    public interface OnSwipeListener {
         void onSwipeStart(int position);
 
         void onSwipeEnd(int position);
     }
 
-    public static interface OnMenuStateChangeListener {
+    public interface OnMenuStateChangeListener {
         void onMenuOpen(int position);
 
         void onMenuClose(int position);

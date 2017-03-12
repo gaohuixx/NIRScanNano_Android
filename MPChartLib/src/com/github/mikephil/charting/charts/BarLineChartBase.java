@@ -1486,9 +1486,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public boolean isAnyAxisInverted() {
         if (mAxisLeft.isInverted())
             return true;
-        if (mAxisRight.isInverted())
-            return true;
-        return false;
+        return mAxisRight.isInverted();
     }
 
     /**

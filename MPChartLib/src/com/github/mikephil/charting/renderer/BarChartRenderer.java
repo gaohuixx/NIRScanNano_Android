@@ -335,7 +335,7 @@ public class BarChartRenderer extends DataRenderer {
                     continue;
 
                 float groupspace = mChart.getBarData().getGroupSpace();
-                boolean isStack = h.getStackIndex() < 0 ? false : true;
+                boolean isStack = h.getStackIndex() >= 0;
 
                 // calculate the correct x-position
                 float x = index * setCount + dataSetIndex + groupspace / 2f

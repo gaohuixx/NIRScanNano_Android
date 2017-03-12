@@ -360,10 +360,7 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
             return true;
         else {
 
-            if (mData.getYValCount() <= 0)
-                return true;
-            else
-                return false;
+            return mData.getYValCount() <= 0;
         }
     }
 
@@ -522,9 +519,8 @@ public abstract class Chart<T extends ChartData<? extends DataSet<? extends Entr
      * @return
      */
     public boolean valuesToHighlight() {
-        return mIndicesToHighlight == null || mIndicesToHighlight.length <= 0
-                || mIndicesToHighlight[0] == null ? false
-                : true;
+        return !(mIndicesToHighlight == null || mIndicesToHighlight.length <= 0
+                || mIndicesToHighlight[0] == null);
     }
 
     /**

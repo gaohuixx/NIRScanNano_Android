@@ -398,10 +398,8 @@ public class YAxis extends AxisBase {
 	public boolean needsDefaultFormatter() {
 		if (mYAxisValueFormatter == null)
 			return true;
-		if (mYAxisValueFormatter instanceof DefaultValueFormatter)
-			return true;
+		return mYAxisValueFormatter instanceof DefaultValueFormatter;
 
-		return false;
 	}
 
 	/**
@@ -410,9 +408,6 @@ public class YAxis extends AxisBase {
 	 * @return
 	 */
 	public boolean needsOffset() {
-		if (isEnabled() && isDrawLabelsEnabled() && getLabelPosition() == YAxisLabelPosition.OUTSIDE_CHART)
-			return true;
-		else
-			return false;
+		return isEnabled() && isDrawLabelsEnabled() && getLabelPosition() == YAxisLabelPosition.OUTSIDE_CHART;
 	}
 }

@@ -146,7 +146,7 @@ public class LineDataSet extends LineRadarDataSet<Entry> {
      * @return
      */
     public boolean isDashedLineEnabled() {
-        return mDashPathEffect == null ? false : true;
+        return mDashPathEffect != null;
     }
 
     /**

@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="android:Theme.Material.Light">
+   <!-- <style name="AppTheme2" parent="android:Theme.Material.Light">
         <item name="android:colorAccent">#FF4081</item>
         <item name="android:colorPrimary">#FF0288D1</item>
         <item name="android:colorPrimaryDark">#FF0288D1</item>
         <item name="android:textColorPrimary">@color/black</item>
+    </style>-->
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#FF0288D1</item>
+        <!--<item name="colorPrimaryDark">#FF0288D1</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
+
+    <style name="ToolbarTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <!--<item name="colorPrimaryDark">#FF0288D1</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+    </style>
+
 </resources>

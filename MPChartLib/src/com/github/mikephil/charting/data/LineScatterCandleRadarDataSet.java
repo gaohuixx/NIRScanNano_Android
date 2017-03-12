@@ -102,7 +102,7 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
      * @return
      */
     public boolean isDashedHighlightLineEnabled() {
-        return mHighlightDashPathEffect == null ? false : true;
+        return mHighlightDashPathEffect != null;
     }
 
     public DashPathEffect getDashPathEffectHighlight() {

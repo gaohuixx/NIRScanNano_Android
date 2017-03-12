@@ -86,7 +86,7 @@ public class BarData extends BarLineScatterCandleBubbleData<BarDataSet> {
      * @return
      */
     public boolean isGrouped() {
-        return mDataSets.size() > 1 ? true : false;
+        return mDataSets.size() > 1;
     }
     
     //

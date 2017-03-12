@@ -13,6 +13,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +34,7 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  * 这个Activity 通过BLE 扫描寻找Nano 设备，这允许用户指定一个偏爱的Nano来为将来使用，
  * 这个偏爱的Nano 将被优先连接当同时找到多台设备的时候
  */
-public class ScanActivity extends Activity {
+public class ScanActivity extends AppCompatActivity {
 
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
@@ -49,16 +51,17 @@ public class ScanActivity extends Activity {
         setContentView(R.layout.activity_scan);
         mContext = this;
 
-        //Set up action bar title and enable back button
         //设置ActionBar 标题和返回按钮
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setTitle(getString(R.string.select_nano));
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle("选择Nano");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+
         ListView lv_nanoDevices = (ListView) findViewById(R.id.lv_nanoDevices);
 
-        //Start scanning for devices that match DEVICE_NAME
         //开始扫描名字匹配的设备
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -82,8 +85,8 @@ public class ScanActivity extends Activity {
     }
 
     /**
-     * Provide user with a dialog that asks if they are sure they want to use the Nano with the
-     * specified mac as their preferred device
+     *
+     * 提供一个对话框，询问是否真的要把mac 地址是xxxx 的Nano设置为偏好设备
      *
      * @param mac MAC address of Nano
      */
@@ -150,7 +153,7 @@ public class ScanActivity extends Activity {
     };
 
 
-    /*
+    /**
      * Handle the selection of a menu item.
      * In this case, there is only the up indicator. If selected, this activity should finish.
      */
@@ -177,7 +180,8 @@ public class ScanActivity extends Activity {
      */
     private void scanLeDevice(final boolean enable) {
         if(mBluetoothLeScanner == null){
-            Toast.makeText(ScanActivity.this, "Could not open LE scanner", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ScanActivity.this, "无法开启 LE 扫描，请先开启蓝牙", Toast.LENGTH_SHORT).show();
+            finish();
         }else {
             if (enable) {
                 // Stops scanning after a pre-defined scan period.

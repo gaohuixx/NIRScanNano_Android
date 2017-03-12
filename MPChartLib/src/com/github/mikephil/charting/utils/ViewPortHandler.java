@@ -105,10 +105,7 @@ public class ViewPortHandler {
     }
 
     public boolean hasChartDimens() {
-        if (mChartHeight > 0 && mChartWidth > 0)
-            return true;
-        else
-            return false;
+        return mChartHeight > 0 && mChartWidth > 0;
     }
 
     public void restrainViewPort(float offsetLeft, float offsetTop, float offsetRight,
@@ -437,42 +434,33 @@ public class ViewPortHandler {
      */
 
     public boolean isInBoundsX(float x) {
-        if (isInBoundsLeft(x) && isInBoundsRight(x))
-            return true;
-        else
-            return false;
+        return isInBoundsLeft(x) && isInBoundsRight(x);
     }
 
     public boolean isInBoundsY(float y) {
-        if (isInBoundsTop(y) && isInBoundsBottom(y))
-            return true;
-        else
-            return false;
+        return isInBoundsTop(y) && isInBoundsBottom(y);
     }
 
     public boolean isInBounds(float x, float y) {
-        if (isInBoundsX(x) && isInBoundsY(y))
-            return true;
-        else
-            return false;
+        return isInBoundsX(x) && isInBoundsY(y);
     }
 
     public boolean isInBoundsLeft(float x) {
-        return mContentRect.left <= x ? true : false;
+        return mContentRect.left <= x;
     }
 
     public boolean isInBoundsRight(float x) {
         x = (float) ((int) (x * 100.f)) / 100.f;
-        return mContentRect.right >= x ? true : false;
+        return mContentRect.right >= x;
     }
 
     public boolean isInBoundsTop(float y) {
-        return mContentRect.top <= y ? true : false;
+        return mContentRect.top <= y;
     }
 
     public boolean isInBoundsBottom(float y) {
         y = (float) ((int) (y * 100.f)) / 100.f;
-        return mContentRect.bottom >= y ? true : false;
+        return mContentRect.bottom >= y;
     }
 
     /**
@@ -514,10 +502,7 @@ public class ViewPortHandler {
      */
     public boolean isFullyZoomedOut() {
 
-        if (isFullyZoomedOutX() && isFullyZoomedOutY())
-            return true;
-        else
-            return false;
+        return isFullyZoomedOutX() && isFullyZoomedOutY();
     }
 
     /**
@@ -526,10 +511,7 @@ public class ViewPortHandler {
      * @return
      */
     public boolean isFullyZoomedOutY() {
-        if (mScaleY > mMinScaleY || mMinScaleY > 1f)
-            return false;
-        else
-            return true;
+        return !(mScaleY > mMinScaleY || mMinScaleY > 1f);
     }
 
     /**
@@ -539,10 +521,7 @@ public class ViewPortHandler {
      * @return
      */
     public boolean isFullyZoomedOutX() {
-        if (mScaleX > mMinScaleX || mMinScaleX > 1f)
-            return false;
-        else
-            return true;
+        return !(mScaleX > mMinScaleX || mMinScaleX > 1f);
     }
 
     /**
@@ -571,7 +550,7 @@ public class ViewPortHandler {
      * @return
      */
     public boolean hasNoDragOffset() {
-        return mTransOffsetX <= 0 && mTransOffsetY <= 0 ? true : false;
+        return mTransOffsetX <= 0 && mTransOffsetY <= 0;
     }
 
     /**

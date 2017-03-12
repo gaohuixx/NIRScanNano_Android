@@ -133,10 +133,8 @@ public class Entry implements Parcelable {
         if (e.mXIndex != this.mXIndex)
             return false;
 
-        if (Math.abs(e.mVal - this.mVal) > 0.00001f)
-            return false;
+        return Math.abs(e.mVal - this.mVal) <= 0.00001f;
 
-        return true;
     }
 
     /**

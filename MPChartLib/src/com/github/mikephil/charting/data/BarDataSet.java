@@ -50,7 +50,7 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> {
         List<BarEntry> yVals = new ArrayList<BarEntry>();
 
         for (int i = 0; i < mYVals.size(); i++) {
-            yVals.add(((BarEntry) mYVals.get(i)).copy());
+            yVals.add(mYVals.get(i).copy());
         }
 
         BarDataSet copied = new BarDataSet(yVals, getLabel());
@@ -165,7 +165,7 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> {
      * @return
      */
     public boolean isStacked() {
-        return mStackSize > 1 ? true : false;
+        return mStackSize > 1;
     }
 
     /**

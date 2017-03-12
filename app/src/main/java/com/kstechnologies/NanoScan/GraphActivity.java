@@ -135,7 +135,7 @@ public class GraphActivity extends Activity {
         // 初始化 pager adapter
         CustomPagerAdapter pagerAdapter = new CustomPagerAdapter(this);
         mViewPager.setAdapter(pagerAdapter);
-        mViewPager.invalidate();
+        mViewPager.invalidate(); //invalidate() 方法是用来刷新一个view 的
 
         // 设置页面改变监听器，为了当页面改变时显示新页面
         mViewPager.setOnPageChangeListener(
@@ -252,7 +252,6 @@ public class GraphActivity extends Activity {
         mAbsorbanceString.remove(0);
         mReflectanceString.remove(0);
 
-        //Generate data points and calculate mins and maxes
         //产生数据点并计算最大最小值
         for (int i = 0; i < mXValues.size(); i++) {
             try {
@@ -307,7 +306,7 @@ public class GraphActivity extends Activity {
 
         //注意：对于那些默认的数据，它是通过 ScanListDictionary 这个类来获取“详情”数据，数据是写死的！
         //这里就是获取每个文件对应的 “详情” 数据，如：aspirin
-        //ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionary(this).getScanList(fileName);
+//        ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionary(this).getScanList(fileName);
         ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionaryUtil().getScanList(fileName);
         ScanListAdapter mAdapter;
         if (graphList != null) {
@@ -412,7 +411,8 @@ public class GraphActivity extends Activity {
 
 
     /**
-     * Custom adapter to control the dictionary items in the listview
+     *
+     * 为下方的listview 自定义一个adapter
      */
     public class ScanListAdapter extends ArrayAdapter<KSTNanoSDK.ScanListManager> {
         private ViewHolder viewHolder;
@@ -475,6 +475,7 @@ public class GraphActivity extends Activity {
 
     /**
      * Custom pager adapter to handle changing chart data when pager tabs are changed
+     *
      */
     public class CustomPagerAdapter extends PagerAdapter {
 

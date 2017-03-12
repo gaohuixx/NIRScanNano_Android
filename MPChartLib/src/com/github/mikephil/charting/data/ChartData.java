@@ -339,7 +339,7 @@ public abstract class ChartData<T extends DataSet<? extends Entry>> {
      * @return
      */
     public float getAverage() {
-        return (float ) getYValueSum() / (float) getYValCount();
+        return getYValueSum() / (float) getYValCount();
     }
 
     /**

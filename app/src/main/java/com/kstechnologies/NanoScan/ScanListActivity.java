@@ -1,16 +1,19 @@
 package com.kstechnologies.NanoScan;
 
-import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,16 +25,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 
-
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import static java.security.AccessController.getContext;
 
 /**
  * 这个activity是应用程序的主视图
@@ -40,11 +45,12 @@ import java.util.ArrayList;
  * 去info视图{@link InfoActivity}，或者查看曾经的扫描数据{@link GraphActivity}
  *
  */
-public class ScanListActivity extends Activity {
+public class ScanListActivity extends AppCompatActivity {
 
     private ArrayList<String> csvFiles = new ArrayList<>();
     private ArrayAdapter<String> mAdapter;
     private static Context mContext;
+    private DrawerLayout drawerLayout;
     private SwipeMenuListView lv_csv_files;
     private SwipeMenuCreator unknownCreator = createMenu();
 
@@ -56,24 +62,65 @@ public class ScanListActivity extends Activity {
 
 
 
-        //通过隐藏ActionBar来制造出Splash动画的效果
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.hide();
-        }
 
+        //通过隐藏ActionBar来制造出Splash动画的效果
+//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+//        ActionBar ab = getActionBar();
+//        if (ab != null) {
+//            ab.hide();
+//        }
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_scan_list);//设置布局
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { //系统版本大于19
-//            setTranslucentStatus(true);
-//        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle("NIRScan Nano");
+//        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_scan:
+                        Toast.makeText(mContext, "开始扫描", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.action_bluetooth:
+                        Toast.makeText(mContext, "开启蓝牙", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.action_settings:
+                        Intent settingsIntent = new Intent(mContext, SettingsActivity.class);
+                        startActivity(settingsIntent); //跳转到设置页面
+                        break;
+                    case R.id.action_theme:
+                        Toast.makeText(mContext, "主题", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.action_more:
+                        Intent infoIntent = new Intent(mContext, InfoActivity.class);
+                        startActivity(infoIntent); //跳转到信息界面
+                    break;
+                    case R.id.action_about:
+                        Intent aboutIntent = new Intent(mContext, AboutActivity.class);
+                        startActivity(aboutIntent); //跳转到关于界面
+                        break;
+
+                }
+
+                drawerLayout.closeDrawer(Gravity.LEFT);
+                return true;
+            }
+        });
+
+
 //        SystemBarTintManager tintManager = new SystemBarTintManager(this);
 //        tintManager.setStatusBarTintEnabled(true);
 //        tintManager.setStatusBarTintResource(R.color.title_green);//设置标题栏颜色，此颜色在color中声明
 
 
-        //获取UI元素的引用
+        /*//获取UI元素的引用
         final RelativeLayout mSplashLayout = (RelativeLayout) findViewById(R.id.rl_splash);
         final RelativeLayout mMainLayout = (RelativeLayout) findViewById(R.id.rl_mainLayout);
 
@@ -95,7 +142,7 @@ public class ScanListActivity extends Activity {
                 mMainLayout.setVisibility(View.VISIBLE);
 
                 //splash动画结束，显示action bar
-                getActionBar().show();
+//                getActionBar().show();
             }
 
             @Override
@@ -105,7 +152,7 @@ public class ScanListActivity extends Activity {
 
         // 开启动画
         mSplashLayout.setAnimation(animSplash);
-        animSplash.start();
+        animSplash.start();*/
 
 
 
@@ -176,15 +223,14 @@ public class ScanListActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent graphIntent = new Intent(mContext, GraphActivity.class);
                 graphIntent.putExtra("file_name", mAdapter.getItem(i));
-                startActivity(graphIntent);
+                startActivity(graphIntent);  //跳转到绘图页面
             }
         });
 
         //通过扫描名字，获得UI引用来编辑
         EditText searchText = (EditText) findViewById(R.id.et_search);
 
-        //Add listener to editText so that the listview is updated as the user starts typing
-        //为那个搜索框添加监听来保证listview 能够随着用户键入的值而改变
+        //为搜索框添加监听来保证listview 能够随着用户键入的值而改变
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -220,29 +266,21 @@ public class ScanListActivity extends Activity {
 
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            startActivity(settingsIntent);
-            return true;
-        }
-
-        else if (id == R.id.action_info) {
-            Intent infoIntent = new Intent(this, InfoActivity.class);
-            startActivity(infoIntent);
+       if (id == 16908332) {
+           drawerLayout.openDrawer(Gravity.LEFT);
             return true;
         }
 
         else if (id == R.id.action_scan) {
             Intent graphIntent = new Intent(mContext, NewScanActivity.class);
-            graphIntent.putExtra("file_name", getString(R.string.newScan));
-            startActivity(graphIntent);
+            graphIntent.putExtra("file_name", getString(R.string.newScan)); //传递参数
+            startActivity(graphIntent); //跳转到扫描页面
         }
         return super.onOptionsItemSelected(item);
     }
 
     /**
-     * Populate the stored scan listview with included files in the raw directory as well as
-     * stored CSV files
+     * 用raw 目录下的文件和已经保存的CSV 文件生成listview
      */
     public void populateListView() {
         Field[] files = R.raw.class.getFields();
@@ -255,7 +293,7 @@ public class ScanListActivity extends Activity {
         }
 
         String nanoExtPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-        File yourDir = new File(nanoExtPath, "/");
+        File yourDir = new File(nanoExtPath, "/");//从根目录中查找
         for (File f : yourDir.listFiles()) {
             if (f.isFile()) {
                 String fileName = f.getName();
@@ -297,7 +335,7 @@ public class ScanListActivity extends Activity {
                 // 设置 item 宽度
                 settingsItem.setWidth(dp2px(90));
                 // 设置一个图标
-                //settingsItem.setIcon(android.R.drawable.ic_menu_delete);
+//                settingsItem.setIcon(android.R.drawable.ic_menu_more);
                 settingsItem.setTitleColor(ContextCompat.getColor(mContext, R.color.white));
                 settingsItem.setTitleSize(18);
                 settingsItem.setTitle(getResources().getString(R.string.delete));

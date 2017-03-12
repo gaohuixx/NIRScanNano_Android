@@ -271,7 +271,7 @@ public abstract class AxisBase extends ComponentBase {
      * @return
      */
     public boolean isGridDashedLineEnabled() {
-        return mGridDashPathEffect == null ? false : true;
+        return mGridDashPathEffect != null;
     }
 
     /**

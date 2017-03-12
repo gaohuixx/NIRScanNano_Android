@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +29,7 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  *
  * @author collinmast
  */
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends AppCompatActivity {
 
     private TextView tv_version;
     private ToggleButton tb_temp;
@@ -47,14 +49,15 @@ public class SettingsActivity extends Activity {
 
         mContext = this;
 
-        //Set up action bar up indicator
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);// 给左上角图标的左边加上一个返回的图标 。对应ActionBar.DISPLAY_HOME_AS_UP
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle("设置");
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //获取UI元素的引用
-        tv_version = (TextView) findViewById(R.id.tv_version);//版本号
+//        tv_version = (TextView) findViewById(R.id.tv_version);//版本号
         tb_temp = (ToggleButton) findViewById(R.id.tb_temp);//温度转换按钮
         tb_spatial = (ToggleButton) findViewById(R.id.tb_spatial);//空间频率转换按钮
         btn_set = (Button) findViewById(R.id.btn_set);//设置我的nano
@@ -74,9 +77,9 @@ public class SettingsActivity extends Activity {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
             int versionCode = pInfo.versionCode;
-            tv_version.setText(getString(R.string.version, version, versionCode));
+//            tv_version.setText(getString(R.string.version, version, versionCode));
         } catch (PackageManager.NameNotFoundException e) {
-            tv_version.setText("");
+//            tv_version.setText("");
         }
 
         //Initialize UI toggle element states, and create event listeners

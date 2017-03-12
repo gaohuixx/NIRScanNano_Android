@@ -1294,9 +1294,9 @@ public class NanoBLEService extends Service {
     private boolean refreshDeviceCache(BluetoothGatt gatt) {
         try {
             BluetoothGatt localBluetoothGatt = gatt;
-            Method localMethod = localBluetoothGatt.getClass().getMethod("refresh", new Class[0]);
+            Method localMethod = localBluetoothGatt.getClass().getMethod("refresh");
             if (localMethod != null) {
-                boolean bool = ((Boolean) localMethod.invoke(localBluetoothGatt, new Object[0])).booleanValue();
+                boolean bool = ((Boolean) localMethod.invoke(localBluetoothGatt)).booleanValue();
                 return bool;
             }
         } catch (Exception localException) {

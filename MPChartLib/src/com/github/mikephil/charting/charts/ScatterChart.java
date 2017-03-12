@@ -70,5 +70,5 @@ public class ScatterChart extends BarLineChartBase<ScatterData> implements Scatt
 
     public ScatterData getScatterData() {
         return mData;
-    };
+    }
 }

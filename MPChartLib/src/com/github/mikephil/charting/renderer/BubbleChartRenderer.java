@@ -93,7 +93,7 @@ public class BubbleChartRenderer extends DataRenderer {
             final BubbleEntry entry = entries.get(j);
 
             pointBuffer[0] = (float) (entry.getXIndex() - minx) * phaseX + (float) minx;
-            pointBuffer[1] = (float) (entry.getVal()) * phaseY;
+            pointBuffer[1] = entry.getVal() * phaseY;
             trans.pointValuesToPixel(pointBuffer);
 
             float shapeHalf = getShapeSize(entry.getSize(), dataSet.getMaxSize(), referenceSize) / 2f;
@@ -227,7 +227,7 @@ public class BubbleChartRenderer extends DataRenderer {
             final float referenceSize = Math.min(maxBubbleHeight, maxBubbleWidth);
 
             pointBuffer[0] = (float) (entry.getXIndex() - minx) * phaseX + (float) minx;
-            pointBuffer[1] = (float) (entry.getVal()) * phaseY;
+            pointBuffer[1] = entry.getVal() * phaseY;
             trans.pointValuesToPixel(pointBuffer);
 
             float shapeHalf = getShapeSize(entry.getSize(), dataSet.getMaxSize(), referenceSize) / 2f;

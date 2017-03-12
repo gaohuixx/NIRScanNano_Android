@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
  *
  * @author collinmast
  */
-public class InfoActivity extends Activity {
+public class InfoActivity extends AppCompatActivity {
 
     private ListView infoList;
 
@@ -33,11 +35,18 @@ public class InfoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+//        toolbar.setNavigationIcon(R.drawable.ic_about);
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle("更多信息");
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         //设置action bar 的返回箭头
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
+//        ActionBar ab = getActionBar();
+//        if (ab != null) {
+//            ab.setDisplayHomeAsUpEnabled(true);
+//        }
 
         infoList = (ListView) findViewById(R.id.lv_info);
     }
@@ -70,16 +79,6 @@ public class InfoActivity extends Activity {
         });
     }
 
-    /*
-     * Inflate the options menu
-     * In this case, inflate the menu resource
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_info, menu);
-        return true;
-    }
 
     /*
      * Handle the selection of a menu item.
@@ -92,10 +91,6 @@ public class InfoActivity extends Activity {
 
         if (id == android.R.id.home) {
             this.finish();
-        }
-
-        else if (id == R.id.action_settings) {
-            return true;
         }
 
         return super.onOptionsItemSelected(item);

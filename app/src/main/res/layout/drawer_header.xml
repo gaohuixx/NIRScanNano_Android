@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/ppp4"
+    android:layout_width="match_parent"
+    android:layout_height="180dp">
+    <!--android:layout_width="320dp  fill_parent"-->
+    <!--android:layout_height="200dp">-->
+    <!--android:background="@android:color/holo_blue_dark"-->
+    <!--注意，宽度是280dp固定的，不对，反正宽度就是设置成fill_parent就可以了，高度可以自己指定-->
+    <!--<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:gravity="center"
+        android:text="这里是抽屉菜单头布局，也实现了透明状态栏效果"/>-->
+
+
+</LinearLayout>

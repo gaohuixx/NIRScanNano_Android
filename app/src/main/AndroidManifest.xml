@@ -73,6 +73,9 @@
         <activity android:name="com.kstechnologies.NanoScan.ScanActivity"
             android:screenOrientation="portrait" />
 
+        <activity android:name="com.kstechnologies.NanoScan.AboutActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ActiveScanActivity"
             android:screenOrientation="portrait" />

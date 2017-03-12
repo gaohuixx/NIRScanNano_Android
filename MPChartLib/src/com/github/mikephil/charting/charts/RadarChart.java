@@ -216,7 +216,7 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
      */
     public float getFactor() {
         RectF content = mViewPortHandler.getContentRect();
-        return (float) Math.min(content.width() / 2f, content.height() / 2f)
+        return Math.min(content.width() / 2f, content.height() / 2f)
                 / mYAxis.mAxisRange;
     }
 

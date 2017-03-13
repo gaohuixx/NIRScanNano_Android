@@ -1,16 +1,16 @@
 package com.kstechnologies.NanoScan;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +32,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
-import com.kstechnologies.nirscannanolibrary.ScanListDictionary;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -55,9 +54,9 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  * 这个页面包含两部分：
  * 上部分：绘图区
  * 下部分：详情
- * @author collinmast
+ * @author collinmast,gaohui
  */
-public class GraphActivity extends Activity {
+public class GraphActivity extends BaseActivity {
 
     private static Context mContext;
 
@@ -78,6 +77,11 @@ public class GraphActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        ActionBar ab = this.getSupportActionBar(); // 3. 正常获取ActionBar
+
+
         mContext = this;
 
         //从intent 中获取文件名
@@ -85,7 +89,6 @@ public class GraphActivity extends Activity {
         fileName = intent.getStringExtra("file_name");
 
         //设置action bar标题，返回按钮，和导航tab
-        ActionBar ab = getActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);//设置顶部的返回箭头
             if (fileName.contains(".csv")) {
@@ -93,36 +96,11 @@ public class GraphActivity extends Activity {
             } else {
                 ab.setTitle(fileName + ".csv");
             }
-            ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//            ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
             mViewPager = (ViewPager) findViewById(R.id.viewpager);
-            mViewPager.setOffscreenPageLimit(2);
+            mViewPager.setOffscreenPageLimit(2); //页面来回切换时不会重新加载
 
-            //创建一个tab监听，当用户改变tab时被调用
-            ActionBar.TabListener tl = new ActionBar.TabListener() {
-                @Override
-                public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                    mViewPager.setCurrentItem(tab.getPosition());
-                }
-
-                @Override
-                public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
-                }
-
-                @Override
-                public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
-                }
-            };
-
-            // 添加3个tabs ，指定tab 的文本和监听
-            for (int i = 0; i < 3; i++) {
-                ab.addTab(
-                        ab.newTab()
-                                .setText(getResources().getStringArray(R.array.graph_tab_index)[i])
-                                .setTabListener(tl));
-            }
         }
 
         graphListView = (ListView) findViewById(R.id.lv_scan_data);
@@ -137,19 +115,8 @@ public class GraphActivity extends Activity {
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.invalidate(); //invalidate() 方法是用来刷新一个view 的
 
-        // 设置页面改变监听器，为了当页面改变时同步改变标签
-        mViewPager.setOnPageChangeListener(
-                new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        // 当在两个页面间切换时，选择相应的tab
-                        ActionBar ab = getActionBar();
-                        if (ab != null) {
-                            ab.setSelectedNavigationItem(position);
-                        }
-                    }
-                });
-
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs); //获取TabLayout
+        tabLayout.setupWithViewPager(mViewPager); //将TabLayout 和ViewPager 关联
 
         mXValues = new ArrayList<>();
         ArrayList<String> mIntensityString = new ArrayList<>();
@@ -339,15 +306,6 @@ public class GraphActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (id == android.R.id.home) {
-            this.finish();
-        }
 
         if (id == R.id.action_email) {
             if (findFile(fileName) != null) {

@@ -1,12 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.kstechnologies.NanoScan.GraphActivity">
     <!-- <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" android:showAsAction="never" /> -->
 
     <!--绘图页面中的那个电子邮件图标-->
-    <item android:id="@+id/action_email" android:title="@string/action_scan"
-        android:icon="@drawable/ic_mail" android:showAsAction="always" />
+    <item
+        android:id="@+id/action_email"
+        android:icon="@drawable/ic_share"
+        android:title="分享"
+        app:showAsAction="ifRoom" />
 </menu>
 
 

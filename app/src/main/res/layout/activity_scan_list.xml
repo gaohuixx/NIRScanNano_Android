@@ -7,23 +7,6 @@
     android:layout_height="match_parent"
     >
 
-
-    <!--欢迎界面-->
-<!--    <RelativeLayout
-        android:id="@+id/rl_splash"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">&lt;!&ndash;默认欢迎界面就是隐藏的&ndash;&gt;
-
-        <ImageView
-            android:id="@+id/iv_logo_splash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/ic_splash_screen"
-            android:contentDescription="@string/desc_splash" />
-    </RelativeLayout>-->
-
     <LinearLayout
         android:id="@+id/rl_mainLayout"
         android:layout_width="fill_parent"
@@ -87,26 +70,13 @@
     </LinearLayout>
 
 
-
-
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="left"
-        android:background="#b1bec7"
+        android:background="#d4dce2"
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/menu_drawer" />
-        <!--android:layout_width="wrap_content"-->
-    <!--</android.support.design.widget.NavigationView>-->
-    <!--  android:background="@android:color/holo_blue_dark"  -->
-
-   <!-- <TextView
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:background="@android:color/holo_blue_dark"
-        android:text="this is a text"/>-->
-
 
 </android.support.v4.widget.DrawerLayout>

@@ -20,7 +20,7 @@
     <string-array name="info_body_array">
         <item>了解TI是如何革新移动光谱技术</item>
         <item>了解KST，TI的战略设计合作伙伴</item>
-        <item>了解如何购买你自己的估值模块</item>
+        <item>了解如何购买您自己的估值模块</item>
         <item>加入TI的E2E技术支持论坛</item>
     </string-array>
 
@@ -64,7 +64,7 @@
     <string name="delete">删除</string>
     <string name="ok">确定</string>
     <string name="not_connected_title">无连接</string>
-    <string name="not_connected_message">请确保你的安卓设备和Nano的蓝牙都开启了, 然后再点击屏幕上的扫描按钮.</string>
+    <string name="not_connected_message">请确保您的安卓设备和Nano的蓝牙都开启了, 然后再点击屏幕上的扫描按钮.</string>
 
     <string name="battery">电池</string>
     <string name="humidity">湿度</string>
@@ -144,9 +144,9 @@
     <string name="dl_ref_cal">下载引用计算</string>
     <string name="dl_cal_matrix">下载计算矩阵</string>
     <string name="select_nano">选择Nano</string>
-    <string name="nano_confirmation_title">你确定么?</string>
-    <string name="nano_confirmation_msg">你确定想要设置MAC地址为：%1$s 的Nano为你的主设备么?</string>
-    <string name="nano_forget_msg">你确定你想要取消MAC地址为：%1$s 的Nano为你的主设备么?</string>
+    <string name="nano_confirmation_title">您确定么?</string>
+    <string name="nano_confirmation_msg">您确定想要设置MAC地址为：%1$s 的Nano为您的主设备么?</string>
+    <string name="nano_forget_msg">您确定您想要取消MAC地址为：%1$s 的Nano为您的主设备么?</string>
     <string name="cancel">取消</string>
     <string name="no_sd_scans">SD卡中没有保存扫描数据!</string>
 

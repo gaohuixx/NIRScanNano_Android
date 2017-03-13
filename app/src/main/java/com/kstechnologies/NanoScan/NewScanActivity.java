@@ -1,7 +1,5 @@
 package com.kstechnologies.NanoScan;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -22,10 +20,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -73,9 +74,10 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  * 是非常重要的，否则它的功能将会不好使
  *
  * 这个界面也能显示图表，但是它是又单独写了一遍，和{@link GraphActivity} 没关系
- * @author collinmast
+ *
+ * @author collinmast,gaohui
  */
-public class NewScanActivity extends Activity {
+public class NewScanActivity extends BaseActivity {
 
     private static Context mContext;
 
@@ -136,6 +138,10 @@ public class NewScanActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_scan);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        ActionBar ab = this.getSupportActionBar(); // 3. 正常获取ActionBar
+
         mContext = this;
 
         calProgress = (ProgressBar) findViewById(R.id.calProgress);//进度条
@@ -159,41 +165,14 @@ public class NewScanActivity extends Activity {
         Intent intent = getIntent();
         fileName = intent.getStringExtra("file_name");
 
-        //设置 action bar
-        ActionBar ab = getActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);//设置返回箭头
             ab.setTitle(getString(R.string.new_scan));
-            ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
             mViewPager = (ViewPager) findViewById(R.id.viewpager);
             mViewPager.setOffscreenPageLimit(2);
 
-            //创建一个tab监听器，当tab被改变时被调用
-            ActionBar.TabListener tl = new ActionBar.TabListener() {
-                @Override
-                public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                    mViewPager.setCurrentItem(tab.getPosition());
-                }
 
-                @Override
-                public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
-                }
-
-                @Override
-                public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-
-                }
-            };
-
-            //添加3个tab，制定tab的文本和TabListener
-            for (int i = 0; i < 3; i++) {
-                ab.addTab(
-                        ab.newTab()
-                                .setText(getResources().getStringArray(R.array.graph_tab_index)[i])
-                                .setTabListener(tl));
-            }
         }
 
         //设置UI元素和事件处理器
@@ -252,20 +231,11 @@ public class NewScanActivity extends Activity {
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.invalidate();
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs); //获取TabLayout
+        tabLayout.setupWithViewPager(mViewPager); //将TabLayout 和ViewPager 关联
+
         tv_scan_conf.setText(SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, "Column 1"));
 
-        mViewPager.setOnPageChangeListener(
-                new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        // When swiping between pages, select the
-                        // corresponding tab.
-                        ActionBar ab = getActionBar();
-                        if (ab != null) {
-                            getActionBar().setSelectedNavigationItem(position);
-                        }
-                    }
-                });
 
         mXValues = new ArrayList<>();
         mIntensityFloat = new ArrayList<>();
@@ -304,7 +274,7 @@ public class NewScanActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_new_scan, menu);
         mMenu = menu;
-        mMenu.findItem(R.id.action_settings).setEnabled(false);
+        mMenu.findItem(R.id.action_config).setEnabled(false);
 
         return true;
     }
@@ -319,13 +289,9 @@ public class NewScanActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_config) {
             Intent configureIntent = new Intent(mContext, ConfigureActivity.class);
             startActivity(configureIntent);
-        }
-
-        if (id == android.R.id.home) {
-            this.finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -786,7 +752,7 @@ public class NewScanActivity extends Activity {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyhhmmss", java.util.Locale.getDefault());
             String ts = simpleDateFormat.format(new Date());
 
-            ActionBar ab = getActionBar();
+            ActionBar ab = getSupportActionBar();
             if (ab != null) {
 
                 if (filePrefix.getText().toString().equals("")) {
@@ -1091,8 +1057,7 @@ public class NewScanActivity extends Activity {
     }
 
     /**
-     * Dialog that tells the user that a Nano is not connected. The activity will finish when the
-     * user selects ok
+     * 这个对话框告诉用户没有Nano被连接上。当用户选择ok 的时候这个activity 将结束
      */
     private void notConnectedDialog() {
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
@@ -1114,7 +1079,7 @@ public class NewScanActivity extends Activity {
     }
 
     /**
-     * Custom receiver for receiving calibration coefficient data.
+     * 自定义一个接收器用来接收calibration coefficient data.
      */
     public class requestCalCoeffReceiver extends BroadcastReceiver {
 
@@ -1139,8 +1104,8 @@ public class NewScanActivity extends Activity {
     }
 
     /**
-     * Custom receiver for receiving calibration matrix data. When this receiver action complete, it
-     * will request the active configuration so that it can be displayed in the listview
+     * 自定义一个接收器用来接收calibration matrix data.
+     * 当这个动作完成的时候，它将请求active configuration，来保证它能够在listview 中显示出来
      */
     public class requestCalMatrixReceiver extends BroadcastReceiver {
 
@@ -1169,7 +1134,7 @@ public class NewScanActivity extends Activity {
     }
 
     /**
-     * Custom receiver for handling scan configurations
+     * 自定义接收器用来处理扫描配置
      */
     private class ScanConfReceiver extends BroadcastReceiver {
 
@@ -1201,9 +1166,10 @@ public class NewScanActivity extends Activity {
         }
     }
     /**
-     * Broadcast Receiver handling the disconnect event. If the Nano disconnects,
-     * this activity should finish so that the user is taken back to the {@link ScanListActivity}
-     * and display a toast message
+     *
+     * 广播接收器处理断开连接事件，一旦Nano 连接断开，这个activity 会结束并返回到{@link ScanListActivity}，
+     * 同时显示一条message 告诉用户连接已经断开
+     *
      */
     public class DisconnReceiver extends BroadcastReceiver {
 

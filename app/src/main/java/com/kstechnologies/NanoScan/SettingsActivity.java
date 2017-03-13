@@ -1,7 +1,5 @@
 package com.kstechnologies.NanoScan;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,8 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,9 +25,9 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  *
  * 用户能够改变温度和光谱频率单元，同时也可以设置和清除一个偏爱Nano 设备
  *
- * @author collinmast
+ * @author collinmast,gaohui
  */
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends BaseActivity {
 
     private TextView tv_version;
     private ToggleButton tb_temp;
@@ -52,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
 
         this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
         actionBar.setTitle("设置");
         actionBar.setDisplayHomeAsUpEnabled(true);
 

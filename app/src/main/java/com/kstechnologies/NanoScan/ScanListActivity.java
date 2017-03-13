@@ -2,29 +2,22 @@ package com.kstechnologies.NanoScan;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
@@ -45,7 +38,7 @@ import static java.security.AccessController.getContext;
  * 去info视图{@link InfoActivity}，或者查看曾经的扫描数据{@link GraphActivity}
  *
  */
-public class ScanListActivity extends AppCompatActivity {
+public class ScanListActivity extends BaseActivity {
 
     private ArrayList<String> csvFiles = new ArrayList<>();
     private ArrayAdapter<String> mAdapter;
@@ -60,24 +53,13 @@ public class ScanListActivity extends AppCompatActivity {
 
         mContext = this;
 
-
-
-
-        //通过隐藏ActionBar来制造出Splash动画的效果
-//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-//        ActionBar ab = getActionBar();
-//        if (ab != null) {
-//            ab.hide();
-//        }
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_scan_list);//设置布局
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
         this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
-        actionBar.setTitle("NIRScan Nano");
-//        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle("NIRScan Nano"); //4. 设置标题
 
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -109,64 +91,20 @@ public class ScanListActivity extends AppCompatActivity {
 
                 }
 
-                drawerLayout.closeDrawer(Gravity.LEFT);
+                drawerLayout.closeDrawer(Gravity.LEFT); // 关闭左边抽屉栏
                 return true;
             }
         });
 
 
-//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-//        tintManager.setStatusBarTintEnabled(true);
-//        tintManager.setStatusBarTintResource(R.color.title_green);//设置标题栏颜色，此颜色在color中声明
-
-
-        /*//获取UI元素的引用
-        final RelativeLayout mSplashLayout = (RelativeLayout) findViewById(R.id.rl_splash);
-        final RelativeLayout mMainLayout = (RelativeLayout) findViewById(R.id.rl_mainLayout);
-
-        //设置splash屏幕
-        mSplashLayout.setVisibility(View.VISIBLE);
-        mMainLayout.setVisibility(View.GONE);
-
-        //设置splash动画
-        Animation animSplash = AnimationUtils.loadAnimation(this, R.anim.alpha_splash);
-        animSplash.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                //隐藏splash布局，并显示主布局
-                mSplashLayout.setVisibility(View.GONE);
-                mMainLayout.setVisibility(View.VISIBLE);
-
-                //splash动画结束，显示action bar
-//                getActionBar().show();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
-
-        // 开启动画
-        mSplashLayout.setAnimation(animSplash);
-        animSplash.start();*/
 
 
 
     }
 
-    /*
-     * 当activity被销毁的时候调用父类的方法
-     */
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 
-    /*
+
+    /**
      * 当activity恢复的时候，检查更新，设置文件列表，菜单和事件监听
      */
     @Override
@@ -247,20 +185,13 @@ public class ScanListActivity extends AppCompatActivity {
         });
     }
 
-    /*
-     * Inflate options菜单，来使info，settings，connect图标是可视的
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // 通过xml，来把3个item添加到menu中
+        // 把扫描按钮添加到menu中
         getMenuInflater().inflate(R.menu.menu_scan_list, menu);
         return true;
     }
 
-    /*
-     * 处理菜单选项，一共有三个选项。
-     * 用户可以通过他们去info activity，settings activity，或者连接到一个Nano
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -322,7 +253,9 @@ public class ScanListActivity extends AppCompatActivity {
         }
     }
 
-    //SwipeMenu：滑动菜单
+    /**
+     * SwipeMenu：滑动菜单
+     */
     private SwipeMenuCreator createMenu() {
         return new SwipeMenuCreator() {
             @Override

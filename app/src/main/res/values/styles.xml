@@ -1,15 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- 基本应用主题 -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"><!--继承DarkActionBar-->
-        <!-- 自定义主题 -->
-        <item name="android:colorAccent">@color/kst_red</item>
-        <item name="android:colorFocusedHighlight">@color/kst_red</item>
-        <item name="android:colorControlActivated">@color/kst_red</item>
-        <item name="android:colorControlNormal">@color/kst_red</item>
-        <item name="android:navigationBarColor">@color/kst_red</item>
-        <item name="android:color">@color/kst_red</item>
-        <item name="android:colorPrimary">@color/kst_red</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#07afaf</item>
+        <item name="colorAccent">#FF0288D1</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="ToolbarTheme">
+        <item name="android:textColorPrimary">@android:color/white</item><!--toolbar上文本颜色-->
+        <item name="colorControlNormal">@android:color/white</item><!--返回箭头颜色-->
     </style>
 
 </resources>

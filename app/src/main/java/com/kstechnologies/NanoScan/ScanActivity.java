@@ -1,7 +1,5 @@
 package com.kstechnologies.NanoScan;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,10 +11,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,8 +30,10 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  *
  * 这个Activity 通过BLE 扫描寻找Nano 设备，这允许用户指定一个偏爱的Nano来为将来使用，
  * 这个偏爱的Nano 将被优先连接当同时找到多台设备的时候
+ *
+ * @author collinmast,gaohui
  */
-public class ScanActivity extends AppCompatActivity {
+public class ScanActivity extends BaseActivity {
 
     private Handler mHandler;
     private BluetoothAdapter mBluetoothAdapter;
@@ -55,7 +54,7 @@ public class ScanActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
 
         this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
         actionBar.setTitle("选择Nano");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -153,20 +152,6 @@ public class ScanActivity extends AppCompatActivity {
     };
 
 
-    /**
-     * Handle the selection of a menu item.
-     * In this case, there is only the up indicator. If selected, this activity should finish.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            this.finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * Scans for Bluetooth devices on the specified interval {@link NanoBLEService#SCAN_PERIOD}.

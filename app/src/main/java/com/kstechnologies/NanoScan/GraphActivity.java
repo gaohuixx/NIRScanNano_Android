@@ -137,7 +137,7 @@ public class GraphActivity extends Activity {
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.invalidate(); //invalidate() 方法是用来刷新一个view 的
 
-        // 设置页面改变监听器，为了当页面改变时显示新页面
+        // 设置页面改变监听器，为了当页面改变时同步改变标签
         mViewPager.setOnPageChangeListener(
                 new ViewPager.SimpleOnPageChangeListener() {
                     @Override
@@ -474,8 +474,7 @@ public class GraphActivity extends Activity {
     }
 
     /**
-     * Custom pager adapter to handle changing chart data when pager tabs are changed
-     *
+     * 自定义一个pager adapter 用来当tabs 改变时更改页面
      */
     public class CustomPagerAdapter extends PagerAdapter {
 

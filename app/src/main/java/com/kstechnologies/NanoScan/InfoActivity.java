@@ -1,22 +1,18 @@
 package com.kstechnologies.NanoScan;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.support.v7.app.ActionBar;
 
 import java.util.ArrayList;
 
@@ -26,7 +22,7 @@ import java.util.ArrayList;
  *
  * @author collinmast
  */
-public class InfoActivity extends AppCompatActivity {
+public class InfoActivity extends BaseActivity {
 
     private ListView infoList;
 
@@ -36,17 +32,11 @@ public class InfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_info);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
-//        toolbar.setNavigationIcon(R.drawable.ic_about);
         this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
-        actionBar.setTitle("更多信息");
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle("更多信息"); //4. 设置标题
+        actionBar.setDisplayHomeAsUpEnabled(true); //5. 设置返回按钮
 
-        //设置action bar 的返回箭头
-//        ActionBar ab = getActionBar();
-//        if (ab != null) {
-//            ab.setDisplayHomeAsUpEnabled(true);
-//        }
 
         infoList = (ListView) findViewById(R.id.lv_info);
     }
@@ -67,7 +57,6 @@ public class InfoActivity extends AppCompatActivity {
         final InformationAdapter adapter = new InformationAdapter(this, R.layout.row_info_item, infoManagerArrayList);
         infoList.setAdapter(adapter);
 
-        //When an info item is clicked, launch the URL using rhe ACTION_VIEW intent
         //当一个info item 被点击时，使用ACTION_VIEW intent 来启动一个URL
         infoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -80,21 +69,7 @@ public class InfoActivity extends AppCompatActivity {
     }
 
 
-    /*
-     * Handle the selection of a menu item.
-     * In this case, there is only the up indicator. If selected, this activity should finish.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            this.finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * 这个类用来封装信息标题，信息体，信息URL

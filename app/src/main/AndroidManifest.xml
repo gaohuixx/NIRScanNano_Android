@@ -29,19 +29,13 @@
         </activity>
         <activity
             android:name="com.kstechnologies.NanoScan.InfoActivity"
-            android:label="@string/title_activity_info"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.kstechnologies.NanoScan.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.kstechnologies.NanoScan.GraphActivity"
-            android:label="@string/title_activity_graph"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.kstechnologies.NanoScan.NanoBLEService"

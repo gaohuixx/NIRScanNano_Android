@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!--<item name="colorPrimary">#13a8f9</item>-->
-        <item name="colorPrimary">#07afaf</item>
-        <item name="colorAccent">#FF0288D1</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
+
+    <style name="AppTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#07afaf</item>
+        <item name="colorAccent">#07afaf</item>
+    </style>
+
 
     <style name="ToolbarTheme">
         <item name="android:textColorPrimary">@android:color/white</item><!--toolbar上文本颜色-->
@@ -27,4 +32,7 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="ThemeDialogText">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
 </resources>

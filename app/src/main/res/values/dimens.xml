@@ -11,5 +11,6 @@
     <dimen name="dip96">96dp</dimen>
 
     <dimen name="px1">1px</dimen>
+    <dimen name="theme_dialog_margin">4dp</dimen>
 
 </resources>

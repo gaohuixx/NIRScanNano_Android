@@ -1,5 +1,6 @@
 package com.kstechnologies.NanoScan;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -24,6 +26,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.gaohui.utils.ThemeManageUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -36,7 +39,6 @@ import static java.security.AccessController.getContext;
  * 它负责生成启动屏幕和主文件列表视图
  * 通过这个activity，用户能够开启扫描程序{@link NewScanActivity}，
  * 去info视图{@link InfoActivity}，或者查看曾经的扫描数据{@link GraphActivity}
- *
  */
 public class ScanListActivity extends BaseActivity {
 
@@ -46,6 +48,7 @@ public class ScanListActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private SwipeMenuListView lv_csv_files;
     private SwipeMenuCreator unknownCreator = createMenu();
+    private BluetoothAdapter bluetoothAdapter;//本地蓝牙适配器
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class ScanListActivity extends BaseActivity {
         mContext = this;
 
         setContentView(R.layout.activity_scan_list);//设置布局
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();//获取本地蓝牙适配器
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
         toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
@@ -71,19 +75,20 @@ public class ScanListActivity extends BaseActivity {
                         Toast.makeText(mContext, "开始扫描", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.action_bluetooth:
-                        Toast.makeText(mContext, "开启蓝牙", Toast.LENGTH_SHORT).show();
+                        openBluetooth(); //开启蓝牙
                         break;
                     case R.id.action_settings:
                         Intent settingsIntent = new Intent(mContext, SettingsActivity.class);
                         startActivity(settingsIntent); //跳转到设置页面
                         break;
                     case R.id.action_theme:
-                        Toast.makeText(mContext, "主题", Toast.LENGTH_SHORT).show();
+                        ThemeDialog dialog = new ThemeDialog(); //弹出主题选择对话框
+                        dialog.show(getSupportFragmentManager(), "theme");
                         break;
                     case R.id.action_more:
                         Intent infoIntent = new Intent(mContext, InfoActivity.class);
                         startActivity(infoIntent); //跳转到信息界面
-                    break;
+                        break;
                     case R.id.action_about:
                         Intent aboutIntent = new Intent(mContext, AboutActivity.class);
                         startActivity(aboutIntent); //跳转到关于界面
@@ -96,12 +101,7 @@ public class ScanListActivity extends BaseActivity {
             }
         });
 
-
-
-
-
     }
-
 
 
     /**
@@ -110,8 +110,6 @@ public class ScanListActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
-        //checkForCrashes();
-        //checkForUpdates();
 
         csvFiles.clear();
 
@@ -197,12 +195,10 @@ public class ScanListActivity extends BaseActivity {
 
         int id = item.getItemId();
 
-       if (id == 16908332) {
-           drawerLayout.openDrawer(Gravity.LEFT);
+        if (id == 16908332) {
+            drawerLayout.openDrawer(Gravity.LEFT);
             return true;
-        }
-
-        else if (id == R.id.action_scan) {
+        } else if (id == R.id.action_scan) {
             Intent graphIntent = new Intent(mContext, NewScanActivity.class);
             graphIntent.putExtra("file_name", getString(R.string.newScan)); //传递参数
             startActivity(graphIntent); //跳转到扫描页面
@@ -238,6 +234,7 @@ public class ScanListActivity extends BaseActivity {
 
     /**
      * 从外部存储中删除一个文件
+     *
      * @param name 要删除文件的名字
      */
     public void removeFile(String name) {
@@ -290,5 +287,22 @@ public class ScanListActivity extends BaseActivity {
                 getResources().getDisplayMetrics());
     }
 
+    /**
+     * 这个方法用来开启蓝牙
+     */
+    private void openBluetooth() {
 
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, "本地蓝牙不可用", Toast.LENGTH_SHORT).show();
+        }
+
+        if (!bluetoothAdapter.isEnabled()) {
+            bluetoothAdapter.enable();  //打开蓝牙，需要BLUETOOTH_ADMIN权限
+            Toast.makeText(mContext, "开启蓝牙成功", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(mContext, "蓝牙已开启", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 }

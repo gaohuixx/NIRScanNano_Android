@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BlueTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#2196F3</item>
+        <item name="colorAccent">#2196F3</item>
+    </style>
+
+    <style name="IndigoTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#3F51B5</item>
+        <item name="colorAccent">#3F51B5</item>
+    </style>
+
+    <style name="GreenTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#4CAF50</item>
+        <item name="colorAccent">#4CAF50</item>
+    </style>
+
+    <style name="RedTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#f44336</item>
+        <item name="colorAccent">#f44336</item>
+    </style>
+
+    <style name="BlueGreyTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#607D8B</item>
+        <item name="colorAccent">#607D8B</item>
+    </style>
+
+    <style name="BlackTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#000</item>
+        <item name="colorAccent">#000</item>
+    </style>
+
+    <style name="OrangeTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#FF9800</item>
+        <item name="colorAccent">#FF9800</item>
+    </style>
+
+    <style name="PurpleTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#9C27B0</item>
+        <item name="colorAccent">#9C27B0</item>
+    </style>
+
+    <style name="PinkTheme" parent="@style/BaseTheme">
+        <!--<item name="colorPrimary">#13a8f9</item>-->
+        <item name="colorPrimary">#E91E63</item>
+        <item name="colorAccent">#E91E63</item>
+    </style>
+
+
+
+
+</resources>

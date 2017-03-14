@@ -4,8 +4,4 @@
     <item android:id="@+id/action_config" android:title="配置"
         android:icon="@drawable/ic_config" app:showAsAction="ifRoom"
         android:enabled="false"/>
-<!--
-    <item android:id="@+id/action_scan" android:title="@string/action_scan"
-        android:icon="@drawable/ic_action_scan" android:showAsAction="always" />
--->
 </menu>

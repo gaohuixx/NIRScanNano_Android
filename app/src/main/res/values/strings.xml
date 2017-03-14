@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NIRScan Nano</string>
+    <string name="app_name">Nano客户端</string>
 
     <string name="action_info">信息</string>
     <string name="action_settings">设置</string>

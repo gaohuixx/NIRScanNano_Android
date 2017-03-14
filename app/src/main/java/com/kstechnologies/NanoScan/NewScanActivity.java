@@ -226,7 +226,7 @@ public class NewScanActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
 
-        //Initialize view pager
+        //初始化 view pager
         CustomPagerAdapter pagerAdapter = new CustomPagerAdapter(this);
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.invalidate();
@@ -267,11 +267,10 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /*
-     * Inflate the options menu so that user actions are present
+     * 添加右上角的配置按钮
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_new_scan, menu);
         mMenu = menu;
         mMenu.findItem(R.id.action_config).setEnabled(false);
@@ -279,16 +278,11 @@ public class NewScanActivity extends BaseActivity {
         return true;
     }
 
-    /*
-     * Handle the selection of a menu item.
-     * In this case, the user has the ability to access settings while the Nano is connected
-     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_config) {
             Intent configureIntent = new Intent(mContext, ConfigureActivity.class);
             startActivity(configureIntent);
@@ -332,7 +326,7 @@ public class NewScanActivity extends BaseActivity {
         }
 
         /*
-         * 这个方法，return一个对象，这个对象表明了PagerAdapter适配器选择哪个对象放在当前的ViewPager中
+         * 这个方法，return一个对象，这个对象表明了PagerAdapter 适配器选择哪个对象放在当前的ViewPager中
          */
         @Override
         public Object instantiateItem(ViewGroup collection, int position) {
@@ -760,7 +754,7 @@ public class NewScanActivity extends BaseActivity {
                 } else {
                     ab.setTitle(filePrefix.getText().toString() + ts);
                 }
-                ab.setSelectedNavigationItem(0);
+//                ab.setSelectedNavigationItem(0);
             }
 
             boolean saveOS = btn_os.isChecked();
@@ -1157,7 +1151,7 @@ public class NewScanActivity extends BaseActivity {
             barProgressDialog.dismiss();
             btn_scan.setClickable(true);
             btn_scan.setBackgroundColor(ContextCompat.getColor(mContext, R.color.kst_red));
-            mMenu.findItem(R.id.action_settings).setEnabled(true);
+            mMenu.findItem(R.id.action_config).setEnabled(true);
 
             SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, scanConf.getConfigName());
             tv_scan_conf.setText(scanConf.getConfigName());

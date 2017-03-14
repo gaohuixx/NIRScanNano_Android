@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,9 +30,7 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
 
 import java.util.ArrayList;
 
-public class ActiveScanActivity extends Activity {
-
-
+public class ActiveScanActivity extends BaseActivity {
 
     private static Context mContext;
 
@@ -60,15 +59,13 @@ public class ActiveScanActivity extends Activity {
             activeConf = (KSTNanoSDK.ScanConfiguration) getIntent().getSerializableExtra("conf");
         }
 
-        //Set up the action bar title, and enable the back button
-        //设置action bar 标题，并且使能返回按钮
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-            if(activeConf != null) {
-                ab.setTitle(activeConf.getConfigName());
-            }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        if(activeConf != null) {
+            actionBar.setTitle(activeConf.getConfigName());
         }
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         lv_configs = (ListView) findViewById(R.id.lv_configs);
 
@@ -100,13 +97,6 @@ public class ActiveScanActivity extends Activity {
         LocalBroadcastManager.getInstance(mContext).registerReceiver(disconnReceiver, disconnFilter);
     }
 
-    /*
-     * 在resume 时，调用父类。除了调用父类的方法没有什么需要做
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     /*
      * When the activity is destroyed, unregister the BroadcastReceivers
@@ -120,29 +110,6 @@ public class ActiveScanActivity extends Activity {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(disconnReceiver);
     }
 
-    /*
-     * Inflate the options menu
-     * In this case, there is no menu and only an up indicator,
-     * so the function should always return true.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
-    /*
-     * Handle the selection of a menu item.
-     * In this case, there is only the up indicator. If selected, this activity should finish.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            this.finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * Custom adapter that holds {@link KSTNanoSDK.ScanConfiguration} objects for the listview
@@ -260,8 +227,8 @@ public class ActiveScanActivity extends Activity {
     }
 
     /**
-     * Broadcast Receiver handling the disconnect event. If the Nano disconnects,
-     * this activity should finish so that the user is taken back to the {@link ScanListActivity}
+     * 这个广播接收器处理连接断开事件。如果Nano 的连接断开， 这个activity 会立刻结束，并且将
+     * 返回到{@link ScanListActivity} ，同时弹出一条信息告知用户连接已经断开
      */
     public class DisconnReceiver extends BroadcastReceiver {
 

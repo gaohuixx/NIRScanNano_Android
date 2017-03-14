@@ -1,7 +1,5 @@
 package com.kstechnologies.NanoScan;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,9 +9,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,9 +29,9 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  *
  * 警告：这个activity 使用了JNI函数调用，一定要保证它的名字和位置不被改变，，否则C 光谱库调用将失败
  *
- * @author collinmast
+ * @author collinmast,gaohui
  */
-public class ScanConfActivity extends Activity {
+public class ScanConfActivity extends BaseActivity {
 
     private static Context mContext;
 
@@ -52,7 +49,7 @@ public class ScanConfActivity extends Activity {
 
     ProgressDialog barProgressDialog;
 
-    //Spectrum C library call. Only the activity by this name is allowed call this function
+    //C 光谱库调用。只有叫这个名字的activity被允许调用这个函数：
     //public native Object dlpSpecScanReadConfiguration(byte[] data);
 
     @Override
@@ -62,12 +59,11 @@ public class ScanConfActivity extends Activity {
 
         mContext = this;
 
-        //Set up the action bar title, and enable the back button
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle(getString(R.string.stored_configurations));
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle(R.string.stored_configurations);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         /* Initialize the receiver for the # of scan configurations
          * When the configuration size is received, show the progress dialog.
@@ -129,15 +125,6 @@ public class ScanConfActivity extends Activity {
         LocalBroadcastManager.getInstance(mContext).registerReceiver(getActiveScanConfReceiver, new IntentFilter(KSTNanoSDK.SEND_ACTIVE_CONF));
     }
 
-    /*
-     * On resume, make a call to the super class.
-     * Nothing else is needed here besides calling
-     * the super method.
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     /*
      * When the activity is destroyed, unregister the BroadcastReceivers
@@ -153,29 +140,7 @@ public class ScanConfActivity extends Activity {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(getActiveScanConfReceiver);
     }
 
-    /*
-     * Inflate the options menu
-     * In this case, there is no menu and only an up indicator,
-     * so the function should always return true.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
 
-    /*
-     * Handle the selection of a menu item.
-     * In this case, there is only the up indicator. If selected, this activity should finish.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            this.finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /*
      * Broadcast receiver for scan configurations. When the expected number of configurations are
@@ -280,8 +245,8 @@ public class ScanConfActivity extends Activity {
     }
 
     /**
-     * Broadcast Receiver handling the disconnect event. If the Nano disconnects,
-     * this activity should finish so that the user is taken back to the {@link ScanListActivity}
+     * 这个广播接收器处理连接断开事件。如果Nano 的连接断开， 这个activity 会立刻结束，并且将
+     * 返回到{@link ScanListActivity} ，同时弹出一条信息告知用户连接已经断开
      */
     public class DisconnReceiver extends BroadcastReceiver {
 

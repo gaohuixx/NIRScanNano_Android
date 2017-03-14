@@ -1,15 +1,12 @@
 package com.kstechnologies.NanoScan;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +22,7 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  * 包含了一些像Nano 的温度，湿度，电量百分比信息
  * @author collinmast
  */
-public class DeviceStatusActivity extends Activity {
+public class DeviceStatusActivity extends BaseActivity {
 
     private static Context mContext;
 
@@ -46,14 +43,13 @@ public class DeviceStatusActivity extends Activity {
 
         mContext = this;
 
-        //Set up the action bar title and enable the back arrow
-        ActionBar ab = getActionBar();
-        if(ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle(getString(R.string.device_status));
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle(R.string.device_status);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //Get UI element references
+        //获取这个视图的UI引用
         tv_batt = (TextView)findViewById(R.id.tv_batt);
         tv_temp = (TextView)findViewById(R.id.tv_temp);
         tv_humid = (TextView)findViewById(R.id.tv_humid);
@@ -127,19 +123,9 @@ public class DeviceStatusActivity extends Activity {
         LocalBroadcastManager.getInstance(mContext).registerReceiver(disconnReceiver, disconnFilter);
     }
 
-    /*
-     * On resume, make a call to the super class.
-     * Nothing else is needed here besides calling
-     * the super method.
-     */
-    @Override
-    public void onResume(){
-        super.onResume();
-    }
 
-    /*
-     * When the activity is destroyed, unregister the BroadcastReceivers
-     * handling disconnection and status events
+    /**
+     * 当这个activity 结束时，移除BroadcastReceiver 的注册，处理断开连接事件
      */
     @Override
     public void onDestroy(){
@@ -148,34 +134,11 @@ public class DeviceStatusActivity extends Activity {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(disconnReceiver);
     }
 
-    /*
-     * Inflate the options menu
-     * In this case, there is no menu and only an up indicator,
-     * so the function should always return true.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
 
-    /*
-     * Handle the selection of a menu item.
-     * In this case, there is only the up indicator. If selected, this activity should finish.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if(id == android.R.id.home){
-            this.finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
-     * Broadcast Receiver handling the disconnect event. If the Nano disconnects,
-     * this activity should finish so that the user is taken back to the {@link ScanListActivity}
+     * 这个广播接收器处理连接断开事件。如果Nano 的连接断开， 这个activity 会立刻结束，并且将
+     * 返回到{@link ScanListActivity} ，同时弹出一条信息告知用户连接已经断开
      */
     public class DisconnReceiver extends BroadcastReceiver {
 

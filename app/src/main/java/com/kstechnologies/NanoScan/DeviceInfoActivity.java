@@ -1,15 +1,12 @@
 package com.kstechnologies.NanoScan;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,10 +18,10 @@ import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
  * 这个activity 在Nano连接上之后控制着设备信息视图，当activity 被创建后就开始向{@link NanoBLEService}发
  * 广播，然后开始接收设备信息
  *
- * @author collinmast
+ * @author collinmast,gaohui
  */
 
-public class DeviceInfoActivity extends Activity {
+public class DeviceInfoActivity extends BaseActivity {
 
     private static Context mContext;
 
@@ -47,12 +44,11 @@ public class DeviceInfoActivity extends Activity {
 
         mContext = this;
 
-        //设置action bar 标题和添加返回按钮
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle(getString(R.string.device_information));
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle(R.string.device_information);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //获取这个视图的UI引用
         tv_manuf = (TextView) findViewById(R.id.tv_manuf);
@@ -68,7 +64,7 @@ public class DeviceInfoActivity extends Activity {
         /*
          * 初始化设备信息广播接收器
          * 所有设备设备信息都被发送到一个广播
-         * 一旦信息被接收到了，就把progress bar 设置为不可视
+         * 一旦信息被接收到了，就把progress bar 设置为不可见
          */
         mInfoReceiver = new BroadcastReceiver() {
             @Override
@@ -90,19 +86,9 @@ public class DeviceInfoActivity extends Activity {
         LocalBroadcastManager.getInstance(mContext).registerReceiver(disconnReceiver, disconnFilter);
     }
 
-    /*
-     * On resume, make a call to the superclass.
-     * Nothing else is needed here besides calling
-     * the super method.
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
-    /*
-     * When the activity is destroyed, unregister the BroadcastReceiver
-     * handling disconnection events, and the receiver handling the device information
+    /**
+     * 当这个activity 结束时，移除BroadcastReceiver 的注册，处理断开连接事件
      */
     @Override
     public void onDestroy() {
@@ -111,34 +97,10 @@ public class DeviceInfoActivity extends Activity {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(disconnReceiver);
     }
 
-    /*
-     * Inflate the options menu
-     * In this case, there is no menu and only an up indicator,
-     * so the function should always return true.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
-    /*
-     * Handle the selection of a menu item.
-     * In this case, there is only the up indicator. If selected, this activity should finish.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            this.finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
-     * Broadcast Receiver handling the disconnect event. If the Nano disconnects,
-     * this activity should finish so that the user is taken back to the {@link ScanListActivity}.
-     * A toast message should appear so that the user knows why the activity is finishing.
+     * 这个广播接收器处理连接断开事件。如果Nano 的连接断开， 这个activity 会立刻结束，并且将
+     * 返回到{@link ScanListActivity} ，同时弹出一条信息告知用户连接已经断开
      */
     public class DisconnReceiver extends BroadcastReceiver {
 

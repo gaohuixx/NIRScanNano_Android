@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -26,13 +25,11 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
-import com.gaohui.utils.ThemeManageUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import static java.security.AccessController.getContext;
 
 /**
  * 这个activity是应用程序的主视图
@@ -72,7 +69,8 @@ public class ScanListActivity extends BaseActivity {
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.action_scan:
-                        Toast.makeText(mContext, "开始扫描", Toast.LENGTH_SHORT).show();
+                        Intent graphIntent = new Intent(mContext, NewScanActivity.class);
+                        startActivity(graphIntent); //跳转到扫描页面
                         break;
                     case R.id.action_bluetooth:
                         openBluetooth(); //开启蓝牙
@@ -302,7 +300,6 @@ public class ScanListActivity extends BaseActivity {
         }else{
             Toast.makeText(mContext, "蓝牙已开启", Toast.LENGTH_SHORT).show();
         }
-
 
     }
 }

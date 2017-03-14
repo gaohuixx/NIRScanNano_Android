@@ -1,7 +1,5 @@
 package com.kstechnologies.NanoScan;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,10 +9,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -41,10 +38,10 @@ import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
  * 这个activity 控制着在Nano SD 卡上保存的扫描结果的获取，一旦获取到了，用户就能删除他们
  * 这些操作需要Nano 去被连接，因此当从{@link NanoBLEService} 收到一个断开连接信息时应当完成这个activity
  *
- * @author collinmast
+ * @author collinmast,gaohui
  */
 
-public class StoredScanDataActivity extends Activity {
+public class StoredScanDataActivity extends BaseActivity {
 
     private static Context mContext;
     private ArrayList<StoredScan> storedScanList = new ArrayList<>();
@@ -70,12 +67,11 @@ public class StoredScanDataActivity extends Activity {
 
         mContext = this;
 
-        //Set up the action bar name and enable the back arrow
-        ActionBar ab = getActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle(getString(R.string.stored_scan_data));
-        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
+        this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
+        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        actionBar.setTitle(R.string.stored_scan_data);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //Send broadcast to BLE service to start requesting stored scans
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.GET_STORED_SCANS));
@@ -120,16 +116,6 @@ public class StoredScanDataActivity extends Activity {
     }
 
     /*
-     * On resume, make a call to the superclass.
-     * Nothing else is needed here besides calling
-     * the super method.
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    /*
      * When the activity is destroyed, unregister the BroadcastReceiver
      * handling disconnection events, as well as the receivers for the scan data size and data.
      */
@@ -141,30 +127,6 @@ public class StoredScanDataActivity extends Activity {
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(disconnReceiver);
     }
 
-    /*
-     * Inflate the options menu
-     * In this case, there is no menu and only an up indicator,
-     * so the function should always return true.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
-    }
-
-    /*
-     * Handle the selection of a menu item.
-     * In this case, there is only the up indicator. If selected, this activity should finish.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == android.R.id.home) {
-            this.finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     /**
      * Custom receiver for stored scan data broadcasts.
@@ -354,7 +316,7 @@ public class StoredScanDataActivity extends Activity {
     }
 
     /**
-     * Function to convert dip to pixels
+     * 功能是将dip 转换为pixels
      *
      * @param dp the number of dip to convert
      * @return the dip units converted to pixels
@@ -365,9 +327,8 @@ public class StoredScanDataActivity extends Activity {
     }
 
     /**
-     * Broadcast Receiver handling the disconnect event. If the Nano disconnects,
-     * this activity should finish so that the user is taken back to the {@link ScanListActivity}.
-     * A toast message should appear so that the user knows why the activity is finishing.
+     * 这个广播接收器处理连接断开事件。如果Nano 的连接断开， 这个activity 会立刻结束，并且将
+     * 返回到{@link ScanListActivity} ，同时弹出一条信息告知用户连接已经断开
      */
     public class DisconnReceiver extends BroadcastReceiver {
 

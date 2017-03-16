@@ -2,11 +2,13 @@ package com.kstechnologies.NanoScan;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -128,9 +130,7 @@ public class ScanListActivity extends BaseActivity {
 
                 switch (index) {
                     case 0:
-                        removeFile(mAdapter.getItem(position));
-                        mAdapter.remove(csvFiles.get(position));
-                        lv_csv_files.setAdapter(mAdapter);
+                        confirmDialog(position);
                         break;
                 }
                 return false;
@@ -179,6 +179,32 @@ public class ScanListActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
             }
         });
+    }
+
+    /**
+     * 点击删除的时候弹出这个确认对话框
+     * @param position 删除第几个
+     */
+    private void confirmDialog(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage("确认删除这条记录吗？");
+        builder.setTitle("警告");
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                removeFile(mAdapter.getItem(position)); //删除文件
+                mAdapter.remove(csvFiles.get(position)); //将相应的条目从列表项中移除
+                lv_csv_files.setAdapter(mAdapter); //刷新列表
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
     @Override

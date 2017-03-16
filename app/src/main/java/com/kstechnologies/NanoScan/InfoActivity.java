@@ -20,7 +20,7 @@ import java.util.ArrayList;
  * 这个activity控制着信息连接。每一个信息item 将有一个标题，信息体，和关联的URL。当一个item 被点击的时候，
  * 浏览器会打开这个URL
  *
- * @author collinmast
+ * @author collinmast,gaohui
  */
 public class InfoActivity extends BaseActivity {
 

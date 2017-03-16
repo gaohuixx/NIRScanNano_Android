@@ -20,7 +20,7 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
 /**
  * 这个activity 控制着Nano 设备的状态视图
  * 包含了一些像Nano 的温度，湿度，电量百分比信息
- * @author collinmast
+ * @author collinmast,gaohui
  */
 public class DeviceStatusActivity extends BaseActivity {
 

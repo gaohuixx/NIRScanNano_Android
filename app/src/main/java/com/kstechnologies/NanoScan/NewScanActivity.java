@@ -1,7 +1,6 @@
 package com.kstechnologies.NanoScan;
 
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -125,7 +124,7 @@ public class NewScanActivity extends BaseActivity {
     private BluetoothLeScanner mBluetoothLeScanner;
     private Handler mHandler;
     private static final String DEVICE_NAME = "NIRScanNano";
-    private boolean connected;
+    private boolean connected = false;
     private AlertDialog alertDialog;
     private TextView tv_scan_conf;
     private String preferredDevice;
@@ -247,7 +246,7 @@ public class NewScanActivity extends BaseActivity {
         mWavelengthFloat = new ArrayList<>();
     }
 
-    /*
+    /**
      * 当activity 被销毁时，取消所有的broadcast receivers 注册，移除回掉并且保存所有用户偏好
      */
     @Override
@@ -270,7 +269,7 @@ public class NewScanActivity extends BaseActivity {
         SettingsManager.storeBooleanPref(mContext, SettingsManager.SharedPreferencesKeys.continuousScan, btn_continuous.isChecked());
     }
 
-    /*
+    /**
      * 添加右上角的配置按钮
      */
     @Override
@@ -321,7 +320,7 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
-     * Custom pager adapter to handle changing chart data when pager tabs are changed
+     * 定义一个adapter 用来处理页面内容
      */
     public class CustomPagerAdapter extends PagerAdapter {
 
@@ -781,7 +780,7 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
-     * Custom receiver for returning the event that reference calibrations have been read
+     * 自定义一个接收器用来返回引用校验被读的事件
      *
      */
     public class refReadyReceiver extends BroadcastReceiver {
@@ -810,8 +809,7 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
-     * Custom receiver that will request the time once all of the GATT notifications have been
-     * subscribed to
+     * 自定义接收器用来设备Nano 的时间
      */
     public class notifyCompleteReceiver extends BroadcastReceiver {
 
@@ -904,7 +902,9 @@ public class NewScanActivity extends BaseActivity {
         }
     }
 
-    // 代码去管理Service 的生命周期
+    /**
+     * 代码去管理Service 的生命周期
+     */
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
         @Override   //这个方法分别会在Activity与Service 建立关联的时候调用
@@ -944,16 +944,11 @@ public class NewScanActivity extends BaseActivity {
     };
 
     /**
-     * Callback function for Bluetooth scanning. This function provides the instance of the
-     * Bluetooth device {@link BluetoothDevice} that was found, it's rssi, and advertisement
-     * data (scanRecord).
-     * <p>
-     * When a Bluetooth device with the advertised name matching the
-     * string DEVICE_NAME {@link NewScanActivity#DEVICE_NAME} is found, a call is made to connect
-     * to the device. Also, the Bluetooth should stop scanning, even if
-     * the {@link NanoBLEService#SCAN_PERIOD} has not expired
+     * 这个是蓝牙扫描的回掉函数，每扫到一个蓝牙设备就调用一次这个方法
+     * 首先获取到这个设备，然后判断它的名字是否是“NIRScanNano”，如果是就连接它
+     * 然后将标志位connected 置为true，以后即使在扫描到Nano 设备，只要connected 为true
+     * 就不再连接了
      *
-     * 当有设备被发现的时候调用这个回掉函数
      */
     private final ScanCallback mLeScanCallback = new ScanCallback() {
         @Override
@@ -961,27 +956,27 @@ public class NewScanActivity extends BaseActivity {
             super.onScanResult(callbackType, result);
             BluetoothDevice device = result.getDevice();
             String name = device.getName();
-            if (name != null) {
+            if (name != null && connected == false) {
                 if (device.getName().equals(DEVICE_NAME)) {    //只有当蓝牙设备名是NIRScanNano 时才连接
                     Log.i(TAG, "mLeScanCallback：此时搜索到相应的Nano，准备连接");
                     mNanoBLEService.connect(device.getAddress());//这里只是把蓝牙设备的MAC 地址传过去
                     connected = true;
                     Log.i(TAG, "此时connected = true，代表已经连接成功");
-                    scanLeDevice(false);//停止扫描
+
+                    //这里很重要，不要在这里停止扫描，因为它和mNanoBLEService.connect() 是同时做的，如果在连接之前就
+                    //停止了扫描时不行的，所以这里不要停止扫描，要等6s 之后自动停止扫描，6s 之后肯定已经连接成功了！
+                    //其它手机都是先连接上然后才停止扫描的，而我的荣耀6 大多说时候都是先停止扫描才开始连接，所以连不上Nano，
+                    //但是偶尔有时候就是先连接上才停止扫描的，这时候就能连接成功，这也就解释了为什么我的坑爹荣耀6 大多数时候
+                    //都连接不上，但是偶尔有时候就能连接上
+                    //可能是停止扫描之后就把什么给关了，所以就没法连接上了，具体原理我没研究
+                    //scanLeDevice(false);//停止扫描
                 }
             }
         }
     };
 
     /**
-     * Callback function for preferred Nano scanning. This function provides the instance of the
-     * Bluetooth device {@link BluetoothDevice} that was found, it's rssi, and advertisement
-     * data (scanRecord).
-     * <p>
-     * When a Bluetooth device with the advertised name matching the
-     * string DEVICE_NAME {@link NewScanActivity#DEVICE_NAME} is found, a call is made to connect
-     * to the device. Also, the Bluetooth should stop scanning, even if
-     * the {@link NanoBLEService#SCAN_PERIOD} has not expired
+     * 功能同上，只不过这个是用来处理偏好Nano 的
      */
     private final ScanCallback mPreferredLeScanCallback = new ScanCallback() {
         @Override
@@ -989,7 +984,7 @@ public class NewScanActivity extends BaseActivity {
             super.onScanResult(callbackType, result);
             BluetoothDevice device = result.getDevice();
             String name = device.getName();
-            if (name != null) {
+            if (name != null && connected == false) {
                 if (device.getName().equals(DEVICE_NAME)) {
                     Log.i(TAG, "mPreferredLeScanCallback：此时搜索到相应的Nano，准备连接");
                     if (device.getAddress().equals(preferredDevice)) {
@@ -997,7 +992,7 @@ public class NewScanActivity extends BaseActivity {
                         mNanoBLEService.connect(device.getAddress());
                         Log.i(TAG, "连接上了偏好Nano");
                         connected = true;
-                        scanPreferredLeDevice(false);
+//                        scanPreferredLeDevice(false);
                     }
                 }
             }
@@ -1005,14 +1000,10 @@ public class NewScanActivity extends BaseActivity {
     };
 
     /**
-     * Scans for Bluetooth devices on the specified interval {@link NanoBLEService#SCAN_PERIOD}.
-     * This function uses the handler {@link NewScanActivity#mHandler} to delay call to stop
-     * scanning until after the interval has expired. The start and stop functions take an
-     * LeScanCallback parameter that specifies the callback function when a Bluetooth device
-     * has been found {@link NewScanActivity#mLeScanCallback}
+     * 用来扫描蓝牙设备。指定时间内没有扫到就返回。扫到之后就调用回掉函数来处理
      *
-     * @param enable 告诉 Bluetooth adapter {@link KSTNanoSDK#mBluetoothAdapter} 是否应该开始或停止
-     *               为true 时开始扫描，为false 时停止扫描
+     * @param enable 为true 时开始扫描，为false 时停止扫描
+     *
      */
     private void scanLeDevice(final boolean enable) {
         if (enable) {
@@ -1043,14 +1034,7 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
-     * Scans for preferred Nano devices on the specified interval {@link NanoBLEService#SCAN_PERIOD}.
-     * This function uses the handler {@link NewScanActivity#mHandler} to delay call to stop
-     * scanning until after the interval has expired. The start and stop functions take an
-     * LeScanCallback parameter that specifies the callback function when a Bluetooth device
-     * has been found {@link NewScanActivity#mPreferredLeScanCallback}
-     *
-     * @param enable Tells the Bluetooth adapter {@link KSTNanoSDK#mBluetoothAdapter} if
-     *               it should start or stop scanning
+     * 功能同上，只不过它是用来扫描偏好设备的
      */
     private void scanPreferredLeDevice(final boolean enable) {
         if (enable) {

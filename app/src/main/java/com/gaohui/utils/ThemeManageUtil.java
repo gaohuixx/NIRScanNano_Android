@@ -1,7 +1,9 @@
 package com.gaohui.utils;
 
 /**
- * Created by lenovo on 2017/3/13.
+ * Created by gaohui on 2017/3/13.
+ *
+ * 相当于定义了一个全局变量
  */
 
 public class ThemeManageUtil {

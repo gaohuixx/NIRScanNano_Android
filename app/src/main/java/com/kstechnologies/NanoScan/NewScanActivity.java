@@ -80,6 +80,7 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
 public class NewScanActivity extends BaseActivity {
 
     private static Context mContext;
+    private static final String TAG = "__BT_SERVICE";
 
     private ProgressDialog barProgressDialog;
 
@@ -135,6 +136,7 @@ public class NewScanActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_scan);
 
@@ -207,7 +209,7 @@ public class NewScanActivity extends BaseActivity {
         btn_scan.setClickable(false);
         btn_scan.setBackgroundColor(ContextCompat.getColor(mContext, R.color.btn_unavailable));
 
-        //Bind to the service. This will start it, and call the start command function
+        //绑定到service 。这将开启这个service，并且会调用start command 方法
         Intent gattServiceIntent = new Intent(this, NanoBLEService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
@@ -224,6 +226,7 @@ public class NewScanActivity extends BaseActivity {
 
     @Override
     public void onResume() {
+        Log.i(TAG, "onResume()");
         super.onResume();
 
         //初始化 view pager
@@ -249,6 +252,7 @@ public class NewScanActivity extends BaseActivity {
      */
     @Override
     public void onDestroy() {
+        Log.i(TAG, "onDestroy()");
         super.onDestroy();
         unbindService(mServiceConnection);
         LocalBroadcastManager.getInstance(mContext).unregisterReceiver(scanDataReadyReceiver);
@@ -271,6 +275,7 @@ public class NewScanActivity extends BaseActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.i(TAG, "onCreateOptionsMenu()");
         getMenuInflater().inflate(R.menu.menu_new_scan, menu);
         mMenu = menu;
         mMenu.findItem(R.id.action_config).setEnabled(false);
@@ -280,6 +285,7 @@ public class NewScanActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(TAG, "onOptionsItemSelected()");
 
         int id = item.getItemId();
 
@@ -666,6 +672,7 @@ public class NewScanActivity extends BaseActivity {
     public class scanDataReadyReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "scanDataReadyReceiver.onReceive()");
             calProgress.setVisibility(View.GONE);
             btn_scan.setText(getString(R.string.scan));
             byte[] scanData = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA);//从Intent中获取数据
@@ -780,6 +787,7 @@ public class NewScanActivity extends BaseActivity {
     public class refReadyReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "refReadyReceiver.onReceive()");
             byte[] refCoeff = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_REF_COEF_DATA);
             byte[] refMatrix = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_REF_MATRIX_DATA);
             ArrayList<KSTNanoSDK.ReferenceCalibration> refCal = new ArrayList<>();
@@ -790,11 +798,12 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
-     * Custom receiver for returning the event that a scan has been initiated from the button
+     * 当点击开始扫描按钮后触发这个广播接收器
      */
     public class ScanStartedReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "ScanStartedReceiver.onReceive()");
             calProgress.setVisibility(View.VISIBLE);
             btn_scan.setText(getString(R.string.scanning));
         }
@@ -807,6 +816,7 @@ public class NewScanActivity extends BaseActivity {
     public class notifyCompleteReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "notifyCompleteReceiver.onReceive()");
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.SET_TIME));
         }
     }
@@ -897,18 +907,19 @@ public class NewScanActivity extends BaseActivity {
     // 代码去管理Service 的生命周期
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
-        @Override
+        @Override   //这个方法分别会在Activity与Service 建立关联的时候调用
         public void onServiceConnected(ComponentName componentName, IBinder service) {
+            Log.i(TAG, "ServiceConnection.onServiceConnected()");
 
-            //Get a reference to the service from the service connection
+            //获取NanoBLEService 这个服务的引用
             mNanoBLEService = ((NanoBLEService.LocalBinder) service).getService();
 
-            //initialize bluetooth, if BLE is not available, then finish
+            //初始化蓝牙，如果BLE 不可用，那么结束
             if (!mNanoBLEService.initialize()) {
                 finish();
             }
 
-            //Start scanning for devices that match DEVICE_NAME
+            //开始扫描匹配DEVICE_NAME 的设备
             final BluetoothManager bluetoothManager =
                     (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             mBluetoothAdapter = bluetoothManager.getAdapter();
@@ -926,7 +937,7 @@ public class NewScanActivity extends BaseActivity {
             }
         }
 
-        @Override
+        @Override   //这个方法分别会在Activity与Service 解除关联的时候调用
         public void onServiceDisconnected(ComponentName componentName) {
             mNanoBLEService = null;
         }
@@ -941,6 +952,8 @@ public class NewScanActivity extends BaseActivity {
      * string DEVICE_NAME {@link NewScanActivity#DEVICE_NAME} is found, a call is made to connect
      * to the device. Also, the Bluetooth should stop scanning, even if
      * the {@link NanoBLEService#SCAN_PERIOD} has not expired
+     *
+     * 当有设备被发现的时候调用这个回掉函数
      */
     private final ScanCallback mLeScanCallback = new ScanCallback() {
         @Override
@@ -949,10 +962,12 @@ public class NewScanActivity extends BaseActivity {
             BluetoothDevice device = result.getDevice();
             String name = device.getName();
             if (name != null) {
-                if (device.getName().equals(DEVICE_NAME)) {
-                    mNanoBLEService.connect(device.getAddress());
+                if (device.getName().equals(DEVICE_NAME)) {    //只有当蓝牙设备名是NIRScanNano 时才连接
+                    Log.i(TAG, "mLeScanCallback：此时搜索到相应的Nano，准备连接");
+                    mNanoBLEService.connect(device.getAddress());//这里只是把蓝牙设备的MAC 地址传过去
                     connected = true;
-                    scanLeDevice(false);
+                    Log.i(TAG, "此时connected = true，代表已经连接成功");
+                    scanLeDevice(false);//停止扫描
                 }
             }
         }
@@ -976,8 +991,11 @@ public class NewScanActivity extends BaseActivity {
             String name = device.getName();
             if (name != null) {
                 if (device.getName().equals(DEVICE_NAME)) {
+                    Log.i(TAG, "mPreferredLeScanCallback：此时搜索到相应的Nano，准备连接");
                     if (device.getAddress().equals(preferredDevice)) {
+                        Log.i(TAG, "搜索到的Nano是偏好Nano");
                         mNanoBLEService.connect(device.getAddress());
+                        Log.i(TAG, "连接上了偏好Nano");
                         connected = true;
                         scanPreferredLeDevice(false);
                     }
@@ -993,8 +1011,8 @@ public class NewScanActivity extends BaseActivity {
      * LeScanCallback parameter that specifies the callback function when a Bluetooth device
      * has been found {@link NewScanActivity#mLeScanCallback}
      *
-     * @param enable Tells the Bluetooth adapter {@link KSTNanoSDK#mBluetoothAdapter} if
-     *               it should start or stop scanning
+     * @param enable 告诉 Bluetooth adapter {@link KSTNanoSDK#mBluetoothAdapter} 是否应该开始或停止
+     *               为true 时开始扫描，为false 时停止扫描
      */
     private void scanLeDevice(final boolean enable) {
         if (enable) {
@@ -1005,13 +1023,16 @@ public class NewScanActivity extends BaseActivity {
                     if(mBluetoothLeScanner != null) {
                         mBluetoothLeScanner.stopScan(mLeScanCallback);
                         if (!connected) {
+                            Log.i(TAG, "扫了，但是没有扫描到");
                             notConnectedDialog();
                         }
                     }
                 }
             }, NanoBLEService.SCAN_PERIOD);
             if(mBluetoothLeScanner != null) {
+                Log.i(TAG, "开始扫描");
                 mBluetoothLeScanner.startScan(mLeScanCallback);
+                Log.i(TAG, "扫描完成");
             }else{
                 finish();
                 Toast.makeText(NewScanActivity.this, "请先开启蓝牙并再次尝试", Toast.LENGTH_SHORT).show();
@@ -1079,6 +1100,7 @@ public class NewScanActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "requestCalCoeffReceiver.onReceive():下载引用计算");
             intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE, 0);
             Boolean size = intent.getBooleanExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE_PACKET, false);
             if (size) {
@@ -1105,6 +1127,7 @@ public class NewScanActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "requestCalMatrixReceiver.onReceive():下载计算矩阵");
             intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE, 0);
             Boolean size = intent.getBooleanExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE_PACKET, false);
             if (size) {
@@ -1134,6 +1157,7 @@ public class NewScanActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "ScanConfReceiver.onReceive():处理扫描配置");
 
             byte[] smallArray = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA);
             byte[] addArray = new byte[smallArray.length * 3];
@@ -1169,6 +1193,7 @@ public class NewScanActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.i(TAG, "DisconnReceiver.onReceive():Nano连接断开");
             Toast.makeText(mContext, R.string.nano_disconnected, Toast.LENGTH_SHORT).show();
             finish();
         }

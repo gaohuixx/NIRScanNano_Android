@@ -1000,6 +1000,7 @@ public class NanoBLEService extends Service {
             return KSTNanoSDK.mBluetoothGatt.connect();
         }
 
+        //这里又通过MAC 地址获取了这个设备对象BluetoothDevice
         final BluetoothDevice device = KSTNanoSDK.mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             if (debug)
@@ -1012,6 +1013,7 @@ public class NanoBLEService extends Service {
             Log.d(TAG, "Using LE Transport");
             KSTNanoSDK.mBluetoothGatt = device.connectGatt(this, false, mGattCallback, BluetoothDevice.TRANSPORT_LE);
         } else {
+            //问题主要出现在这里！它会在这里卡一会，然后就可能连接不上！调用mGattCallback 的状态改变方法
             KSTNanoSDK.mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         }
         if (debug)

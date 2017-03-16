@@ -295,8 +295,11 @@ public class ScanListActivity extends BaseActivity {
         }
 
         if (!bluetoothAdapter.isEnabled()) {
-            bluetoothAdapter.enable();  //打开蓝牙，需要BLUETOOTH_ADMIN权限
-            Toast.makeText(mContext, "开启蓝牙成功", Toast.LENGTH_SHORT).show();
+            boolean state = bluetoothAdapter.enable();  //打开蓝牙，需要BLUETOOTH_ADMIN权限
+            if(state)
+                Toast.makeText(mContext, "开启蓝牙成功", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(mContext, "开启蓝牙失败", Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(mContext, "蓝牙已开启", Toast.LENGTH_SHORT).show();
         }

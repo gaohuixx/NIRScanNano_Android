@@ -29,7 +29,6 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  */
 public class SettingsActivity extends BaseActivity {
 
-    private TextView tv_version;
     private ToggleButton tb_temp;
     private ToggleButton tb_spatial;
     private Button btn_set;

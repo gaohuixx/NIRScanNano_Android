@@ -11,6 +11,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -133,15 +134,15 @@ public class GraphActivity extends BaseActivity {
         InputStream is = null;
 
         /*
-         * 尝试打来一个文件，首先从raw目录，然后从额外的目录
+         * 尝试打来一个文件，首先从raw目录，然后从外部存储的目录
          */
         try {
             is = getResources().openRawResource(getResources().getIdentifier(fileName, "raw", getPackageName()));
             reader = new BufferedReader(new InputStreamReader(is));
         } catch (Resources.NotFoundException e) {
             try {
-                reader = new BufferedReader(new FileReader(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName));
-                dictReader = new BufferedReader(new FileReader(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName.replace(".csv", ".dict")));
+                reader = new BufferedReader(new FileReader(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/csv/" + fileName));
+                dictReader = new BufferedReader(new FileReader(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/dict/" + fileName.replace(".csv", ".dict")));
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
                 Toast.makeText(mContext, getString(R.string.file_not_found), Toast.LENGTH_SHORT).show();
@@ -775,13 +776,13 @@ public class GraphActivity extends BaseActivity {
     }
 
     /**
-     * 通过名字在额外存储目录中找寻找一个文件
+     * 通过名字在外部存储目录中找寻找一个文件
      * @param name the name of the file to search for
      * @return File with the specified name
      */
     public File findFile(String name) {
         String nanoExtPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-        File yourDir = new File(nanoExtPath, "/");
+        File yourDir = new File(nanoExtPath, "/Nano/csv");
         for (File f : yourDir.listFiles()) {
             if (f.isFile()) {
                 String fileName = f.getName();

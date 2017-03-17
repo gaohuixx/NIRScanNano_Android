@@ -243,8 +243,10 @@ public class ScanListActivity extends BaseActivity {
             csvFiles.add(filename);
         }
 
-        String nanoExtPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+        String nanoExtPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/csv";
         File yourDir = new File(nanoExtPath, "/");//从根目录中查找
+        if(!yourDir.exists())
+            yourDir.mkdirs();
         for (File f : yourDir.listFiles()) {
             if (f.isFile()) {
                 String fileName = f.getName();
@@ -262,8 +264,11 @@ public class ScanListActivity extends BaseActivity {
      * @param name 要删除文件的名字
      */
     public void removeFile(String name) {
-        String nanoExtPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+        //此时获取到的nanoExtPath==“/storage/emulated/0”
+        String nanoExtPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/csv";
         File yourDir = new File(nanoExtPath, "/");
+        if(!yourDir.exists())
+            yourDir.mkdirs();
         for (File f : yourDir.listFiles()) {
             if (f.isFile()) {
                 String fileName = f.getName();

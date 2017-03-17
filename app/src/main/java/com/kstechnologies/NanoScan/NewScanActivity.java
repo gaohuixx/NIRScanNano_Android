@@ -51,6 +51,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -820,6 +821,7 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
+     * 把扫描数据写到CSV 文件中
      * Write scan data to CSV file
      * @param currentTime the current time to save
      * @param scanResults the {@link KSTNanoSDK.ScanResults} structure to save
@@ -833,7 +835,7 @@ public class NewScanActivity extends BaseActivity {
         }
 
         if (saveOS) {
-            String csvOS = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + prefix + currentTime + ".csv";
+            String csvOS = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/csv/" + prefix + currentTime + ".csv";
 
             CSVWriter writer;
             try {
@@ -878,7 +880,10 @@ public class NewScanActivity extends BaseActivity {
         }
 
         if (saveOS) {
-            String csv = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + prefix + currentTime + ".dict";
+            String csv = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/dict/" + prefix + currentTime + ".dict";
+            File file = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/dict");
+            if(!file.exists())
+                file.mkdirs();
 
             CSVWriter writer;
             try {

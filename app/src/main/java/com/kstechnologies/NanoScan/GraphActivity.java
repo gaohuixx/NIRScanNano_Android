@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gaohui.utils.ScanListDictionaryUtil;
+import com.gaohui.utils.ThemeManageUtil;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -234,7 +235,7 @@ public class GraphActivity extends BaseActivity {
             mWavelengthFloat.add(fWavelength);
 
             }catch (NumberFormatException e){
-                Toast.makeText(GraphActivity.this, "Error parsing float value", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GraphActivity.this, "浮点值解析错误", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -288,10 +289,6 @@ public class GraphActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 
     //设置菜单
     @Override
@@ -655,6 +652,8 @@ public class GraphActivity extends BaseActivity {
      */
     private void setData(LineChart mChart, ArrayList<String> xValues, ArrayList<Entry> yValues, ChartType type) {
 
+        int themeColor = ThemeManageUtil.getCurrentThemeColor();
+
         if (type == ChartType.REFLECTANCE) {
             // create a dataset and give it a type
             LineDataSet set1 = new LineDataSet(yValues, fileName);
@@ -662,14 +661,17 @@ public class GraphActivity extends BaseActivity {
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.RED);
+//            set1.setColor(Color.BLACK);
+            set1.setColor(themeColor);
+//            set1.setCircleColor(Color.RED);
+            set1.setCircleColor(themeColor);//不能写成0xffc107，前面两位是透明度，00代表全透明，ff代表不透明
             set1.setLineWidth(1f);
             set1.setCircleSize(3f);
             set1.setDrawCircleHole(true);
             set1.setValueTextSize(9f);
             set1.setFillAlpha(65);
-            set1.setFillColor(Color.RED);
+//            set1.setFillColor(Color.RED);
+            set1.setFillColor(themeColor);
             set1.setDrawFilled(true);
 
             ArrayList<LineDataSet> dataSets = new ArrayList<>();
@@ -689,14 +691,14 @@ public class GraphActivity extends BaseActivity {
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.GREEN);
+            set1.setColor(themeColor);
+            set1.setCircleColor(themeColor);
             set1.setLineWidth(1f);
             set1.setCircleSize(3f);
             set1.setDrawCircleHole(true);
             set1.setValueTextSize(9f);
             set1.setFillAlpha(65);
-            set1.setFillColor(Color.GREEN);
+            set1.setFillColor(themeColor);
             set1.setDrawFilled(true);
 
             ArrayList<LineDataSet> dataSets = new ArrayList<>();
@@ -716,14 +718,14 @@ public class GraphActivity extends BaseActivity {
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLUE);
+            set1.setColor(themeColor);
+            set1.setCircleColor(themeColor);
             set1.setLineWidth(1f);
             set1.setCircleSize(3f);
             set1.setDrawCircleHole(true);
             set1.setValueTextSize(9f);
             set1.setFillAlpha(65);
-            set1.setFillColor(Color.BLUE);
+            set1.setFillColor(themeColor);
             set1.setDrawFilled(true);
 
             ArrayList<LineDataSet> dataSets = new ArrayList<>();
@@ -743,14 +745,14 @@ public class GraphActivity extends BaseActivity {
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
+            set1.setColor(themeColor);
+            set1.setCircleColor(themeColor);
             set1.setLineWidth(1f);
             set1.setCircleSize(3f);
             set1.setDrawCircleHole(true);
             set1.setValueTextSize(9f);
             set1.setFillAlpha(65);
-            set1.setFillColor(Color.BLACK);
+            set1.setFillColor(themeColor);
             set1.setDrawFilled(true);
 
             ArrayList<LineDataSet> dataSets = new ArrayList<>();

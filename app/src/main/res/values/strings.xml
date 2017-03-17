@@ -100,7 +100,7 @@
     <string name="number_repeats">重复次数</string>
     <string name="serial_sn">Nano SN</string>
 
-    <string name="scan">扫描</string>
+    <string name="scan">开始扫描</string>
     <string name="prefix">文件名前缀</string>
     <string name="data">数据</string>
     <string name="nano">Nano</string>

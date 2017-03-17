@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.gaohui.utils.ThemeManageUtil;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -206,7 +207,7 @@ public class NewScanActivity extends BaseActivity {
             }
         });
 
-        btn_scan.setClickable(false);
+        btn_scan.setClickable(false);//此时按钮不可用，为灰色
         btn_scan.setBackgroundColor(ContextCompat.getColor(mContext, R.color.btn_unavailable));
 
         //绑定到service 。这将开启这个service，并且会调用start command 方法
@@ -544,6 +545,8 @@ public class NewScanActivity extends BaseActivity {
 
     private void setData(LineChart mChart, ArrayList<String> xValues, ArrayList<Entry> yValues, ChartType type) {
 
+        int themeColor = ThemeManageUtil.getCurrentThemeColor();
+
         //针对三种图分别都要写一段代码
         if (type == ChartType.REFLECTANCE) {
             // 创建一个数据集并给它一个类型
@@ -552,14 +555,14 @@ public class NewScanActivity extends BaseActivity {
             // 画出像 "- - - - - -" 这样的线
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.RED);
+            set1.setColor(themeColor);
+            set1.setCircleColor(themeColor);
             set1.setLineWidth(1f);
             set1.setCircleSize(3f);
             set1.setDrawCircleHole(true);
             set1.setValueTextSize(9f);
             set1.setFillAlpha(65);
-            set1.setFillColor(Color.RED);
+            set1.setFillColor(themeColor);
             set1.setDrawFilled(true);
 
             ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
@@ -579,14 +582,14 @@ public class NewScanActivity extends BaseActivity {
             // 画出像 "- - - - - -" 这样的线
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.GREEN);
+            set1.setColor(themeColor);
+            set1.setCircleColor(themeColor);
             set1.setLineWidth(1f);
             set1.setCircleSize(3f);
             set1.setDrawCircleHole(true);
             set1.setValueTextSize(9f);
             set1.setFillAlpha(65);
-            set1.setFillColor(Color.GREEN);
+            set1.setFillColor(themeColor);
             set1.setDrawFilled(true);
 
             ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
@@ -606,14 +609,14 @@ public class NewScanActivity extends BaseActivity {
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLUE);
+            set1.setColor(themeColor);
+            set1.setCircleColor(themeColor);
             set1.setLineWidth(1f);
             set1.setCircleSize(3f);
             set1.setDrawCircleHole(true);
             set1.setValueTextSize(9f);
             set1.setFillAlpha(65);
-            set1.setFillColor(Color.BLUE);
+            set1.setFillColor(themeColor);
             set1.setDrawFilled(true);
 
             ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
@@ -633,14 +636,14 @@ public class NewScanActivity extends BaseActivity {
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
             set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
+            set1.setColor(themeColor);
+            set1.setCircleColor(themeColor);
             set1.setLineWidth(1f);
             set1.setCircleSize(3f);
             set1.setDrawCircleHole(true);
             set1.setValueTextSize(9f);
             set1.setFillAlpha(65);
-            set1.setFillColor(Color.BLACK);
+            set1.setFillColor(themeColor);
             set1.setDrawFilled(true);
 
             ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
@@ -747,7 +750,7 @@ public class NewScanActivity extends BaseActivity {
             if (scanType.equals("00")) {
                 scanType = "Column 1";
             } else {
-                scanType = "Hadamard";
+                scanType = "Hadamard 1";
             }
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyhhmmss", java.util.Locale.getDefault());
@@ -1162,8 +1165,8 @@ public class NewScanActivity extends BaseActivity {
             activeConf = scanConf;
 
             barProgressDialog.dismiss();
-            btn_scan.setClickable(true);
-            btn_scan.setBackgroundColor(ContextCompat.getColor(mContext, R.color.kst_red));
+            btn_scan.setClickable(true);//此时按钮可用，设置为正常颜色
+            btn_scan.setBackgroundColor(ThemeManageUtil.getCurrentThemeColor());
             mMenu.findItem(R.id.action_config).setEnabled(true);
 
             SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, scanConf.getConfigName());

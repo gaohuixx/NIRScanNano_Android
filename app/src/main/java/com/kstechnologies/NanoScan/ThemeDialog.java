@@ -29,8 +29,8 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
         layout.findViewById(R.id.color5).setOnClickListener(this);
         layout.findViewById(R.id.color6).setOnClickListener(this);
         layout.findViewById(R.id.color7).setOnClickListener(this);
-        layout.findViewById(R.id.color10).setOnClickListener(this);
-        layout.findViewById(R.id.color11).setOnClickListener(this);
+        layout.findViewById(R.id.color8).setOnClickListener(this);
+        layout.findViewById(R.id.color9).setOnClickListener(this);
         return layout;
     }
 
@@ -71,11 +71,11 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
             case R.id.color7:
                 theme = R.style.Color7;
                 break;
-            case R.id.color10:
-                theme = R.style.Color10;
+            case R.id.color8:
+                theme = R.style.Color8;
                 break;
-            case R.id.color11:
-                theme = R.style.Color11;
+            case R.id.color9:
+                theme = R.style.Color9;
                 break;
             default:
                 theme = R.style.AppTheme;

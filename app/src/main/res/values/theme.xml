@@ -1,60 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="BlueTheme" parent="@style/BaseTheme">
-        <item name="colorPrimary">#2196F3</item>
-        <item name="colorAccent">#2196F3</item>
-        <item name="colorControlNormal">#2196F3</item>
-    </style>
-
-    <style name="IndigoTheme" parent="@style/BaseTheme">
-        <item name="colorPrimary">#3F51B5</item>
-        <item name="colorAccent">#3F51B5</item>
-        <item name="colorControlNormal">#3F51B5</item>
-    </style>
-
-    <style name="GreenTheme" parent="@style/BaseTheme">
-        <item name="colorPrimary">#4CAF50</item>
-        <item name="colorAccent">#4CAF50</item>
-        <item name="colorControlNormal">#4CAF50</item>
-    </style>
-
-    <style name="RedTheme" parent="@style/BaseTheme">
-        <item name="colorPrimary">#f44336</item>
-        <item name="colorAccent">#f44336</item>
-        <item name="colorControlNormal">#f44336</item>
-    </style>
-
-    <style name="BlueGreyTheme" parent="@style/BaseTheme">
-        <item name="colorPrimary">#607D8B</item>
-        <item name="colorAccent">#607D8B</item>
-        <item name="colorControlNormal">#607D8B</item>
-    </style>
-
-    <style name="BlackTheme" parent="@style/BaseTheme">
-        <item name="colorPrimary">#000</item>
-        <item name="colorAccent">#000</item>
-        <item name="colorControlNormal">#000</item>
-    </style>
-
-    <style name="OrangeTheme" parent="@style/BaseTheme">
-        <item name="colorPrimary">#FF9800</item>
-        <item name="colorAccent">#FF9800</item>
-        <item name="colorControlNormal">#FF9800</item>
-    </style>
-
-    <style name="PurpleTheme" parent="@style/BaseTheme">
-        <item name="colorPrimary">#9C27B0</item>
-        <item name="colorAccent">#9C27B0</item>
-        <item name="colorControlNormal">#9C27B0</item>
-    </style>
-
-    <style name="PinkTheme" parent="@style/BaseTheme">
-        <item name="colorPrimary">#E91E63</item>
-        <item name="colorAccent">#E91E63</item>
-        <item name="colorControlNormal">#E91E63</item>
-    </style>
-
     <style name="Color1" parent="@style/BaseTheme">
         <item name="colorPrimary">@color/color1_primary</item>
         <item name="colorAccent">@color/color1_primary_light</item>
@@ -97,16 +43,16 @@
         <item name="colorControlNormal">@color/color7_primary</item>
     </style>
 
-    <style name="Color10" parent="@style/BaseTheme">
-        <item name="colorPrimary">@color/color10_primary</item>
-        <item name="colorAccent">@color/color10_primary_light</item>
-        <item name="colorControlNormal">@color/color10_primary</item>
+    <style name="Color8" parent="@style/BaseTheme">
+        <item name="colorPrimary">@color/color8_primary</item>
+        <item name="colorAccent">@color/color8_primary_light</item>
+        <item name="colorControlNormal">@color/color8_primary</item>
     </style>
 
-    <style name="Color11" parent="@style/BaseTheme">
-        <item name="colorPrimary">@color/color11_primary</item>
-        <item name="colorAccent">@color/color11_primary_light</item>
-        <item name="colorControlNormal">@color/color11_primary</item>
+    <style name="Color9" parent="@style/BaseTheme">
+        <item name="colorPrimary">@color/color9_primary</item>
+        <item name="colorAccent">@color/color9_primary_light</item>
+        <item name="colorControlNormal">@color/color9_primary</item>
     </style>
 
 

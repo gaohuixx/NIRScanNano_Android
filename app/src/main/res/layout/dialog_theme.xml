@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Blue"
+                android:text="少女粉"
                 android:textColor="@color/color1_primary_light" />
 
         </android.support.v7.widget.CardView>
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Indigo"
+                android:text="姨妈红"
                 android:textColor="@color/color2_primary_light" />
 
         </android.support.v7.widget.CardView>
@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Green"
+                android:text="咸蛋黄"
                 android:textColor="@color/color3_primary_light" />
 
         </android.support.v7.widget.CardView>
@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Red"
+                android:text="早苗绿"
                 android:textColor="@color/color4_primary_light" />
 
         </android.support.v7.widget.CardView>
@@ -113,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="BlueGrey"
+                android:text="胖次蓝"
                 android:textColor="@color/color5_primary_light" />
 
         </android.support.v7.widget.CardView>
@@ -132,7 +132,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Black"
+                android:text="基佬紫"
                 android:textColor="@color/color6_primary_light" />
 
         </android.support.v7.widget.CardView>
@@ -159,46 +159,46 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Purple"
+                android:text="神秘黑"
                 android:textColor="@color/color7_primary_light" />
 
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/color10"
+            android:id="@+id/color8"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/theme_dialog_margin"
             android:layout_weight="1"
             android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/color10_primary">
+            app:cardBackgroundColor="@color/color8_primary">
 
             <TextView
                 style="@style/ThemeDialogText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Orange"
-                android:textColor="@color/color10_primary_light" />
+                android:text="深沉褐"
+                android:textColor="@color/color8_primary_light" />
 
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/color11"
+            android:id="@+id/color9"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/theme_dialog_margin"
             android:layout_weight="1"
             android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/color11_primary">
+            app:cardBackgroundColor="@color/color9_primary">
 
             <TextView
                 style="@style/ThemeDialogText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="Pink"
-                android:textColor="@color/color11_primary_light" />
+                android:text="淡雅灰"
+                android:textColor="@color/color9_primary_light" />
 
         </android.support.v7.widget.CardView>
     </LinearLayout>

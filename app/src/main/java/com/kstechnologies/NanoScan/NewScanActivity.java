@@ -753,7 +753,8 @@ public class NewScanActivity extends BaseActivity {
                 scanType = "Hadamard 1";
             }
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyhhmmss", java.util.Locale.getDefault());
+            //yyMMddHHmmss
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
             String ts = simpleDateFormat.format(new Date());
 
             ActionBar ab = getSupportActionBar();

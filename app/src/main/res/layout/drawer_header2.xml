@@ -14,7 +14,7 @@
         android:gravity="center"
         android:text="NIRScan\nNano"
         android:textAppearance="?android:textAppearanceLarge"
-        android:textColor="#d4dce2"
+        android:textColor="?attr/colorAccent"
         android:textSize="40dp"
         android:textStyle="bold|italic" />
 

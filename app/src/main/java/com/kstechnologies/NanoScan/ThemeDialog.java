@@ -22,15 +22,15 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
         this.getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         final View layout = inflater.inflate(R.layout.dialog_theme, container, false);
-        layout.findViewById(R.id.blue_theme).setOnClickListener(this);
-        layout.findViewById(R.id.indigo_theme).setOnClickListener(this);
-        layout.findViewById(R.id.green_theme).setOnClickListener(this);
-        layout.findViewById(R.id.red_theme).setOnClickListener(this);
-        layout.findViewById(R.id.blue_grey_theme).setOnClickListener(this);
-        layout.findViewById(R.id.black_theme).setOnClickListener(this);
-        layout.findViewById(R.id.purple_theme).setOnClickListener(this);
-        layout.findViewById(R.id.orange_theme).setOnClickListener(this);
-        layout.findViewById(R.id.pink_theme).setOnClickListener(this);
+        layout.findViewById(R.id.color1).setOnClickListener(this);
+        layout.findViewById(R.id.color2).setOnClickListener(this);
+        layout.findViewById(R.id.color3).setOnClickListener(this);
+        layout.findViewById(R.id.color4).setOnClickListener(this);
+        layout.findViewById(R.id.color5).setOnClickListener(this);
+        layout.findViewById(R.id.color6).setOnClickListener(this);
+        layout.findViewById(R.id.color7).setOnClickListener(this);
+        layout.findViewById(R.id.color10).setOnClickListener(this);
+        layout.findViewById(R.id.color11).setOnClickListener(this);
         return layout;
     }
 
@@ -50,32 +50,32 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
 
         int theme;
         switch (v.getId()) {
-            case R.id.blue_theme:
-                theme = R.style.BlueTheme;
+            case R.id.color1:
+                theme = R.style.Color1;
                 break;
-            case R.id.indigo_theme:
-                theme = R.style.IndigoTheme;
+            case R.id.color2:
+                theme = R.style.Color2;
                 break;
-            case R.id.green_theme:
-                theme = R.style.GreenTheme;
+            case R.id.color3:
+                theme = R.style.Color3;
                 break;
-            case R.id.red_theme:
-                theme = R.style.RedTheme;
+            case R.id.color4:
+                theme = R.style.Color4;
                 break;
-            case R.id.blue_grey_theme:
-                theme = R.style.BlueGreyTheme;
+            case R.id.color5:
+                theme = R.style.Color5;
                 break;
-            case R.id.black_theme:
-                theme = R.style.BlackTheme;
+            case R.id.color6:
+                theme = R.style.Color6;
                 break;
-            case R.id.orange_theme:
-                theme = R.style.OrangeTheme;
+            case R.id.color7:
+                theme = R.style.Color7;
                 break;
-            case R.id.purple_theme:
-                theme = R.style.PurpleTheme;
+            case R.id.color10:
+                theme = R.style.Color10;
                 break;
-            case R.id.pink_theme:
-                theme = R.style.PinkTheme;
+            case R.id.color11:
+                theme = R.style.Color11;
                 break;
             default:
                 theme = R.style.AppTheme;

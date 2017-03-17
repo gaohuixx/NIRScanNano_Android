@@ -9,7 +9,7 @@
 
     <style name="AppTheme" parent="@style/BaseTheme">
         <item name="colorPrimary">#07afaf</item>
-        <item name="colorAccent">#07afaf</item>
+        <item name="colorAccent">#26cccc</item>
         <item name="colorControlNormal">#07afaf</item>
     </style>
 

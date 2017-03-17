@@ -54,9 +54,50 @@
     <color name="orange_primary_light">#FFCC80</color>
     <color name="orange_accent">#FF9800</color>
 
-
     <color name="pink_primary">#E91E63</color>
     <color name="pink_primary_dark">#C2185B</color>
     <color name="pink_primary_light">#F48FB1</color>
     <color name="pink_accent">#E91E63</color>
+
+
+    <color name="color1_primary">#fb7299</color><!--bilibili粉-->
+    <color name="color1_primary_light">#f79db7</color>
+
+    <color name="color2_primary">#f44336</color><!--姨妈红-->
+    <color name="color2_primary_light">#f47f76</color>
+
+    <color name="color3_primary">#ffc107</color>
+    <color name="color3_primary_light">#fcd769</color>
+
+    <color name="color4_primary">#8bc34a</color>
+    <color name="color4_primary_light">#afd286</color>
+
+    <color name="color5_primary">#2194f0</color>
+    <color name="color5_primary_light">#7fc1f5</color>
+
+    <color name="color6_primary">#9c27b0</color>
+    <color name="color6_primary_light">#a56baf</color>
+
+    <color name="color7_primary">#2d2d2d</color>
+    <color name="color7_primary_light">#717171</color>
+
+    <color name="color8_primary">#f2b344</color>
+    <color name="color8_primary_light">#efc67f</color>
+
+    <color name="color9_primary">#44c967</color>
+    <color name="color9_primary_light">#6cd488</color>
+
+    <color name="color10_primary">#af967b</color>
+    <color name="color10_primary_light">#d6bba1</color>
+
+    <color name="color11_primary">#8091b0</color>
+    <color name="color11_primary_light">#a2b0c9</color>
+
+    <color name="color12_primary">#f2a15b</color>
+    <color name="color12_primary_light">#2d2d2d</color>
+
+
+
+
+
 </resources>

@@ -82,8 +82,8 @@
     <string-array name="configure_options">
         <item>设备信息</item>
         <item>设备状态</item>
-        <item>扫描配置</item>
-        <item>保存扫描数据</item>
+        <item>已保存的扫描配置</item>
+        <item>Nano中保存的扫描数据</item>
     </string-array>
 
     <string name="range_start_value">%1$d nm</string>
@@ -122,10 +122,10 @@
     <string name="temp_value_f">%1$s&#x2109;</string>
     <string name="humid_value">%1$s%%RH</string>
 
-    <string name="stored_configurations">保存配置</string>
-    <string name="reading_configurations">读取扫描配置中…</string>
-    <string name="stored_scan_data">保存扫描数据</string>
-    <string name="reading_sd_card">读取SD卡中…</string>
+    <string name="stored_configurations">已保存的扫描配置</string>
+    <string name="reading_configurations">读取扫描配置中...</string>
+    <string name="stored_scan_data">Nano中保存的扫描数据</string>
+    <string name="reading_sd_card">正在读取Nano中的SD卡...</string>
 
     <string name="time_format_at">\'at\'</string>
     <string name="new_scan">新扫描</string>
@@ -139,10 +139,10 @@
     <string name="send_mail">"分享"</string>
     <string name="no_email_clients">您没有安装邮件客户端</string>
     <string name="update_thresholds">更新阈值</string>
-    <string name="scanning">扫描中…</string>
+    <string name="scanning">扫描中...</string>
 
-    <string name="dl_ref_cal">下载引用计算</string>
-    <string name="dl_cal_matrix">下载计算矩阵</string>
+    <string name="dl_ref_cal">下载校准系数数据</string>
+    <string name="dl_cal_matrix">下载校准矩阵数据</string>
     <string name="select_nano">选择Nano</string>
     <string name="nano_confirmation_title">您确定么?</string>
     <string name="nano_confirmation_msg">您确定想要设置MAC地址为：%1$s 的Nano为您的主设备么?</string>

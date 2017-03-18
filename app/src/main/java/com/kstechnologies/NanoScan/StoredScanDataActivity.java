@@ -86,7 +86,7 @@ public class StoredScanDataActivity extends BaseActivity {
                 storedScanSize = intent.getIntExtra(KSTNanoSDK.EXTRA_INDEX_SIZE, 0);
                 if (storedScanSize > 0) {
                     tv_no_scans.setVisibility(View.GONE);
-                    barProgressDialog = new ProgressDialog(StoredScanDataActivity.this);
+                    barProgressDialog = new ProgressDialog(StoredScanDataActivity.this, R.style.DialogTheme);
 
                     barProgressDialog.setTitle(getString(R.string.reading_sd_card));
                     barProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

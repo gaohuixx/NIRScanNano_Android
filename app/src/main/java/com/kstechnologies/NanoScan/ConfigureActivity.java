@@ -21,7 +21,7 @@ import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
  * 1.设备信息
  * 2.设备状态
  * 3.扫描配置
- * 4.保存扫描数据
+ * 4.Nano中保存的扫描数据
  *
  * @author collinmast,gaohui
  */

@@ -167,7 +167,7 @@ public class ScanListActivity extends BaseActivity {
      * @param position 删除第几个
      */
     private void confirmDialog(final int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.DialogTheme);
         builder.setMessage("确认删除这条记录吗？");
         builder.setTitle("警告");
         builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {

@@ -747,10 +747,10 @@ public class NewScanActivity extends BaseActivity {
             mViewPager.setAdapter(mViewPager.getAdapter());
             mViewPager.invalidate();
 
-            if (scanType.equals("00")) {
-                scanType = "Column 1";
+            if (scanType.equals("00")) { //只有两种扫描类型，这个和配置名称不一样
+                scanType = "Column";
             } else {
-                scanType = "Hadamard 1";
+                scanType = "Hadamard";
             }
 
             //yyMMddHHmmss
@@ -1068,7 +1068,7 @@ public class NewScanActivity extends BaseActivity {
      * 这个对话框告诉用户没有Nano被连接上。当用户选择ok 的时候这个activity 将结束
      */
     private void notConnectedDialog() {
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext, R.style.DialogTheme);
         alertDialogBuilder.setTitle(mContext.getResources().getString(R.string.not_connected_title));
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setMessage(mContext.getResources().getString(R.string.not_connected_message));
@@ -1098,7 +1098,7 @@ public class NewScanActivity extends BaseActivity {
             Boolean size = intent.getBooleanExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE_PACKET, false);
             if (size) {
                 calProgress.setVisibility(View.INVISIBLE);
-                barProgressDialog = new ProgressDialog(NewScanActivity.this);
+                barProgressDialog = new ProgressDialog(NewScanActivity.this, R.style.DialogTheme);
 
                 barProgressDialog.setTitle(getString(R.string.dl_ref_cal));
                 barProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -1125,7 +1125,7 @@ public class NewScanActivity extends BaseActivity {
             Boolean size = intent.getBooleanExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE_PACKET, false);
             if (size) {
                 barProgressDialog.dismiss();
-                barProgressDialog = new ProgressDialog(NewScanActivity.this);
+                barProgressDialog = new ProgressDialog(NewScanActivity.this, R.style.DialogTheme);
 
                 barProgressDialog.setTitle(getString(R.string.dl_cal_matrix));
                 barProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);

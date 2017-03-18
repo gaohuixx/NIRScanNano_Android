@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import com.gaohui.utils.ThemeManageUtil;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 import com.kstechnologies.nirscannanolibrary.SettingsManager;
 
@@ -73,7 +74,7 @@ public class ScanConfActivity extends BaseActivity {
             public void onReceive(Context context, Intent intent) {
                 storedConfSize = intent.getIntExtra(KSTNanoSDK.EXTRA_CONF_SIZE, 0);
                 if (storedConfSize > 0) {
-                    barProgressDialog = new ProgressDialog(ScanConfActivity.this);
+                    barProgressDialog = new ProgressDialog(ScanConfActivity.this, R.style.DialogTheme);
 
                     barProgressDialog.setTitle(getString(R.string.reading_configurations));
                     barProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
@@ -221,7 +222,7 @@ public class ScanConfActivity extends BaseActivity {
                 viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
                 viewHolder.serial.setText(config.getScanConfigSerialNumber());
                 if (config.isActive()) {
-                    viewHolder.scanType.setTextColor(ContextCompat.getColor(mContext, R.color.active_conf));
+                    viewHolder.scanType.setTextColor(ThemeManageUtil.getCurrentThemeColor());
                     SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, config.getConfigName());
                 } else {
                     viewHolder.scanType.setTextColor(ContextCompat.getColor(mContext, R.color.black));

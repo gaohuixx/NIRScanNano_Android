@@ -1,21 +1,27 @@
 package com.kstechnologies.NanoScan;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,8 +52,10 @@ public class ScanListActivity extends BaseActivity {
     private static Context mContext;
     private DrawerLayout drawerLayout;
     private SwipeMenuListView lv_csv_files;
+    private NavigationView navigationView;
     private SwipeMenuCreator unknownCreator = createMenu();
     private BluetoothAdapter bluetoothAdapter;//本地蓝牙适配器
+    private boolean bluetoothState = false;//蓝牙状态
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,41 +73,11 @@ public class ScanListActivity extends BaseActivity {
         actionBar.setTitle("NIRScan Nano"); //4. 设置标题
 
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.action_scan:
-                        Intent graphIntent = new Intent(mContext, NewScanActivity.class);
-                        startActivity(graphIntent); //跳转到扫描页面
-                        break;
-                    case R.id.action_bluetooth:
-                        openBluetooth(); //开启蓝牙
-                        break;
-                    case R.id.action_settings:
-                        Intent settingsIntent = new Intent(mContext, SettingsActivity.class);
-                        startActivity(settingsIntent); //跳转到设置页面
-                        break;
-                    case R.id.action_theme:
-                        ThemeDialog dialog = new ThemeDialog(); //弹出主题选择对话框
-                        dialog.show(getSupportFragmentManager(), "theme");
-                        break;
-                    case R.id.action_more:
-                        Intent infoIntent = new Intent(mContext, InfoActivity.class);
-                        startActivity(infoIntent); //跳转到信息界面
-                        break;
-                    case R.id.action_about:
-                        Intent aboutIntent = new Intent(mContext, AboutActivity.class);
-                        startActivity(aboutIntent); //跳转到关于界面
-                        break;
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-                }
-
-                drawerLayout.closeDrawer(Gravity.LEFT); // 关闭左边抽屉栏
-                return true;
-            }
-        });
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        mContext.registerReceiver(bluetoothStateChangeReceiver, filter);
 
     }
 
@@ -110,6 +88,9 @@ public class ScanListActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
+        bluetoothState = bluetoothAdapter.isEnabled();//刷新蓝牙状态
+        refreshNavigationListen();//刷新导航栏的监听
+        refreshBluetoothItemStyle();//刷新蓝牙选项样式
 
         csvFiles.clear();
 
@@ -230,6 +211,16 @@ public class ScanListActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        try {
+            mContext.unregisterReceiver(bluetoothStateChangeReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
+    }
+
     /**
      * 用raw 目录下的文件和已经保存的CSV 文件生成listview
      */
@@ -327,13 +318,114 @@ public class ScanListActivity extends BaseActivity {
 
         if (!bluetoothAdapter.isEnabled()) {
             boolean state = bluetoothAdapter.enable();  //打开蓝牙，需要BLUETOOTH_ADMIN权限
-            if(state)
+            if(state){
                 Toast.makeText(mContext, "开启蓝牙成功", Toast.LENGTH_SHORT).show();
+                bluetoothState = true;
+            }
             else
                 Toast.makeText(mContext, "开启蓝牙失败", Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(mContext, "蓝牙已开启", Toast.LENGTH_SHORT).show();
         }
-
     }
+
+    /**
+     * 这个方法用来关闭蓝牙
+     */
+    private void closeBluetooth() {
+
+        if (bluetoothAdapter == null) {
+            Toast.makeText(this, "本地蓝牙不可用", Toast.LENGTH_SHORT).show();
+        }
+
+        if (bluetoothAdapter.isEnabled()) {
+            boolean state = bluetoothAdapter.disable();  //打开蓝牙，需要BLUETOOTH_ADMIN权限
+            if(state){
+                Toast.makeText(mContext, "关闭蓝牙成功", Toast.LENGTH_SHORT).show();
+                bluetoothState = false;
+            }
+
+            else
+                Toast.makeText(mContext, "关闭蓝牙失败", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(mContext, "蓝牙已关闭", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * 这个方法用来刷新蓝牙按钮的监听
+     */
+    private void refreshNavigationListen(){
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.action_scan:
+                        Intent graphIntent = new Intent(mContext, NewScanActivity.class);
+                        startActivity(graphIntent); //跳转到扫描页面
+                        break;
+                    case R.id.action_bluetooth:
+                        if (bluetoothState)
+                            closeBluetooth(); //关闭蓝牙
+                        else
+                            openBluetooth(); //开启蓝牙
+                        break;
+                    case R.id.action_settings:
+                        Intent settingsIntent = new Intent(mContext, SettingsActivity.class);
+                        startActivity(settingsIntent); //跳转到设置页面
+                        break;
+                    case R.id.action_theme:
+                        ThemeDialog dialog = new ThemeDialog(); //弹出主题选择对话框
+                        dialog.show(getSupportFragmentManager(), "theme");
+                        break;
+                    case R.id.action_more:
+                        Intent infoIntent = new Intent(mContext, InfoActivity.class);
+                        startActivity(infoIntent); //跳转到信息界面
+                        break;
+                    case R.id.action_about:
+                        Intent aboutIntent = new Intent(mContext, AboutActivity.class);
+                        startActivity(aboutIntent); //跳转到关于界面
+                        break;
+
+                }
+
+                drawerLayout.closeDrawer(Gravity.LEFT); // 关闭左边抽屉栏
+                return true;
+            }
+        });
+    }
+
+
+    /**
+     * 这个方法用来刷新蓝牙按钮的样式
+     */
+    private void refreshBluetoothItemStyle(){
+        Menu menu = navigationView.getMenu();
+        MenuItem bluetoothItem = menu.findItem(R.id.action_bluetooth);
+        if (bluetoothState){
+            bluetoothItem.setTitle("关闭蓝牙");
+            bluetoothItem.setIcon(R.drawable.ic_bluetooth_opened);
+        }
+        else{
+            bluetoothItem.setTitle("开启蓝牙");
+            bluetoothItem.setIcon(R.drawable.ic_bluetooth_closed);
+        }
+    }
+
+
+    private BroadcastReceiver bluetoothStateChangeReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+            if (blueState == BluetoothAdapter.STATE_ON || blueState == BluetoothAdapter.STATE_OFF){
+                bluetoothState = bluetoothAdapter.isEnabled();//刷新蓝牙状态
+                refreshNavigationListen();//刷新导航栏的监听
+                refreshBluetoothItemStyle();//刷新蓝牙选项样式
+            }
+        }
+    };
+
+
 }

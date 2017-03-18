@@ -11,7 +11,7 @@
         <menu>
             <item
                 android:id="@+id/action_bluetooth"
-                android:icon="@drawable/ic_bluetooth"
+                android:icon="@drawable/ic_bluetooth_closed"
                 android:title="开启蓝牙" />
             <item
                 android:id="@+id/action_settings"

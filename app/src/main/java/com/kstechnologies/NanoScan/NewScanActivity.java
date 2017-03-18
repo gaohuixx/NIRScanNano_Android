@@ -893,7 +893,7 @@ public class NewScanActivity extends BaseActivity {
             try {
                 writer = new CSVWriter(new FileWriter(csv));
                 List<String[]> data = new ArrayList<String[]>();
-                data.add(new String[]{"方法", scanType});
+                data.add(new String[]{"测量方法", scanType});
                 data.add(new String[]{"时间戳", timeStamp});
                 data.add(new String[]{"光谱范围起点 (nm)", spectStart});
                 data.add(new String[]{"光谱范围终点 (nm)", spectEnd});

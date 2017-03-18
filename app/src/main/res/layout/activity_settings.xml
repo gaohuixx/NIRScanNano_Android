@@ -81,8 +81,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:textOff="Wavenumber"
-                android:textOn="Wavelength" />
+                android:textOff="波数"
+                android:textOn="波长" />
 
         </RelativeLayout>
 

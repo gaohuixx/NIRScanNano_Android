@@ -31,8 +31,8 @@
         <item>http://e2e.ti.com/support/dlp__mems_micro-electro-mechanical_systems/f/983</item>
     </string-array>
 
-    <string name="temperature">温度</string>
-    <string name="spatial_freq">空间频率</string>
+    <string name="temperature">温度显示格式</string>
+    <string name="spatial_freq">光谱横坐标显示格式</string>
     <string name="set_nano">设置我的Nano</string>
     <string name="clear_nano">清除我的Nano</string>
     <string name="go">设置!</string>

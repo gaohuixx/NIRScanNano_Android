@@ -33,6 +33,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.renderer.XAxisRenderer;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 
 import java.io.BufferedReader;
@@ -120,10 +121,10 @@ public class GraphActivity extends BaseActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs); //获取TabLayout
         tabLayout.setupWithViewPager(mViewPager); //将TabLayout 和ViewPager 关联
 
-        mXValues = new ArrayList<>();
-        ArrayList<String> mIntensityString = new ArrayList<>();
-        ArrayList<String> mAbsorbanceString = new ArrayList<>();
-        ArrayList<String> mReflectanceString = new ArrayList<>();
+        mXValues = new ArrayList<>(); //横坐标数组，用来保存从csv文件中读取出来的数据
+        ArrayList<String> mIntensityString = new ArrayList<>(); //强度数组，用来保存从csv文件中读取出来的数据
+        ArrayList<String> mAbsorbanceString = new ArrayList<>(); //吸收率数组，用来保存从csv文件中读取出来的数据
+        ArrayList<String> mReflectanceString = new ArrayList<>(); //反射率数组，用来保存从csv文件中读取出来的数据
 
         mIntensityFloat = new ArrayList<>();
         mAbsorbanceFloat = new ArrayList<>();
@@ -163,7 +164,7 @@ public class GraphActivity extends BaseActivity {
                         if (RowData[0].equals("Wavelength")) {
                             mXValues.add(RowData[0]);
                         } else {
-                            mXValues.add(getSpatialFreq(RowData[0]));
+                            mXValues.add(getSpatialFreq(RowData[0]));//这块是用来将频率进行转换的
                         }
                     }
                     if (RowData[1].equals("(null)")) {
@@ -200,6 +201,8 @@ public class GraphActivity extends BaseActivity {
                 String line;
                 while ((line = dictReader.readLine()) != null) {
                     String[] RowData = line.split(",");
+                    RowData[0] = RowData[0].substring(1, RowData[0].length()-1);
+                    RowData[1] = RowData[1].substring(1, RowData[1].length()-1);
                     graphDict.add(new KSTNanoSDK.ScanListManager(RowData[0], RowData[1]));
                 }
             } catch (IOException ex) {
@@ -240,8 +243,8 @@ public class GraphActivity extends BaseActivity {
             }
         }
 
-        //下面这一堆代码都是用来获取最大最小值的
-        float minWavelength = mWavelengthFloat.get(0);
+        //下面这一堆代码都是用来获取最大最小值的，没用啊
+/*        float minWavelength = mWavelengthFloat.get(0);
         float maxWavelength = mWavelengthFloat.get(0);
 
         for (Float f : mWavelengthFloat) {
@@ -271,18 +274,18 @@ public class GraphActivity extends BaseActivity {
         for (Entry e : mIntensityFloat) {
             if (e.getVal() < minIntensity) minIntensity = e.getVal();
             if (e.getVal() > maxIntensity) maxIntensity = e.getVal();
-        }
+        }*/
 
         //注意：对于那些默认的数据，它是通过 ScanListDictionary 这个类来获取“详情”数据，数据是写死的！
         //这里就是获取每个文件对应的 “详情” 数据，如：aspirin
 //        ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionary(this).getScanList(fileName);
         ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionaryUtil().getScanList(fileName);
         ScanListAdapter mAdapter;
-        if (graphList != null) {
+        if (graphList != null) {    //这是默认数据的列表
             mAdapter = new ScanListAdapter(this, R.layout.row_graph_list_item, graphList);
 
             graphListView.setAdapter(mAdapter);
-        } else if (graphDict != null) {
+        } else if (graphDict != null) {     //自己测量数据的列表，graphDict 是从文件中读取出来的
             mAdapter = new ScanListAdapter(this, R.layout.row_graph_list_item, graphDict);
             graphListView.setAdapter(mAdapter);
         }
@@ -369,6 +372,7 @@ public class GraphActivity extends BaseActivity {
     /**
      *
      * 为下方的listview 自定义一个adapter
+     * 这个List 每一个元素就是一个KSTNanoSDK.ScanListManager
      */
     public class ScanListAdapter extends ArrayAdapter<KSTNanoSDK.ScanListManager> {
         private ViewHolder viewHolder;
@@ -500,6 +504,7 @@ public class GraphActivity extends BaseActivity {
 
                 // modify the legend ...
                 l.setForm(Legend.LegendForm.LINE);
+
                 return layout;
             } else if (customPagerEnum.getLayoutResId() == R.layout.page_graph_absorbance) {
 
@@ -645,10 +650,10 @@ public class GraphActivity extends BaseActivity {
 
     /**
      * 为一个指定的图表设置X 轴，Y 轴数据
-     * @param mChart the chart to update the data for
-     * @param xValues the X -axis values to be plotted
-     * @param yValues the Y-axis values to be plotted
-     * @param type the type of chart to be displayed {@link com.kstechnologies.NanoScan.GraphActivity.ChartType}
+     * @param mChart 为那个图标更新数据
+     * @param xValues 横坐标是String类型
+     * @param yValues 纵坐标是数字类型
+     * @param type 要显示的图表类型 {@link com.kstechnologies.NanoScan.GraphActivity.ChartType}
      */
     private void setData(LineChart mChart, ArrayList<String> xValues, ArrayList<Entry> yValues, ChartType type) {
 
@@ -678,7 +683,7 @@ public class GraphActivity extends BaseActivity {
             dataSets.add(set1); // add the datasets
 
             // create a data object with the datasets
-            LineData data = new LineData(xValues, dataSets);
+            LineData data = new LineData(xValues, dataSets);//设置横坐标数据值，和纵坐标及数据样式
 
             // set data
             mChart.setData(data);
@@ -797,17 +802,17 @@ public class GraphActivity extends BaseActivity {
         return null;
     }
 
-    /** Function return the specified frequency in units of frequency or wavenumber
+    /** 这个函数用来根据设置来返回波长或者波数
      *
      * @param freq The frequency to convert
      * @return string representing either frequency or wavenumber
      */
     private String getSpatialFreq(String freq) {
-        Float floatFreq = Float.parseFloat(freq);
+        Float floatFreq = Float.parseFloat(freq); //现把它转换成数字，然后再根据设置进行相关转换
         if (SettingsManager.getBooleanPref(mContext, SettingsManager.SharedPreferencesKeys.spatialFreq, SettingsManager.WAVELENGTH)) {
-            return String.format("%.02f", floatFreq);
+            return String.format("%.02f", floatFreq); //波长，单位nm
         } else {
-            return String.format("%.02f", (10000000 / floatFreq));
+            return String.format("%.02f", (10000000 / floatFreq)); //波数，单位 cm-1
         }
     }
 

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 /**
  * 为了将下面的列表详情页汉化，我重写了一个类
+ *
+ * @author gaohui
  */
 
 public class ScanListDictionaryUtil {

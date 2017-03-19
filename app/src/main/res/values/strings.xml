@@ -141,8 +141,8 @@
     <string name="update_thresholds">更新阈值</string>
     <string name="scanning">扫描中...</string>
 
-    <string name="dl_ref_cal">下载校准系数数据</string>
-    <string name="dl_cal_matrix">下载校准矩阵数据</string>
+    <string name="dl_ref_cal">下载校准系数</string>
+    <string name="dl_cal_matrix">下载校准矩阵</string>
     <string name="select_nano">选择Nano</string>
     <string name="nano_confirmation_title">您确定么?</string>
     <string name="nano_confirmation_msg">您确定想要设置MAC地址为：%1$s 的Nano为您的主设备么?</string>

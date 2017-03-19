@@ -26,6 +26,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.LoginFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,6 +43,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.gaohui.utils.ThemeManageUtil;
+import com.gaohui.utils.TimeUtil;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -81,7 +83,7 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
 public class NewScanActivity extends BaseActivity {
 
     private static Context mContext;
-    private static final String TAG = "__BT_SERVICE";
+    private static final String TAG = "gaohui";
 
     private ProgressDialog barProgressDialog;
 
@@ -692,6 +694,9 @@ public class NewScanActivity extends BaseActivity {
             * byte6: uint8_t     second; //< seconds after the minute [0-60]
             */
             String scanDate = intent.getStringExtra(KSTNanoSDK.EXTRA_SCAN_DATE);
+            Log.i(TAG, scanDate);
+            scanDate = TimeUtil.convertTime(scanDate);
+            Log.i(TAG, scanDate);
 
             KSTNanoSDK.ReferenceCalibration ref = KSTNanoSDK.ReferenceCalibration.currentCalibration.get(0);
             results = KSTNanoSDK.KSTNanoSDK_dlpSpecScanInterpReference(scanData, ref.getRefCalCoefficients(), ref.getRefCalMatrix());
@@ -747,7 +752,7 @@ public class NewScanActivity extends BaseActivity {
             mViewPager.setAdapter(mViewPager.getAdapter());
             mViewPager.invalidate();
 
-            if (scanType.equals("00")) { //只有两种扫描类型，这个和配置名称不一样
+            if (scanType.equals("00")) { //只有两种扫描类型，这个和配置名称不是一回事
                 scanType = "Column";
             } else {
                 scanType = "Hadamard";
@@ -755,7 +760,7 @@ public class NewScanActivity extends BaseActivity {
 
             //yyMMddHHmmss
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
-            String ts = simpleDateFormat.format(new Date());
+            String ts = simpleDateFormat.format(new Date());//这个是文件名中的显示
 
             ActionBar ab = getSupportActionBar();
             if (ab != null) {
@@ -771,7 +776,7 @@ public class NewScanActivity extends BaseActivity {
             boolean saveOS = btn_os.isChecked();
             boolean continuous = btn_continuous.isChecked();
 
-            writeCSV(ts, results, saveOS);
+            writeCSV(ts, results, saveOS);//ts 是170318200720，这个不用变，
             writeCSVDict(ts, scanType, scanDate, String.valueOf(minWavelength), String.valueOf(maxWavelength), String.valueOf(results.getLength()), String.valueOf(results.getLength()), "1", "2.00", saveOS);
 
             SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.prefix, filePrefix.getText().toString());
@@ -894,7 +899,7 @@ public class NewScanActivity extends BaseActivity {
                 writer = new CSVWriter(new FileWriter(csv));
                 List<String[]> data = new ArrayList<String[]>();
                 data.add(new String[]{"测量方法", scanType});
-                data.add(new String[]{"时间戳", timeStamp});
+                data.add(new String[]{"测量时间", timeStamp});
                 data.add(new String[]{"光谱范围起点 (nm)", spectStart});
                 data.add(new String[]{"光谱范围终点 (nm)", spectEnd});
                 data.add(new String[]{"波长点数", numPoints});

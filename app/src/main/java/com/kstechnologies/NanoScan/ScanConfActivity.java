@@ -225,7 +225,7 @@ public class ScanConfActivity extends BaseActivity {
                     viewHolder.scanType.setTextColor(ThemeManageUtil.getCurrentThemeColor());
                     SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, config.getConfigName());
                 } else {
-                    viewHolder.scanType.setTextColor(ContextCompat.getColor(mContext, R.color.black));
+                    viewHolder.scanType.setTextColor(0xff888888);
                 }
             }
             return convertView;

@@ -93,8 +93,8 @@
     <string name="repeats_value">%1$d</string>
 
     <string name="manufacturer">制造商</string>
-    <string name="range_start">光谱范围开始</string>
-    <string name="range_end">光谱范围结束</string>
+    <string name="range_start">光谱范围起点</string>
+    <string name="range_end">光谱范围终点</string>
     <string name="width">宽度</string>
     <string name="number_patterns">模式次数</string>
     <string name="number_repeats">重复次数</string>

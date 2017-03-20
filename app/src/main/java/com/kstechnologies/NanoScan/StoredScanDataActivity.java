@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import com.gaohui.utils.TimeUtil;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 
 
@@ -274,18 +276,8 @@ public class StoredScanDataActivity extends BaseActivity {
      * @return The new formatted date string
      */
     private String createTimeString(String scanDate) {
-        SimpleDateFormat format = new SimpleDateFormat("yyMMddFFHHmmss", Locale.US);
-        try {
-            Date date = format.parse(scanDate);
 
-            String outFormat = "EEEE, M/d/yy " + getString(R.string.time_format_at) + " HH:mm:ss";
-            SimpleDateFormat sdf = new SimpleDateFormat(outFormat, Locale.US);
-            return sdf.format(date);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return TimeUtil.convertTime(scanDate);
     }
 
     /**

@@ -100,7 +100,7 @@ public class NanoBLEService extends Service {
     }
 
     //Tag for logging events in the BluetoothLeService
-    private static final String TAG = "__BT_SERVICE";
+    private static final String TAG = "gaohui";
 
     //Instance of the Bluetooth Manager. This is used to retrieve the Bluetooth Adapter from the
     // Android system
@@ -188,7 +188,7 @@ public class NanoBLEService extends Service {
              */
             if (status == BluetoothGatt.GATT_SUCCESS && enumerated) {
                 if (debug)
-                    Log.d(TAG, "Services discovered:SUCCESS");
+                    Log.i(TAG, "Services discovered:SUCCESS");
                 broadcastUpdate(KSTNanoSDK.ACTION_GATT_SERVICES_DISCOVERED);
 
                 BluetoothGattDescriptor descriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGCISRetRefCalCoefficients.getDescriptor(CCCD_UUID);
@@ -215,77 +215,77 @@ public class NanoBLEService extends Service {
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorWrite(gatt, descriptor, status);
             if (debug)
-                Log.d("__onDescriptorWrite", "descriptor: " + descriptor.getUuid() + ". characteristic: " + descriptor.getCharacteristic().getUuid() + ". status: " + status);
+                Log.i("__onDescriptorWrite", "descriptor: " + descriptor.getUuid() + ". characteristic: " + descriptor.getCharacteristic().getUuid() + ". status: " + status);
 
             if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GCIS_RET_REF_CAL_COEFF) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GCIS_RET_REF_CAL_COEFF");
+                    Log.i(TAG, "Wrote Notify request for GCIS_RET_REF_CAL_COEFF");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGCISRetRefCalMatrix.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GCIS_RET_REF_CAL_MATRIX) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GCIS_RET_REF_CAL_MATRIX");
+                    Log.i(TAG, "Wrote Notify request for GCIS_RET_REF_CAL_MATRIX");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISStartScanNotify.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSDIS_START_SCAN) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSDIS_START_SCAN");
+                    Log.i(TAG, "Wrote Notify request for GSDIS_START_SCAN");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISRetScanName.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSDIS_RET_SCAN_NAME) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSDIS_RET_SCAN_NAME");
+                    Log.i(TAG, "Wrote Notify request for GSDIS_RET_SCAN_NAME");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISRetScanType.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSDIS_RET_SCAN_TYPE) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSDIS_RET_SCAN_TYPE");
+                    Log.i(TAG, "Wrote Notify request for GSDIS_RET_SCAN_TYPE");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISRetScanDate.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSDIS_RET_SCAN_DATE) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSDIS_RET_SCAN_DATE");
+                    Log.i(TAG, "Wrote Notify request for GSDIS_RET_SCAN_DATE");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISRetPacketFormatVersion.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSDIS_RET_PKT_FMT_VER) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSDIS_RET_PKT_FMT_VER");
+                    Log.i(TAG, "Wrote Notify request for GSDIS_RET_PKT_FMT_VER");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISRetSerialScanDataStruct.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSDIS_RET_SER_SCAN_DATA_STRUCT) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSDIS_RET_SER_SCAN_DATA_STRUCT");
+                    Log.i(TAG, "Wrote Notify request for GSDIS_RET_SER_SCAN_DATA_STRUCT");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSCISRetStoredConfList.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSCIS_RET_STORED_CONF_LIST) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSCIS_RET_STORED_CONF_LIST");
+                    Log.i(TAG, "Wrote Notify request for GSCIS_RET_STORED_CONF_LIST");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISSDStoredScanIndicesListData.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSDIS_SD_STORED_SCAN_IND_LIST_DATA) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSDIS_SD_STORED_SCAN_IND_LIST_DATA");
+                    Log.i(TAG, "Wrote Notify request for GSDIS_SD_STORED_SCAN_IND_LIST_DATA");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISClearScanNotify.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSDIS_CLEAR_SCAN) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSDIS_CLEAR_SCAN");
+                    Log.i(TAG, "Wrote Notify request for GSDIS_CLEAR_SCAN");
                 BluetoothGattDescriptor mDescriptor = KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSCISRetScanConfData.getDescriptor(CCCD_UUID);
                 mDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 KSTNanoSDK.mBluetoothGatt.writeDescriptor(mDescriptor);
             } else if (descriptor.getCharacteristic().getUuid().compareTo(KSTNanoSDK.NanoGATT.GSCIS_RET_SCAN_CONF_DATA) == 0) {
                 if (debug)
-                    Log.d(TAG, "Wrote Notify request for GSCIS_RET_SCAN_CONF_DATA");
+                    Log.i(TAG, "Wrote Notify request for GSCIS_RET_SCAN_CONF_DATA");
                 Intent notifyCompleteIntent = new Intent(KSTNanoSDK.ACTION_NOTIFY_DONE);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(notifyCompleteIntent);
             }
@@ -338,7 +338,7 @@ public class NanoBLEService extends Service {
                     for (byte byteChar : data)
                         stringBuilder.append(String.format("%02X", byteChar));
                     if (debug)
-                        Log.d(TAG, "batt level:" + stringBuilder.toString());
+                        Log.i(TAG, "batt level:" + stringBuilder.toString());
                     battLevel = data[0];
                     KSTNanoSDK.getTemp();
                 } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GGIS_TEMP_MEASUREMENT)) {
@@ -347,10 +347,10 @@ public class NanoBLEService extends Service {
                     for (byte byteChar : data)
                         stringBuilder.append(String.format("%02X", byteChar));
                     if (debug)
-                        Log.d(TAG, "temp level string:" + stringBuilder.toString());
+                        Log.i(TAG, "temp level string:" + stringBuilder.toString());
                     temp = (float) (data[1] << 8 | (data[0] & 0xff)) / 100;
                     if (debug)
-                        Log.d(TAG, "temp level int:" + temp);
+                        Log.i(TAG, "temp level int:" + temp);
                     KSTNanoSDK.getHumidity();
                 } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GGIS_HUMID_MEASUREMENT)) {
                     byte[] data = characteristic.getValue();
@@ -358,7 +358,7 @@ public class NanoBLEService extends Service {
                     for (byte byteChar : data)
                         stringBuilder.append(String.format("%02X", byteChar));
                     if (debug)
-                        Log.d(TAG, "humid level:" + stringBuilder.toString());
+                        Log.i(TAG, "humid level:" + stringBuilder.toString());
                     humidity = (float) (data[1] << 8 | (data[0] & 0xff)) / 100;
                     KSTNanoSDK.getDeviceStatus();
                 } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GGIS_DEV_STATUS)) {
@@ -367,7 +367,7 @@ public class NanoBLEService extends Service {
                     for (byte byteChar : data)
                         stringBuilder.append(String.format("%02X", byteChar));
                     if (debug)
-                        Log.d(TAG, "dev status:" + stringBuilder.toString());
+                        Log.i(TAG, "dev status:" + stringBuilder.toString());
                     devStatus = stringBuilder.toString();
                     KSTNanoSDK.getErrorStatus();
                 } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GGIS_ERR_STATUS)) {
@@ -376,7 +376,7 @@ public class NanoBLEService extends Service {
                     for (byte byteChar : data)
                         stringBuilder.append(String.format("%02X", byteChar));
                     if (debug)
-                        Log.d(TAG, "error status:" + stringBuilder.toString());
+                        Log.i(TAG, "error status:" + stringBuilder.toString());
                     errStatus = stringBuilder.toString();
 
                     final Intent intent = new Intent(KSTNanoSDK.ACTION_STATUS);
@@ -395,7 +395,7 @@ public class NanoBLEService extends Service {
                     scanConfSizeIntent.putExtra(KSTNanoSDK.EXTRA_CONF_SIZE, scanConfIndexSize);
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(scanConfSizeIntent);
                     if (debug)
-                        Log.d(TAG, "Num stored scan configs:" + scanConfIndexSize);
+                        Log.i(TAG, "Num stored scan configs:" + scanConfIndexSize);
 
                     KSTNanoSDK.requestStoredConfigurationList();
                 } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_NUM_SD_STORED_SCANS)) {
@@ -403,7 +403,7 @@ public class NanoBLEService extends Service {
 
                     storedSDScanSize = (((data[1]) << 8) | (data[0] & 0xFF));
                     if (debug)
-                        Log.d(TAG, "Num stored SD scans:" + storedSDScanSize);
+                        Log.i(TAG, "Num stored SD scans:" + storedSDScanSize);
                     Intent sdScanSizeIntent = new Intent(KSTNanoSDK.SD_SCAN_SIZE);
                     sdScanSizeIntent.putExtra(KSTNanoSDK.EXTRA_INDEX_SIZE, storedSDScanSize);
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(sdScanSizeIntent);
@@ -415,14 +415,14 @@ public class NanoBLEService extends Service {
                         for (byte byteChar : data)
                             stringBuilder.append(String.format("%02X", byteChar));
                         if (debug)
-                            Log.d(TAG, "Active scan conf index:" + stringBuilder.toString());
+                            Log.i(TAG, "Active scan conf index:" + stringBuilder.toString());
                         Intent sendActiveConfIntent = new Intent(KSTNanoSDK.SEND_ACTIVE_CONF);
                         sendActiveConfIntent.putExtra(KSTNanoSDK.EXTRA_ACTIVE_CONF, data);
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(sendActiveConfIntent);
                     } else {
                         byte[] confIndex = {data[0], data[1]};
                         if (debug)
-                            Log.d(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
+                            Log.i(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
                         KSTNanoSDK.requestScanConfiguration(confIndex);
                     }
                 }
@@ -443,7 +443,7 @@ public class NanoBLEService extends Service {
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
             if (debug)
-                Log.d(TAG, "onCharacteristic changed for characteristic:" + characteristic.getUuid().toString());
+                Log.i(TAG, "onCharacteristic changed for characteristic:" + characteristic.getUuid().toString());
 
             if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISStartScanNotify) {
                 Intent scanStartedIntent = new Intent(ACTION_SCAN_STARTED);
@@ -457,13 +457,13 @@ public class NanoBLEService extends Service {
                 final byte[] data = characteristic.getValue();
                 if (data[0] == (byte) 0xff) {
                     if (debug)
-                        Log.d(TAG, "Scan data is ready to be read");
+                        Log.i(TAG, "Scan data is ready to be read");
                     scanIndex[0] = data[1];
                     scanIndex[1] = data[2];
                     scanIndex[2] = data[3];
                     scanIndex[3] = data[4];
                     if (debug)
-                        Log.d(TAG, "the scan index is:" + scanIndex[0] + " " + scanIndex[1] + " " + scanIndex[2] + " " + scanIndex[3]);
+                        Log.i(TAG, "the scan index is:" + scanIndex[0] + " " + scanIndex[1] + " " + scanIndex[2] + " " + scanIndex[3]);
 
                     KSTNanoSDK.requestScanName(scanIndex);
                 }
@@ -471,7 +471,7 @@ public class NanoBLEService extends Service {
                 final byte[] data = characteristic.getValue();
 
                 if (debug)
-                    Log.d(TAG, "Received scan name:" + new String(data));
+                    Log.i(TAG, "Received scan name:" + new String(data));
                 scanName = new String(data);
 
                 if (readingStoredScans) {
@@ -486,7 +486,7 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received scan type:" + stringBuilder.toString());
+                    Log.i(TAG, "Received scan type:" + stringBuilder.toString());
                 scanType = stringBuilder.toString();
                 KSTNanoSDK.requestScanDate(scanIndex);
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISRetScanDate) {
@@ -495,7 +495,7 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02d", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received scan date:" + stringBuilder.toString());
+                    Log.i(TAG, "Received scan date:" + stringBuilder.toString());
                 scanDate = stringBuilder.toString();
                 if (readingStoredScans) {
 
@@ -515,7 +515,7 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received Packet Format Version:" + stringBuilder.toString());
+                    Log.i(TAG, "Received Packet Format Version:" + stringBuilder.toString());
                 scanPktFmtVer = stringBuilder.toString();
                 KSTNanoSDK.requestSerializedScanDataStruct(scanIndex);
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISRetSerialScanDataStruct) {
@@ -524,7 +524,7 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received Serialized Scan Data Struct:" + stringBuilder.toString());
+                    Log.i(TAG, "Received Serialized Scan Data Struct:" + stringBuilder.toString());
                 if (data[0] == 0x00) {
                     size = (((data[2]) << 8) | (data[1] & 0xFF));
                 } else {
@@ -537,18 +537,18 @@ public class NanoBLEService extends Service {
                 if (scanData.size() == size) {
                     size = 0;
                     if (debug)
-                        Log.d(TAG, "Done collecting scan data, sending broadcast");
+                        Log.i(TAG, "Done collecting scan data, sending broadcast");
                     broadcastUpdate(KSTNanoSDK.SCAN_DATA, scanData.toByteArray());
                 }
                 if (debug)
-                    Log.d("__SIZE", "new ScanData size:" + scanData.size());
+                    Log.i("__SIZE", "new ScanData size:" + scanData.size());
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGCISRetRefCalCoefficients) {
                 final byte[] data = characteristic.getValue();
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received Reference calibration coefficients:" + stringBuilder.toString());
+                    Log.i(TAG, "Received Reference calibration coefficients:" + stringBuilder.toString());
 
                 if (data[0] == 0x00) {
                     refConf.reset();
@@ -572,7 +572,7 @@ public class NanoBLEService extends Service {
                 if (refConf.size() == refSize) {
                     refSize = 0;
                     if (debug)
-                        Log.d(TAG, "Done collecting reference, sending broadcast");
+                        Log.i(TAG, "Done collecting reference, sending broadcast");
                     KSTNanoSDK.requestRefCalMatrix();
                 }
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGCISRetRefCalMatrix) {
@@ -581,7 +581,7 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received Reference calibration matrix:" + stringBuilder.toString());
+                    Log.i(TAG, "Received Reference calibration matrix:" + stringBuilder.toString());
 
                 if (data[0] == 0x00) {
                     refMatrix.reset();
@@ -604,7 +604,7 @@ public class NanoBLEService extends Service {
                 if (refMatrix.size() == refMatrixSize) {
                     refSize = 0;
                     if (debug)
-                        Log.d(TAG, "Done collecting reference Matrix, sending broadcast");
+                        Log.i(TAG, "Done collecting reference Matrix, sending broadcast");
                     broadcastUpdate(KSTNanoSDK.REF_CONF_DATA, refConf.toByteArray(), refMatrix.toByteArray());
                 }
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSCISRetStoredConfList) {
@@ -613,7 +613,7 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received Scan Conf index:" + stringBuilder.toString());
+                    Log.i(TAG, "Received Scan Conf index:" + stringBuilder.toString());
 
                 scanConfIndex++;
                 scanConfList.add(data);
@@ -626,7 +626,7 @@ public class NanoBLEService extends Service {
                     confIndex[1] = scanConfList.get(scanConfIndex)[2];
 
                     if (debug)
-                        Log.d(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
+                        Log.i(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
                     KSTNanoSDK.requestScanConfiguration(confIndex);
 
                 }
@@ -638,7 +638,7 @@ public class NanoBLEService extends Service {
                     confIndex[1] = scanConfList.get(scanConfIndex)[2];
 
                     if (debug)
-                        Log.d(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
+                        Log.i(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
                     KSTNanoSDK.requestScanConfiguration(confIndex);
                 }
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISSDStoredScanIndicesListData) {
@@ -647,14 +647,14 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received SD scan indices list:" + stringBuilder.toString());
+                    Log.i(TAG, "Received SD scan indices list:" + stringBuilder.toString());
                 int index;
                 for (index = 0; index < data.length / 4; index++) {
                     byte[] sdIndex = {data[index * 4], data[(index * 4) + 1], data[(index * 4) + 2], data[(index * 4) + 3]};
 
                     storedScanList.add(sdIndex);
                     if (debug)
-                        Log.d(TAG, "new storedScanList size:" + storedScanList.size());
+                        Log.i(TAG, "new storedScanList size:" + storedScanList.size());
                 }
                 if (storedScanList.size() == storedSDScanSize) {
                     byte[] indexData = storedScanList.get(0);
@@ -668,7 +668,7 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received Scan Conf Data:" + stringBuilder.toString());
+                    Log.i(TAG, "Received Scan Conf Data:" + stringBuilder.toString());
 
                 if (data[0] == 0x00) {
                     scanConf.reset();
@@ -684,18 +684,18 @@ public class NanoBLEService extends Service {
                     if (!activeConfRequested) {
                         scanConfSize = 0;
                         if (debug)
-                            Log.d(TAG, "Done collecting scanConfiguration, sending broadcast");
+                            Log.i(TAG, "Done collecting scanConfiguration, sending broadcast");
                         broadcastScanConfig(KSTNanoSDK.SCAN_CONF_DATA, scanConf.toByteArray());
 
                         if (scanConfIndex < scanConfIndexSize) {
                             scanConfIndex++;
                             byte[] confIndex = {0, 0};
                             if (debug)
-                                Log.d(TAG, "Retrieving scan at index:" + scanConfIndex + " Size is:" + scanConfList.size());
+                                Log.i(TAG, "Retrieving scan at index:" + scanConfIndex + " Size is:" + scanConfList.size());
                             confIndex[0] = scanConfList.get(1)[scanConfIndex + 1];
                             confIndex[1] = scanConfList.get(1)[scanConfIndex + 2];
                             if (debug)
-                                Log.d(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
+                                Log.i(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
                             KSTNanoSDK.requestScanConfiguration(confIndex);
                         } else {
                             scanConfIndex = 0;
@@ -703,7 +703,7 @@ public class NanoBLEService extends Service {
                     } else {
                         scanConfSize = 0;
                         if (debug)
-                            Log.d(TAG, "Done collecting active scanConfiguration");
+                            Log.i(TAG, "Done collecting active scanConfiguration");
                         broadcastScanConfig(KSTNanoSDK.SCAN_CONF_DATA, scanConf.toByteArray());
                         scanConfIndex = 0;
                         activeConfRequested = false;
@@ -715,10 +715,10 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.d(TAG, "Received status from clear scan:" + stringBuilder.toString());
+                    Log.i(TAG, "Received status from clear scan:" + stringBuilder.toString());
             } else {
                 if (debug)
-                    Log.d(TAG, "Received notify/indicate from unknown characteristic:" + characteristic.getUuid().toString());
+                    Log.i(TAG, "Received notify/indicate from unknown characteristic:" + characteristic.getUuid().toString());
             }
         }
 
@@ -739,67 +739,67 @@ public class NanoBLEService extends Service {
 
             if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_START_SCAN)) {
                 if (debug)
-                    Log.d(TAG, "Wrote start scan! status=" + status);
+                    Log.i(TAG, "Wrote start scan! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_REQ_SER_SCAN_DATA_STRUCT)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Request for Scan Data Struct! status=" + status);
+                    Log.i(TAG, "Wrote Request for Scan Data Struct! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_REQ_SCAN_TYPE)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Request for Scan Type! status=" + status);
+                    Log.i(TAG, "Wrote Request for Scan Type! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_REQ_SCAN_NAME)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Request for Scan Name! status=" + status);
+                    Log.i(TAG, "Wrote Request for Scan Name! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_REQ_SCAN_DATE)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Request for Scan Date! status=" + status);
+                    Log.i(TAG, "Wrote Request for Scan Date! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_REQ_PKT_FMT_VER)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Request for Packet Format Version! status=" + status);
+                    Log.i(TAG, "Wrote Request for Packet Format Version! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GCIS_REQ_REF_CAL_COEFF)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Request for Reference Calibration Coefficients! status=" + status);
+                    Log.i(TAG, "Wrote Request for Reference Calibration Coefficients! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GCIS_REQ_REF_CAL_MATRIX)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Request for Reference Calibration Matrix! status=" + status);
+                    Log.i(TAG, "Wrote Request for Reference Calibration Matrix! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSCIS_REQ_STORED_CONF_LIST)) {
-                Log.d(TAG, "Wrote Request for Scan configuration list! status=" + status);
+                Log.i(TAG, "Wrote Request for Scan configuration list! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_SD_STORED_SCAN_IND_LIST)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Request for SD Stored scan indices list! status=" + status);
+                    Log.i(TAG, "Wrote Request for SD Stored scan indices list! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSCIS_REQ_SCAN_CONF_DATA)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Request for Scan Conf data! Status=" + status);
+                    Log.i(TAG, "Wrote Request for Scan Conf data! Status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GDTS_TIME)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Time! Status=" + status);
+                    Log.i(TAG, "Wrote Time! Status=" + status);
                 String dataString = SettingsManager.getStringPref(getApplicationContext(), SettingsManager.SharedPreferencesKeys.prefix, "Data");
                 if (dataString.equals("")) {
                     dataString = "Data";
                 }
                 byte[] data = new StringBuilder(dataString).reverse().toString().getBytes();
                 if (debug)
-                    Log.d(TAG, "Writing scan stub to:" + dataString);
+                    Log.i(TAG, "Writing scan stub to:" + dataString);
                 KSTNanoSDK.setStub(data);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_SET_SCAN_NAME_STUB)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Scan Name Stub! Status=" + status);
+                    Log.i(TAG, "Wrote Scan Name Stub! Status=" + status);
                 if (!scanStarted) {
                     if (debug)
-                        Log.d(TAG, "Requesting Calibration Data");
+                        Log.i(TAG, "Requesting Calibration Data");
                     KSTNanoSDK.requestRefCalCoefficients();
                 } else {
                     scanStarted = false;
                     if (debug)
-                        Log.d(TAG, "Starting Scan");
+                        Log.i(TAG, "Starting Scan");
                     byte[] data = {0x00};
                     if (SettingsManager.getBooleanPref(getApplicationContext(), SettingsManager.SharedPreferencesKeys.saveSD, false)) {
                         data[0] = 0x01;
                         if (debug)
-                            Log.d(TAG, "Save to SD selected, writing 1");
+                            Log.i(TAG, "Save to SD selected, writing 1");
                     } else {
                         data[0] = 0x00;
                         if (debug)
-                            Log.d(TAG, "Save to SD not selected, writing 0");
+                            Log.i(TAG, "Save to SD not selected, writing 0");
                     }
                     scanData.reset();
                     refConf.reset();
@@ -812,21 +812,21 @@ public class NanoBLEService extends Service {
                 }
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_CLEAR_SCAN)) {
                 if (debug)
-                    Log.d(TAG, "wrote clear scan! status=" + status);
+                    Log.i(TAG, "wrote clear scan! status=" + status);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSCIS_ACTIVE_SCAN_CONF)) {
                 if (debug)
-                    Log.d(TAG, "Wrote set active scan conf! status=" + status);
+                    Log.i(TAG, "Wrote set active scan conf! status=" + status);
                 KSTNanoSDK.getActiveConf();
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GGIS_TEMP_THRESH)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Temperature threshold! status=" + status);
+                    Log.i(TAG, "Wrote Temperature threshold! status=" + status);
                 KSTNanoSDK.setHumidityThreshold(humidThresh);
             } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GGIS_HUMID_THRESH)) {
                 if (debug)
-                    Log.d(TAG, "Wrote Humidity threshold! status=" + status);
+                    Log.i(TAG, "Wrote Humidity threshold! status=" + status);
             } else {
                 if (debug)
-                    Log.d(TAG, "Unknown characteristic");
+                    Log.i(TAG, "Unknown characteristic");
             }
         }
     };
@@ -860,7 +860,7 @@ public class NanoBLEService extends Service {
             for (byte byteChar : data)
                 stringBuilder.append(String.format("%02X ", byteChar));
             if (debug)
-                Log.d(TAG, "Notify characteristic:" + characteristic.getUuid().toString() + " -- Notify data:" + stringBuilder.toString());
+                Log.i(TAG, "Notify characteristic:" + characteristic.getUuid().toString() + " -- Notify data:" + stringBuilder.toString());
             intent.putExtra(KSTNanoSDK.EXTRA_DATA, stringBuilder.toString());
         }
 
@@ -943,7 +943,7 @@ public class NanoBLEService extends Service {
         // such that resources are cleaned up properly.  In this particular example, close() is
         // invoked when the UI is disconnected from the Service.
         if (debug)
-            Log.d(TAG, "onUnbind called");
+            Log.i(TAG, "onUnbind called");
         //disconnect();
         close();
         return super.onUnbind(intent);
@@ -958,7 +958,7 @@ public class NanoBLEService extends Service {
      */
     public boolean initialize() {
         if (debug)
-            Log.d(TAG, "Initializing BLE");
+            Log.i(TAG, "Initializing BLE");
         // For API level 18 and above, get a reference to BluetoothAdapter through
         // BluetoothManager.
         if (mBluetoothManager == null) {
@@ -996,7 +996,7 @@ public class NanoBLEService extends Service {
         if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
                 && KSTNanoSDK.mBluetoothGatt != null) {
             if (debug)
-                Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
+                Log.i(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             return KSTNanoSDK.mBluetoothGatt.connect();
         }
 
@@ -1010,14 +1010,14 @@ public class NanoBLEService extends Service {
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d(TAG, "Using LE Transport");
+            Log.i(TAG, "Using LE Transport");
             KSTNanoSDK.mBluetoothGatt = device.connectGatt(this, false, mGattCallback, BluetoothDevice.TRANSPORT_LE);
         } else {
             //问题主要出现在这里！它会在这里卡一会，然后就可能连接不上！调用mGattCallback 的状态改变方法
             KSTNanoSDK.mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         }
         if (debug)
-            Log.d(TAG, "Trying to create a new connection.");
+            Log.i(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         return true;
     }
@@ -1026,14 +1026,14 @@ public class NanoBLEService extends Service {
     public void onCreate() {
         super.onCreate();
         if (debug)
-            Log.d(TAG, "onCreate called");
+            Log.i(TAG, "onCreate called");
 
         mDataReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent i) {
                 if (i != null) {
                     if (debug)
-                        Log.d(TAG, "Starting Scan");
+                        Log.i(TAG, "Starting Scan");
                     byte[] data = {0x00};
                     if (SettingsManager.getBooleanPref(context, SettingsManager.SharedPreferencesKeys.saveSD, false)) {
                         data[0] = 0x01;
@@ -1061,7 +1061,7 @@ public class NanoBLEService extends Service {
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
                     if (debug)
-                        Log.d(TAG, "Requesting Device Info");
+                        Log.i(TAG, "Requesting Device Info");
                     KSTNanoSDK.getManufacturerName();
                 }
             }
@@ -1072,7 +1072,7 @@ public class NanoBLEService extends Service {
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
                     if (debug)
-                        Log.d(TAG, "Requesting Device Status");
+                        Log.i(TAG, "Requesting Device Status");
                     KSTNanoSDK.getBatteryLevel();
                 }
             }
@@ -1083,7 +1083,7 @@ public class NanoBLEService extends Service {
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
                     if (debug)
-                        Log.d(TAG, "Requesting Device Status");
+                        Log.i(TAG, "Requesting Device Status");
                     KSTNanoSDK.getNumberStoredConfigurations();
                 }
             }
@@ -1094,7 +1094,7 @@ public class NanoBLEService extends Service {
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
                     if (debug)
-                        Log.d(TAG, "Requesting Stored Scans");
+                        Log.i(TAG, "Requesting Stored Scans");
                     KSTNanoSDK.getNumberStoredScans();
                 }
             }
@@ -1105,7 +1105,7 @@ public class NanoBLEService extends Service {
             public void onReceive(Context context, Intent intent) {
                 if (intent != null) {
                     if (debug)
-                        Log.d(TAG, "writing time to nano");
+                        Log.i(TAG, "writing time to nano");
                     KSTNanoSDK.setTime();
                 }
             }
@@ -1121,7 +1121,7 @@ public class NanoBLEService extends Service {
                 }
                 byte[] data = new StringBuilder(dataString).reverse().toString().getBytes();
                 if (debug)
-                    Log.d(TAG, "Writing scan stub to:" + dataString);
+                    Log.i(TAG, "Writing scan stub to:" + dataString);
                 KSTNanoSDK.setStub(data);
             }
         };
@@ -1131,7 +1131,7 @@ public class NanoBLEService extends Service {
             public void onReceive(Context context, Intent intent) {
                 byte[] index = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_SCAN_INDEX);
                 if (debug)
-                    Log.d(TAG, "deleting index:" + index[0] + "-" + index[1] + "-" + index[2] + "-" + index[3]);
+                    Log.i(TAG, "deleting index:" + index[0] + "-" + index[1] + "-" + index[2] + "-" + index[3]);
                 KSTNanoSDK.deleteScan(index);
             }
         };
@@ -1140,7 +1140,7 @@ public class NanoBLEService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (debug)
-                    Log.d(TAG, "Reading active scan conf");
+                    Log.i(TAG, "Reading active scan conf");
                 KSTNanoSDK.getActiveConf();
 
             }
@@ -1150,7 +1150,7 @@ public class NanoBLEService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (debug)
-                    Log.d(TAG, "Setting active scan conf");
+                    Log.i(TAG, "Setting active scan conf");
                 byte[] data = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_SCAN_INDEX);
                 KSTNanoSDK.setActiveConf(data);
             }
@@ -1159,7 +1159,7 @@ public class NanoBLEService extends Service {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (debug)
-                    Log.d(TAG, "Updating Thresholds");
+                    Log.i(TAG, "Updating Thresholds");
                 tempThresh = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_TEMP_THRESH);
                 humidThresh = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_HUMID_THRESH);
                 KSTNanoSDK.setTemperatureThreshold(tempThresh);
@@ -1193,7 +1193,7 @@ public class NanoBLEService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if (debug)
-            Log.d(TAG, "onDestroy called");
+            Log.i(TAG, "onDestroy called");
 
         //Clean up the registered receivers
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(mDataReceiver);
@@ -1213,7 +1213,7 @@ public class NanoBLEService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (debug)
-            Log.d(TAG, "onStartCommand called");
+            Log.i(TAG, "onStartCommand called");
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -1221,7 +1221,7 @@ public class NanoBLEService extends Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         if (debug)
-            Log.d(TAG, "onTaskRemoved called");
+            Log.i(TAG, "onTaskRemoved called");
     }
 
     /**

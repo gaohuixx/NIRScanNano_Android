@@ -90,9 +90,6 @@ public class ActiveScanActivity extends BaseActivity {
 
 
     /*
-     * When the activity is destroyed, unregister the BroadcastReceivers
-     * handling receiving scan configurations, disconnect events, the # of configurations,
-     * and the active configuration
      * 当activity 被销毁的时候，取消注册广播接收器
      */
     @Override
@@ -154,6 +151,13 @@ public class ActiveScanActivity extends BaseActivity {
                 viewHolder.patterns.setText(getString(R.string.patterns_value, config.getNumPatterns()));
                 viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
                 viewHolder.serial.setText(config.getScanConfigSerialNumber());
+
+                Log.i("gaohui", "scanType: " + config.getSectionScanType());
+                Log.i("gaohui", "rangeStart: " + config.getWavelengthStartNm());
+                Log.i("gaohui", "rangeEnd: " + config.getWavelengthEndNm());
+                Log.i("gaohui", "width: " + config.getWidthPx());
+                Log.i("gaohui", "patterns: " + config.getNumPatterns());
+                Log.i("gaohui", "repeats: " + config.getNumRepeats());
             }
             return convertView;
         }
@@ -200,6 +204,12 @@ public class ActiveScanActivity extends BaseActivity {
                 viewHolder.patterns.setText(getString(R.string.patterns_value, config.getNumPatterns()));
                 viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
             }
+            Log.i("gaohui", "scanType: " + config.getSectionScanType());
+            Log.i("gaohui", "rangeStart: " + config.getWavelengthStartNm());
+            Log.i("gaohui", "rangeEnd: " + config.getWavelengthEndNm());
+            Log.i("gaohui", "width: " + config.getWidthPx());
+            Log.i("gaohui", "patterns: " + config.getNumPatterns());
+            Log.i("gaohui", "repeats: " + config.getNumRepeats());
             return convertView;
         }
     }

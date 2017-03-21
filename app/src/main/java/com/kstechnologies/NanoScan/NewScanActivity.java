@@ -1035,9 +1035,7 @@ public class NewScanActivity extends BaseActivity {
                 }
             }, NanoBLEService.SCAN_PERIOD);
             if(mBluetoothLeScanner != null) {
-                Log.i(TAG, "开始扫描");
                 mBluetoothLeScanner.startScan(mLeScanCallback);
-                Log.i(TAG, "扫描完成");
             }else{
                 finish();
                 Toast.makeText(NewScanActivity.this, "请先开启蓝牙并再次尝试", Toast.LENGTH_SHORT).show();
@@ -1063,7 +1061,12 @@ public class NewScanActivity extends BaseActivity {
                     }
                 }
             }, NanoBLEService.SCAN_PERIOD);
-            mBluetoothLeScanner.startScan(mPreferredLeScanCallback);
+            if(mBluetoothLeScanner != null) {
+                mBluetoothLeScanner.startScan(mPreferredLeScanCallback);
+            }else{
+                finish();
+                Toast.makeText(NewScanActivity.this, "请先开启蓝牙并再次尝试", Toast.LENGTH_SHORT).show();
+            }
         } else {
             mBluetoothLeScanner.stopScan(mPreferredLeScanCallback);
         }

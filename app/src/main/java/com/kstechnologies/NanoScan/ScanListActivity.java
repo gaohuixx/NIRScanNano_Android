@@ -49,6 +49,7 @@ import java.util.ArrayList;
  */
 public class ScanListActivity extends BaseActivity {
 
+    private static final String TAG = "gaohui";
     private ArrayList<String> csvFiles = new ArrayList<>();
     private ArrayAdapter<String> mAdapter;
     private static Context mContext;
@@ -58,6 +59,8 @@ public class ScanListActivity extends BaseActivity {
     private SwipeMenuCreator unknownCreator = createMenu();
     private BluetoothAdapter bluetoothAdapter;//本地蓝牙适配器
     private boolean bluetoothState = false;//蓝牙状态
+    private String csvPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/csv";
+    private String dictPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/dict";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +100,11 @@ public class ScanListActivity extends BaseActivity {
         csvFiles.clear();
 
         lv_csv_files = (SwipeMenuListView) findViewById(R.id.lv_csv_files);
-        populateListView();
+        populateListView(); //往csvFiles 集合里面添加文件
 
-        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, csvFiles);
-        lv_csv_files.setAdapter(mAdapter);
-        lv_csv_files.setMenuCreator(unknownCreator);
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, csvFiles);//生成适配器
+        lv_csv_files.setAdapter(mAdapter);//设置适配器
+        lv_csv_files.setMenuCreator(unknownCreator);//创建侧滑菜单
 
         /*
          * 设置SwipeMenuListView菜单item 的点击事件
@@ -113,8 +116,7 @@ public class ScanListActivity extends BaseActivity {
 
                 switch (index) {
                     case 0:
-                        Toast.makeText(mContext, "ssss", Toast.LENGTH_SHORT).show();
-                        renameDialog();
+                        renameDialog(position);
                         break;
                     case 1:
                         confirmDialog(position);
@@ -143,7 +145,10 @@ public class ScanListActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent graphIntent = new Intent(mContext, GraphActivity.class);
-                graphIntent.putExtra("file_name", mAdapter.getItem(i));
+                if (i < 10)//0-9 是示例文件，不用加.csv 后缀
+                    graphIntent.putExtra("file_name", mAdapter.getItem(i));
+                else
+                    graphIntent.putExtra("file_name", mAdapter.getItem(i) + ".csv");
                 startActivity(graphIntent);  //跳转到绘图页面
             }
         });
@@ -180,7 +185,13 @@ public class ScanListActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                removeFile(mAdapter.getItem(position)); //删除文件
+                boolean state = removeFile(csvFiles.get(position)); //删除文件
+                if (!state){
+                    Toast.makeText(mContext, "示例文件不允许删除", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Log.i(TAG, "csvFiles.get(position): " + csvFiles.get(position));
+                Log.i(TAG, "mAdapter.getItem(position): " + mAdapter.getItem(position));
                 mAdapter.remove(csvFiles.get(position)); //将相应的条目从列表项中移除
                 lv_csv_files.setAdapter(mAdapter); //刷新列表
             }
@@ -201,6 +212,9 @@ public class ScanListActivity extends BaseActivity {
         return true;
     }
 
+    /**
+     * 为toolbar 上的按钮添加监听
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -231,25 +245,22 @@ public class ScanListActivity extends BaseActivity {
      * 用raw 目录下的文件和已经保存的CSV 文件生成listview
      */
     public void populateListView() {
-        Field[] files = R.raw.class.getFields();
+        Field[] files = R.raw.class.getFields();//这里是获取R.raw 类的所有字段，一个字段就是一个文件名
 
         //循环raw文件夹中的每个文件
         for (Field file : files) {
             String filename = file.getName();
-
             csvFiles.add(filename);
         }
 
-        String nanoExtPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/csv";
-        File yourDir = new File(nanoExtPath, "/");//从根目录中查找
+        File yourDir = new File(csvPath);//从根目录中查找
         if(!yourDir.exists())
             yourDir.mkdirs();
         for (File f : yourDir.listFiles()) {
             if (f.isFile()) {
                 String fileName = f.getName();
-                if (fileName.contains(".csv")) {
-                    //Log.d(TAG, "found:" + fileName);
-                    csvFiles.add(fileName);
+                if (fileName.endsWith(".csv")) {
+                    csvFiles.add(fileName.substring(0,fileName.length()-4));
                 }
             }
         }
@@ -260,20 +271,18 @@ public class ScanListActivity extends BaseActivity {
      *
      * @param name 要删除文件的名字
      */
-    public void removeFile(String name) {
-        //此时获取到的nanoExtPath==“/storage/emulated/0”
-        String nanoExtPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/csv";
-        File yourDir = new File(nanoExtPath, "/");
-        if(!yourDir.exists())
-            yourDir.mkdirs();
-        for (File f : yourDir.listFiles()) {
-            if (f.isFile()) {
-                String fileName = f.getName();
-                if (fileName.equals(name)) {
-                    f.delete();
-                }
-            }
-        }
+    public boolean removeFile(String name) {
+        File csvfile = new File(csvPath, name + ".csv");
+        if (csvfile.exists()) //删除csv 文件
+            csvfile.delete();
+        else
+            return false;//如果这个csv 文件不存在，那么就说明它是示例文件
+
+        File dictfile = new File(dictPath, name + ".dict");
+        if (dictfile.exists()) //删除dict 文件
+            dictfile.delete();
+
+        return true;
     }
 
     /**
@@ -296,7 +305,7 @@ public class ScanListActivity extends BaseActivity {
 
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 deleteItem.setBackground(R.color.kst_red); // 设置 item 背景
-                deleteItem.setWidth(dp2px(60)); // 设置 item 宽度
+                deleteItem.setWidth(dp2px(80)); // 设置 item 宽度
                 deleteItem.setTitleColor(ContextCompat.getColor(mContext, R.color.white));// 设置一个图标
                 deleteItem.setTitleSize(18);
                 deleteItem.setTitle(getResources().getString(R.string.delete));
@@ -380,7 +389,7 @@ public class ScanListActivity extends BaseActivity {
                             closeBluetooth(); //关闭蓝牙
                         else
                             openBluetooth(); //开启蓝牙
-                        break;
+                        return true;
                     case R.id.action_settings:
                         Intent settingsIntent = new Intent(mContext, SettingsActivity.class);
                         startActivity(settingsIntent); //跳转到设置页面
@@ -423,7 +432,9 @@ public class ScanListActivity extends BaseActivity {
         }
     }
 
-
+    /**
+     * 这个广播接收器用来接收蓝牙状态改变广播
+     */
     private BroadcastReceiver bluetoothStateChangeReceiver = new BroadcastReceiver() {
 
         @Override
@@ -442,25 +453,37 @@ public class ScanListActivity extends BaseActivity {
      * @param path 文件目录
      * @param oldname  原来的文件名
      * @param newname 新文件名
+     *
+     * @return 状态
      */
-    private void renameFile(String path,String oldname,String newname){
+    private int renameFile(String path,String oldname,String newname){
         if(!oldname.equals(newname)){//新的文件名和以前文件名不同时,才有必要进行重命名
             File oldfile=new File(path+"/"+oldname);
             File newfile=new File(path+"/"+newname);
             if(!oldfile.exists()){
-                return;//重命名文件不存在
+                return 1;//重命名失败，原因：重命名文件不存在
             }
-            if(newfile.exists())//若在该目录下已经有一个文件和新文件名相同，则不允许重命名
+            if(newfile.exists()){//若在该目录下已经有一个文件和新文件名相同，则不允许重命名
                 Toast.makeText(mContext, "该名称已存在", Toast.LENGTH_SHORT).show();
+                return 2;//重命名失败，原因：新名称已经存在
+            }
             else{
                 oldfile.renameTo(newfile);
+                return 0;//重命名成功
             }
         }
+        return 3;//重命名失败，原因：新的文件名和以前文件名相同
     }
 
-    private void renameDialog(){
+    /**
+     * 弹出重命名对话框
+     */
+    private void renameDialog(final int position){
         final EditText et = new EditText(this);
+        et.setPadding(60, 30, 60, 30);
         et.setWidth(800);
+        et.setText(csvFiles.get(position));
+        et.setSelection(csvFiles.get(position).length());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE );
 
         new AlertDialog.Builder(this, R.style.DialogTheme).setTitle("重命名")
@@ -472,7 +495,27 @@ public class ScanListActivity extends BaseActivity {
                             Toast.makeText(getApplicationContext(), "不能为空！" + input, Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            Toast.makeText(getApplicationContext(), "新名称为：" + input, Toast.LENGTH_SHORT).show();
+                            String oldName = csvFiles.get(position);
+                            String newName = et.getText().toString();
+
+                            int state = renameFile(csvPath, oldName + ".csv", newName + ".csv");
+
+                            if (state == 1){
+                                Toast.makeText(mContext, "示例文件不允许重命名", Toast.LENGTH_SHORT).show();
+                                return;
+                            }else if (state == 2){
+                                Toast.makeText(mContext, "此名称已经存在", Toast.LENGTH_SHORT).show();
+                                return;
+                            }else if (state == 3){
+                                Toast.makeText(mContext, "名称未作修改", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            renameFile(dictPath, oldName + ".dict", newName + ".dict");
+                            csvFiles.set(position, newName);//将数组相应位置的名称该成新名字
+                            lv_csv_files.setAdapter(mAdapter); //刷新列表
+
+                            Toast.makeText(mContext, "修改成功", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })

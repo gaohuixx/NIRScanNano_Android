@@ -1085,6 +1085,7 @@ public class NewScanActivity extends BaseActivity {
                 finish();
             }
         });
+        alertDialogBuilder.setCancelable(false);
 
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();

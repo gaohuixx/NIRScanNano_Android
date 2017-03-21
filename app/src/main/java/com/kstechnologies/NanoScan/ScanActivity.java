@@ -112,6 +112,7 @@ public class ScanActivity extends BaseActivity {
             }
         });
 
+        alertDialogBuilder.setCancelable(false);
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }

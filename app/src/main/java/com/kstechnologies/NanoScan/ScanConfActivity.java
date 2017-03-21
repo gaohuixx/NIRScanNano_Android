@@ -87,6 +87,7 @@ public class ScanConfActivity extends BaseActivity {
                             finish();
                         }
                     });
+                    barProgressDialog.setCancelable(false);
                     barProgressDialog.show();
                     receivedConfSize = 0;
                 }

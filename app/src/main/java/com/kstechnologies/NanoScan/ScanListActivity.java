@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.gaohui.utils.ThemeManageUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -111,6 +113,10 @@ public class ScanListActivity extends BaseActivity {
 
                 switch (index) {
                     case 0:
+                        Toast.makeText(mContext, "ssss", Toast.LENGTH_SHORT).show();
+                        renameDialog();
+                        break;
+                    case 1:
                         confirmDialog(position);
                         break;
                 }
@@ -185,7 +191,7 @@ public class ScanListActivity extends BaseActivity {
                 dialog.dismiss();
             }
         });
-        builder.create().show();
+        builder.setCancelable(false).show();
     }
 
     @Override
@@ -278,20 +284,25 @@ public class ScanListActivity extends BaseActivity {
             @Override
             public void create(SwipeMenu menu) {
 
-                SwipeMenuItem settingsItem = new SwipeMenuItem(
+                SwipeMenuItem renameItem = new SwipeMenuItem(
                         getApplicationContext());
-                // 设置 item 背景
-                settingsItem.setBackground(R.color.kst_red);
-                // 设置 item 宽度
-                settingsItem.setWidth(dp2px(90));
-                // 设置一个图标
-//                settingsItem.setIcon(android.R.drawable.ic_menu_more);
-                settingsItem.setTitleColor(ContextCompat.getColor(mContext, R.color.white));
-                settingsItem.setTitleSize(18);
-                settingsItem.setTitle(getResources().getString(R.string.delete));
+                renameItem.setBackground(ThemeManageUtil.getCurrentThemeColorInXML());// 设置 item 背景
+                renameItem.setWidth(dp2px(80));// 设置 item 宽度
+                renameItem.setTitleColor(ContextCompat.getColor(mContext, R.color.white));// 设置一个图标
+                renameItem.setTitleSize(18);
+                renameItem.setTitle("重命名");
+                menu.addMenuItem(renameItem);// 添加item 到menu
 
-                // add to menu
-                menu.addMenuItem(settingsItem);
+
+                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
+                deleteItem.setBackground(R.color.kst_red); // 设置 item 背景
+                deleteItem.setWidth(dp2px(60)); // 设置 item 宽度
+                deleteItem.setTitleColor(ContextCompat.getColor(mContext, R.color.white));// 设置一个图标
+                deleteItem.setTitleSize(18);
+                deleteItem.setTitle(getResources().getString(R.string.delete));
+                menu.addMenuItem(deleteItem);// 添加item 到menu
+
+
             }
         };
     }
@@ -427,5 +438,46 @@ public class ScanListActivity extends BaseActivity {
         }
     };
 
+    /** 文件重命名
+     * @param path 文件目录
+     * @param oldname  原来的文件名
+     * @param newname 新文件名
+     */
+    private void renameFile(String path,String oldname,String newname){
+        if(!oldname.equals(newname)){//新的文件名和以前文件名不同时,才有必要进行重命名
+            File oldfile=new File(path+"/"+oldname);
+            File newfile=new File(path+"/"+newname);
+            if(!oldfile.exists()){
+                return;//重命名文件不存在
+            }
+            if(newfile.exists())//若在该目录下已经有一个文件和新文件名相同，则不允许重命名
+                Toast.makeText(mContext, "该名称已存在", Toast.LENGTH_SHORT).show();
+            else{
+                oldfile.renameTo(newfile);
+            }
+        }
+    }
+
+    private void renameDialog(){
+        final EditText et = new EditText(this);
+        et.setWidth(800);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE );
+
+        new AlertDialog.Builder(this, R.style.DialogTheme).setTitle("重命名")
+                .setView(et)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String input = et.getText().toString();
+                        if (input.equals("")) {
+                            Toast.makeText(getApplicationContext(), "不能为空！" + input, Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "新名称为：" + input, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("取消", null).setCancelable(false)
+                .show();
+    }
 
 }

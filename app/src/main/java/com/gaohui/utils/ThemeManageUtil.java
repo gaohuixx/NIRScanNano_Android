@@ -40,4 +40,32 @@ public class ThemeManageUtil {
         return 0xff07afaf;
     }
 
+    public static int getCurrentThemeColorInXML(){
+
+        switch (currentTheme){
+            case R.style.AppTheme:
+                return R.color.default_primary;
+            case R.style.Color1:
+                return R.color.color1_primary;
+            case R.style.Color2:
+                return R.color.color2_primary;
+            case R.style.Color3:
+                return R.color.color3_primary;
+            case R.style.Color4:
+                return R.color.color4_primary;
+            case R.style.Color5:
+                return R.color.color5_primary;
+            case R.style.Color6:
+                return R.color.color6_primary;
+            case R.style.Color7:
+                return R.color.color7_primary;
+            case R.style.Color8:
+                return R.color.color8_primary;
+            case R.style.Color9:
+                return R.color.color9_primary;
+        }
+
+        return R.color.default_primary;
+    }
+
 }

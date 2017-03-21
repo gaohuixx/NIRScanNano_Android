@@ -64,7 +64,7 @@
     <string name="delete">删除</string>
     <string name="ok">确定</string>
     <string name="not_connected_title">无连接</string>
-    <string name="not_connected_message">请确保您的安卓设备和Nano的蓝牙都开启了, 然后再点击屏幕上的扫描按钮.</string>
+    <string name="not_connected_message">没有扫描到Nano设备，请确保您的Nano的蓝牙开启了, 然后再点击屏幕上的扫描按钮.</string>
 
     <string name="battery">电池</string>
     <string name="humidity">湿度</string>

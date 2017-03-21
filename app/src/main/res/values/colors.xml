@@ -8,6 +8,8 @@
     <color name="btn_unavailable">#888888</color>
     <color name="title_green">#FFFFFF</color>
 
+    <color name="default_primary">#07afaf</color><!--默认颜色-->
+    <color name="default_primary_light">#3cc2c2</color>
 
     <color name="color1_primary">#fb7299</color><!--bilibili粉-->
     <color name="color1_primary_light">#f79db7</color>

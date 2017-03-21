@@ -196,6 +196,7 @@ public class SettingsActivity extends BaseActivity {
                 alertDialog.dismiss();
             }
         });
+        alertDialogBuilder.setCancelable(false);
 
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();

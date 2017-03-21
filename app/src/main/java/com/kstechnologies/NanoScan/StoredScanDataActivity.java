@@ -101,6 +101,7 @@ public class StoredScanDataActivity extends BaseActivity {
                             finish();
                         }
                     });
+                    barProgressDialog.setCancelable(false);
                     barProgressDialog.show();
                     receivedScanSize = 0;
                 } else {

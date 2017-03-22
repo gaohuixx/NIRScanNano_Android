@@ -54,7 +54,6 @@ public class SettingsActivity extends BaseActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         //获取UI元素的引用
-//        tv_version = (TextView) findViewById(R.id.tv_version);//版本号
         tb_temp = (ToggleButton) findViewById(R.id.tb_temp);//温度转换按钮
         tb_spatial = (ToggleButton) findViewById(R.id.tb_spatial);//空间频率转换按钮
         btn_set = (Button) findViewById(R.id.btn_set);//设置我的nano
@@ -66,20 +65,11 @@ public class SettingsActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
 
-        //Initialize preferred device
+        //初始化偏好设备
         preferredNano = SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.preferredDevice, null);
 
-        //Retrieve package information for displaying version info
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            int versionCode = pInfo.versionCode;
-//            tv_version.setText(getString(R.string.version, version, versionCode));
-        } catch (PackageManager.NameNotFoundException e) {
-//            tv_version.setText("");
-        }
 
-        //Initialize UI toggle element states, and create event listeners
+        //初始化切换按钮状态，创建事件监听器
         tb_temp.setChecked(SettingsManager.getBooleanPref(this, SettingsManager.SharedPreferencesKeys.tempUnits, SettingsManager.CELSIUS));
         tb_spatial.setChecked(SettingsManager.getBooleanPref(this, SettingsManager.SharedPreferencesKeys.spatialFreq, SettingsManager.WAVELENGTH));
 
@@ -100,7 +90,7 @@ public class SettingsActivity extends BaseActivity {
         btn_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //When trying to set a preferred Nano, start the bluetooth scanner so that a device can be chosen
+                //调到新页面去选择一个Nano
                 startActivity(new Intent(mContext, ScanActivity.class));
             }
         });

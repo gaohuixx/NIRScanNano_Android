@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@drawable/ppp4"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="180dp">
+    android:layout_height="168dp"
+    android:background="?attr/colorPrimary"
+    android:orientation="vertical">
 
-</LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="10dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:text="NIRScan\nNano"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="?attr/colorAccent"
+        android:textSize="40dp"
+        android:textStyle="bold|italic" />
+
+</FrameLayout>

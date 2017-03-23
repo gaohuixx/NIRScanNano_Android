@@ -661,7 +661,7 @@ public class GraphActivity extends BaseActivity {
 
         if (type == ChartType.REFLECTANCE) {
             // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName.substring(0, fileName.length()-4));
+            LineDataSet set1 = new LineDataSet(yValues, fileName);
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
@@ -691,7 +691,7 @@ public class GraphActivity extends BaseActivity {
             mChart.setMaxVisibleValueCount(20);
         } else if (type == ChartType.ABSORBANCE) {
             // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName.substring(0, fileName.length()-4));
+            LineDataSet set1 = new LineDataSet(yValues, fileName);
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
@@ -718,7 +718,7 @@ public class GraphActivity extends BaseActivity {
             mChart.setMaxVisibleValueCount(20);
         } else if (type == ChartType.INTENSITY) {
             // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName.substring(0, fileName.length()-4));
+            LineDataSet set1 = new LineDataSet(yValues, fileName);
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
@@ -745,7 +745,7 @@ public class GraphActivity extends BaseActivity {
             mChart.setMaxVisibleValueCount(20);
         } else {
             // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName.substring(0, fileName.length()-4));
+            LineDataSet set1 = new LineDataSet(yValues, fileName);
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);

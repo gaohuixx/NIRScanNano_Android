@@ -1,15 +1,11 @@
 package com.kstechnologies.NanoScan;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.gaohui.utils.ThemeManageUtil;
 
 /**
  *

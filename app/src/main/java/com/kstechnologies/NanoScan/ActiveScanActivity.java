@@ -151,13 +151,6 @@ public class ActiveScanActivity extends BaseActivity {
                 viewHolder.patterns.setText(getString(R.string.patterns_value, config.getNumPatterns()));
                 viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
                 viewHolder.serial.setText(config.getScanConfigSerialNumber());
-
-                Log.i("gaohui", "scanType: " + config.getSectionScanType());
-                Log.i("gaohui", "rangeStart: " + config.getWavelengthStartNm());
-                Log.i("gaohui", "rangeEnd: " + config.getWavelengthEndNm());
-                Log.i("gaohui", "width: " + config.getWidthPx());
-                Log.i("gaohui", "patterns: " + config.getNumPatterns());
-                Log.i("gaohui", "repeats: " + config.getNumRepeats());
             }
             return convertView;
         }

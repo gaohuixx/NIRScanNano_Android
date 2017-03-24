@@ -61,6 +61,8 @@ public class DeviceStatusActivity extends BaseActivity {
         btn_update_thresholds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(mContext, "更新阈值成功", Toast.LENGTH_SHORT).show();
+
                 Intent thresholdUpdateIntent = new Intent(KSTNanoSDK.UPDATE_THRESHOLD);
                 String tempString = et_tempThresh.getText().toString();
                 String humidString = et_humidThresh.getText().toString();

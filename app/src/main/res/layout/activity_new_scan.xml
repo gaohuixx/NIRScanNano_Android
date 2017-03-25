@@ -67,12 +67,13 @@
             android:paddingTop="@dimen/dip8">
 
             <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                app:theme="@style/ButtonTheme"
                 android:id="@+id/btn_scan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="@dimen/dip8"
-                android:background="?attr/colorPrimary"
                 android:text="@string/scan"
                 android:textSize="22dp"
                 android:textColor="@color/white" />

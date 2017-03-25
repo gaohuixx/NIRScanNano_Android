@@ -208,7 +208,8 @@ public class NewScanActivity extends BaseActivity {
         });
 
         btn_scan.setClickable(false);//此时按钮不可用，为灰色
-        btn_scan.setBackgroundColor(ContextCompat.getColor(mContext, R.color.btn_unavailable));
+
+//        btn_scan.setBackgroundColor(ContextCompat.getColor(mContext, R.color.btn_unavailable));
 
         //绑定到service 。这将开启这个service，并且会调用start command 方法
         Intent gattServiceIntent = new Intent(this, NanoBLEService.class);
@@ -817,12 +818,12 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
-     * 自定义接收器用来设备Nano 的时间
+     * 自定义接收器用来设置Nano 的时间
      */
     public class notifyCompleteReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "notifyCompleteReceiver.onReceive()");
+            Log.i(TAG, "notifyCompleteReceiver.onReceive()");//发广播时也可以传参数啊！
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.SET_TIME));
         }
     }
@@ -1174,7 +1175,8 @@ public class NewScanActivity extends BaseActivity {
 
             barProgressDialog.dismiss();
             btn_scan.setClickable(true);//此时按钮可用，设置为正常颜色
-            btn_scan.setBackgroundColor(ThemeManageUtil.getCurrentThemeColor());
+
+//            btn_scan.setBackgroundColor(ThemeManageUtil.getCurrentThemeColor());
             mMenu.findItem(R.id.action_config).setEnabled(true);
 
             SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, scanConf.getConfigName());

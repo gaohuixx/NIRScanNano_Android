@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -18,10 +19,10 @@ import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 /**
  * 一旦连接上了一个Nano ，这个activity 将控制设置视图，四个选项会被展示出来，每一个都将会启动一个新的activity
  * 每一个选项都需要Nano 去连接上去执行GATT 操作
- * 1.设备信息
- * 2.设备状态
- * 3.扫描配置
- * 4.Nano中保存的扫描数据
+ * 1.设备信息 {@link DeviceInfoActivity}
+ * 2.设备状态 {@link DeviceStatusActivity}
+ * 3.扫描配置 {@link ScanConfActivity}
+ * 4.Nano中保存的扫描数据 {@link StoredScanDataActivity}
  *
  * @author collinmast,gaohui
  */
@@ -99,6 +100,8 @@ public class ConfigureActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             Toast.makeText(mContext, R.string.nano_disconnected, Toast.LENGTH_SHORT).show();
             finish();
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            vibrator.vibrate(1000);//震动1s
         }
     }
 }

@@ -18,6 +18,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
@@ -206,7 +207,7 @@ public class NewScanActivity extends BaseActivity {
             }
         });
 
-        btn_scan.setClickable(false);//此时按钮不可用，为灰色
+        btn_scan.setClickable(false);//此时按钮不可用
 
 //        btn_scan.setBackgroundColor(ContextCompat.getColor(mContext, R.color.btn_unavailable));
 
@@ -293,9 +294,37 @@ public class NewScanActivity extends BaseActivity {
         if (id == R.id.action_config) {
             Intent configureIntent = new Intent(mContext, ConfigureActivity.class);
             startActivity(configureIntent);
+        }else if (id == android.R.id.home) {
+            confirmDialog();
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            vibrator.vibrate(500);//震动1s
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    /**
+     * 点击删除的时候弹出这个确认对话框
+     */
+    private void confirmDialog() {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.DialogTheme);
+        builder.setMessage("此操作将使连接断开！是否继续？");
+        builder.setTitle("警告");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Toast.makeText(mContext, R.string.nano_disconnected, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+        builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setCancelable(false).show();
     }
 
     /**
@@ -1151,6 +1180,7 @@ public class NewScanActivity extends BaseActivity {
      *
      * 广播接收器处理断开连接事件，一旦Nano 连接断开，这个activity 会结束并返回到{@link ScanListActivity}，
      * 同时显示一条message 告诉用户连接已经断开
+     * 当Nano 断开连接后大约12s 后才能触发这个广播
      *
      */
     public class DisconnReceiver extends BroadcastReceiver {
@@ -1160,6 +1190,9 @@ public class NewScanActivity extends BaseActivity {
             Log.i(TAG, "DisconnReceiver.onReceive():Nano连接断开");
             Toast.makeText(mContext, R.string.nano_disconnected, Toast.LENGTH_SHORT).show();
             finish();
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            vibrator.vibrate(1000);//震动1s
         }
     }
+
 }

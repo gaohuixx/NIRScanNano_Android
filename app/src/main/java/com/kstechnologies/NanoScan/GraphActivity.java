@@ -66,6 +66,7 @@ public class GraphActivity extends BaseActivity {
     private ListView graphListView;
     private ViewPager mViewPager;
     private String fileName;
+    private String displayName;
     private ArrayList<String> mXValues;
 
     private ArrayList<Entry> mIntensityFloat;
@@ -90,17 +91,16 @@ public class GraphActivity extends BaseActivity {
         //从intent 中获取文件名
         Intent intent = getIntent();
         fileName = intent.getStringExtra("file_name");
+        if (fileName.contains(".csv")) {
+            displayName = fileName.substring(0, fileName.length()-4);
+        } else {
+            displayName = fileName;
+        }
 
         //设置action bar标题，返回按钮，和导航tab
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);//设置顶部的返回箭头
-            if (fileName.contains(".csv")) {
-                ab.setTitle(fileName.substring(0, fileName.length()-4));
-            } else {
-                ab.setTitle(fileName);
-            }
-//            ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+            ab.setTitle(displayName);//设置标题名称，不带.csv 后缀
             mViewPager = (ViewPager) findViewById(R.id.viewpager);
             mViewPager.setOffscreenPageLimit(2); //页面来回切换时不会重新加载
 
@@ -661,7 +661,7 @@ public class GraphActivity extends BaseActivity {
 
         if (type == ChartType.REFLECTANCE) {
             // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName);
+            LineDataSet set1 = new LineDataSet(yValues, displayName);
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
@@ -691,7 +691,7 @@ public class GraphActivity extends BaseActivity {
             mChart.setMaxVisibleValueCount(20);
         } else if (type == ChartType.ABSORBANCE) {
             // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName);
+            LineDataSet set1 = new LineDataSet(yValues, displayName);
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
@@ -718,7 +718,7 @@ public class GraphActivity extends BaseActivity {
             mChart.setMaxVisibleValueCount(20);
         } else if (type == ChartType.INTENSITY) {
             // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName);
+            LineDataSet set1 = new LineDataSet(yValues, displayName);
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);
@@ -745,7 +745,7 @@ public class GraphActivity extends BaseActivity {
             mChart.setMaxVisibleValueCount(20);
         } else {
             // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName);
+            LineDataSet set1 = new LineDataSet(yValues, displayName);
 
             // set the line to be drawn like this "- - - - - -"
             set1.enableDashedLine(10f, 5f, 0f);

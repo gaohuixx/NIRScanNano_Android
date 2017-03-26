@@ -875,11 +875,11 @@ public class NanoBLEService extends Service {
      */
     private void broadcastUpdate(final String action,
                                  byte[] scanData) {
-        final Intent intent = new Intent(action);
-        intent.putExtra(KSTNanoSDK.EXTRA_DATA, scanData);
-        intent.putExtra(KSTNanoSDK.EXTRA_SCAN_NAME, scanName);
-        intent.putExtra(KSTNanoSDK.EXTRA_SCAN_TYPE, scanType);
-        intent.putExtra(KSTNanoSDK.EXTRA_SCAN_DATE, scanDate);
+        final Intent intent = new Intent(action);//触发扫描完成广播，并把数据带过去
+        intent.putExtra(KSTNanoSDK.EXTRA_DATA, scanData);//扫描数据
+        intent.putExtra(KSTNanoSDK.EXTRA_SCAN_NAME, scanName);//扫描名字
+        intent.putExtra(KSTNanoSDK.EXTRA_SCAN_TYPE, scanType);//扫描类型
+        intent.putExtra(KSTNanoSDK.EXTRA_SCAN_DATE, scanDate);//扫描日期
         intent.putExtra(KSTNanoSDK.EXTRA_SCAN_FMT_VER, scanPktFmtVer);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
@@ -1013,7 +1013,7 @@ public class NanoBLEService extends Service {
             Log.i(TAG, "Using LE Transport");
             KSTNanoSDK.mBluetoothGatt = device.connectGatt(this, false, mGattCallback, BluetoothDevice.TRANSPORT_LE);
         } else {
-            //问题主要出现在这里！它会在这里卡一会，然后就可能连接不上！调用mGattCallback 的状态改变方法
+            //这里获取到BluetoothGatt，然后给KSTNanoSDK.mBluetoothGatt，它相当于一个全局变量
             KSTNanoSDK.mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         }
         if (debug)
@@ -1022,6 +1022,9 @@ public class NanoBLEService extends Service {
         return true;
     }
 
+    /**
+     * 在这里初始化一堆广播接收器
+     */
     @Override
     public void onCreate() {
         super.onCreate();

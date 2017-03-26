@@ -681,23 +681,12 @@ public class NewScanActivity extends BaseActivity {
             btn_scan.setText(getString(R.string.scan));
             byte[] scanData = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA);//从Intent中获取数据
 
-            String scanType = intent.getStringExtra(KSTNanoSDK.EXTRA_SCAN_TYPE);
-            /*
-            * 7 bytes representing the current data
-            * byte0: uint8_t     year; //< years since 2000
-            * byte1: uint8_t     month; /**< months since January [0-11]
-            * byte2: uint8_t     day; /**< day of the month [1-31]
-            * byte3: uint8_t     day_of_week; /**< days since Sunday [0-6]
-            * byte3: uint8_t     hour; /**< hours since midnight [0-23]
-            * byte5: uint8_t     minute; //< minutes after the hour [0-59]
-            * byte6: uint8_t     second; //< seconds after the minute [0-60]
-            */
-            String scanDate = intent.getStringExtra(KSTNanoSDK.EXTRA_SCAN_DATE);
-            Log.i(TAG, scanDate);
+            String scanType = intent.getStringExtra(KSTNanoSDK.EXTRA_SCAN_TYPE);//获取扫描类型
+            String scanDate = intent.getStringExtra(KSTNanoSDK.EXTRA_SCAN_DATE);//17031800200720
             scanDate = TimeUtil.convertTime(scanDate);
-            Log.i(TAG, scanDate);
 
             KSTNanoSDK.ReferenceCalibration ref = KSTNanoSDK.ReferenceCalibration.currentCalibration.get(0);
+            //利用参考校准系数和参考校准矩阵计算出扫描结果并封装成对象，计算过程调用的是C 语言写的函数
             results = KSTNanoSDK.KSTNanoSDK_dlpSpecScanInterpReference(scanData, ref.getRefCalCoefficients(), ref.getRefCalMatrix());
 
             mXValues.clear();
@@ -706,7 +695,7 @@ public class NewScanActivity extends BaseActivity {
             mReflectanceFloat.clear();
             mWavelengthFloat.clear();
 
-            int index;
+            int index;//反射率和吸光率都是从其它数据算出来的，这个算法叼炸天，不明觉厉
             for (index = 0; index < results.getLength(); index++) {
                 mXValues.add(String.format("%.02f", KSTNanoSDK.ScanResults.getSpatialFreq(mContext, results.getWavelength()[index])));
                 mIntensityFloat.add(new Entry((float) results.getUncalibratedIntensity()[index], index));
@@ -715,7 +704,7 @@ public class NewScanActivity extends BaseActivity {
                 mWavelengthFloat.add((float) results.getWavelength()[index]);
             }
 
-            //还是获取最大值与最小值
+            //还是获取最大值与最小值，获取最大最小波长还有点用，但是后面获取反射率那些就没用了
             float minWavelength = mWavelengthFloat.get(0);
             float maxWavelength = mWavelengthFloat.get(0);
 
@@ -724,29 +713,6 @@ public class NewScanActivity extends BaseActivity {
                 if (f > maxWavelength) maxWavelength = f;
             }
 
-            float minAbsorbance = mAbsorbanceFloat.get(0).getVal();
-            float maxAbsorbance = mAbsorbanceFloat.get(0).getVal();
-
-            for (Entry e : mAbsorbanceFloat) {
-                if (e.getVal() < minAbsorbance) minAbsorbance = e.getVal();
-                if (e.getVal() > maxAbsorbance) maxAbsorbance = e.getVal();
-            }
-
-            float minReflectance = mReflectanceFloat.get(0).getVal();
-            float maxReflectance = mReflectanceFloat.get(0).getVal();
-
-            for (Entry e : mReflectanceFloat) {
-                if (e.getVal() < minReflectance) minReflectance = e.getVal();
-                if (e.getVal() > maxReflectance) maxReflectance = e.getVal();
-            }
-
-            float minIntensity = mIntensityFloat.get(0).getVal();
-            float maxIntensity = mIntensityFloat.get(0).getVal();
-
-            for (Entry e : mIntensityFloat) {
-                if (e.getVal() < minIntensity) minIntensity = e.getVal();
-                if (e.getVal() > maxIntensity) maxIntensity = e.getVal();
-            }
 
             mViewPager.setAdapter(mViewPager.getAdapter());
             mViewPager.invalidate();
@@ -757,7 +723,6 @@ public class NewScanActivity extends BaseActivity {
                 scanType = "Hadamard";
             }
 
-            //yyMMddHHmmss
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
             String ts = simpleDateFormat.format(new Date());//这个是文件名中的显示
 
@@ -769,11 +734,10 @@ public class NewScanActivity extends BaseActivity {
                 } else {
                     ab.setTitle(filePrefix.getText().toString() + ts);
                 }
-//                ab.setSelectedNavigationItem(0);
             }
 
-            boolean saveOS = btn_os.isChecked();
-            boolean continuous = btn_continuous.isChecked();
+            boolean saveOS = btn_os.isChecked();//判断是否需要保存到手机
+            boolean continuous = btn_continuous.isChecked();//判断是否继续扫描
 
             writeCSV(ts, results, saveOS);//ts 是170318200720，这个不用变，
             writeCSVDict(ts, scanType, scanDate, String.valueOf(minWavelength), String.valueOf(maxWavelength), String.valueOf(results.getLength()), String.valueOf(results.getLength()), "1", "2.00", saveOS);
@@ -874,10 +838,10 @@ public class NewScanActivity extends BaseActivity {
      * @param timeStamp the timestamp to be saved
      * @param spectStart the spectral range start
      * @param spectEnd the spectral range end
-     * @param numPoints the number of data points
+     * @param numPoints numPoints 和resolution 是相同的
      * @param resolution the scan resolution
-     * @param numAverages the number of scans to average
-     * @param measTime the total measurement time
+     * @param numAverages 平均扫描数，是写死的，1
+     * @param measTime 总测量时间，是写死的，2.00
      * @param saveOS boolean indicating if this file should be saved to the OS
      */
     private void writeCSVDict(String currentTime, String scanType, String timeStamp, String spectStart, String spectEnd, String numPoints, String resolution, String numAverages, String measTime, boolean saveOS) {
@@ -1101,7 +1065,7 @@ public class NewScanActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "requestCalCoeffReceiver.onReceive():下载引用计算");
+            Log.i(TAG, "requestCalCoeffReceiver.onReceive():下载校准系数");
             intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE, 0);
             Boolean size = intent.getBooleanExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE_PACKET, false);
             if (size) {
@@ -1128,7 +1092,7 @@ public class NewScanActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "requestCalMatrixReceiver.onReceive():下载计算矩阵");
+            Log.i(TAG, "requestCalMatrixReceiver.onReceive():下载校准矩阵");
             intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE, 0);
             Boolean size = intent.getBooleanExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE_PACKET, false);
             if (size) {
@@ -1168,15 +1132,14 @@ public class NewScanActivity extends BaseActivity {
             System.arraycopy(addArray, 0, largeArray, smallArray.length, addArray.length);
 
             Log.w("_JNI","largeArray Size: "+ largeArray.length);
+            //调用C 语言函数将获取到的数据解析并封装成KSTNanoSDK.ScanConfiguration 对象
             KSTNanoSDK.ScanConfiguration scanConf = KSTNanoSDK.KSTNanoSDK_dlpSpecScanReadConfiguration(intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA));
-            //KSTNanoSDK.ScanConfiguration scanConf = KSTNanoSDK.KSTNanoSDK_dlpSpecScanReadConfiguration(largeArray);
 
             activeConf = scanConf;
 
             barProgressDialog.dismiss();
-            btn_scan.setClickable(true);//此时按钮可用，设置为正常颜色
+            btn_scan.setClickable(true);//此时按钮可用
 
-//            btn_scan.setBackgroundColor(ThemeManageUtil.getCurrentThemeColor());
             mMenu.findItem(R.id.action_config).setEnabled(true);
 
             SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, scanConf.getConfigName());

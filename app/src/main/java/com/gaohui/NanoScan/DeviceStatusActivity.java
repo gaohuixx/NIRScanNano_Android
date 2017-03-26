@@ -1,4 +1,4 @@
-package com.kstechnologies.NanoScan;
+package com.gaohui.NanoScan;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

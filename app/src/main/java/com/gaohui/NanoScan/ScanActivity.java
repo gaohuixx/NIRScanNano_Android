@@ -1,4 +1,4 @@
-package com.kstechnologies.NanoScan;
+package com.gaohui.NanoScan;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 import com.kstechnologies.nirscannanolibrary.SettingsManager;
 

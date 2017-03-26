@@ -1,4 +1,4 @@
-package com.kstechnologies.NanoScan;
+package com.gaohui.NanoScan;
 
 import android.app.Service;
 import android.bluetooth.BluetoothDevice;
@@ -162,7 +162,7 @@ public class NanoBLEService extends Service {
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = KSTNanoSDK.ACTION_GATT_DISCONNECTED;
-                refresh();
+                refresh();//当Nano 与手机断开连接时，手机不会立刻发现，也就是说不会立刻触发这个状态
                 if (debug) {
                     Log.i(TAG, "Disconnected from GATT server.");
                 }

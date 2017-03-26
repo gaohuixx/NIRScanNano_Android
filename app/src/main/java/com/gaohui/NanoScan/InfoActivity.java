@@ -1,4 +1,4 @@
-package com.kstechnologies.NanoScan;
+package com.gaohui.NanoScan;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v7.app.ActionBar;
+
 
 import java.util.ArrayList;
 
@@ -100,7 +101,7 @@ public class InfoActivity extends BaseActivity {
     }
 
     /**
-     * 自定义一个适配器去支持{@link com.kstechnologies.NanoScan.InfoActivity.InfoManager}对象
+     * 自定义一个适配器去支持{@link InfoActivity.InfoManager}对象
      * 并且添加他们到listview
      */
     public class InformationAdapter extends ArrayAdapter<InfoManager> {
@@ -134,7 +135,7 @@ public class InfoActivity extends BaseActivity {
         }
 
         /**
-         * View holder for {@link com.kstechnologies.NanoScan.InfoActivity.InfoManager} objects
+         * View holder for {@link InfoActivity.InfoManager} objects
          */
         private class ViewHolder {
             private TextView infoTitle;

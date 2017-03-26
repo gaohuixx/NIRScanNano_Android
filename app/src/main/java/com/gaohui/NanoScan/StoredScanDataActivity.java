@@ -1,4 +1,4 @@
-package com.kstechnologies.NanoScan;
+package com.gaohui.NanoScan;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -183,7 +183,7 @@ public class StoredScanDataActivity extends BaseActivity {
 
     /**
      * Custom adapter for the stored scan list. This adapter holds
-     * {@link com.kstechnologies.NanoScan.StoredScanDataActivity.StoredScan} objects and initializes
+     * {@link StoredScanDataActivity.StoredScan} objects and initializes
      * the view holder
      */
     public class StoredScanAdapter extends ArrayAdapter<StoredScan> {
@@ -229,7 +229,7 @@ public class StoredScanDataActivity extends BaseActivity {
 
     /**
      * View holder for the labels consisting of a
-     * {@link com.kstechnologies.NanoScan.StoredScanDataActivity.StoredScan} object
+     * {@link StoredScanDataActivity.StoredScan} object
      */
     private class ViewHolder {
         private TextView scanName;

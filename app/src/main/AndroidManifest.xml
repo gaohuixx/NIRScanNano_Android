@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.kstechnologies.NanoScan">
+    package="com.gaohui.NanoScan">
 
     <!--申请权限-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.kstechnologies.NanoScan.ScanListActivity"
+            android:name="ScanListActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -28,50 +28,50 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.kstechnologies.NanoScan.InfoActivity"
+            android:name="InfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kstechnologies.NanoScan.SettingsActivity"
+            android:name="SettingsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kstechnologies.NanoScan.GraphActivity"
+            android:name="GraphActivity"
             android:screenOrientation="portrait" />
 
         <service
-            android:name="com.kstechnologies.NanoScan.NanoBLEService"
+            android:name="NanoBLEService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="com.kstechnologies.NanoScan.NewScanActivity"
+            android:name="NewScanActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <!-- android:windowSoftInputMode="adjustPan" -->
         <!-- 当前窗口的内容将自动移动以便当前焦点从不被键盘覆盖和用户能总是看到输入内容的部分 -->
         <activity
-            android:name="com.kstechnologies.NanoScan.ConfigureActivity"
+            android:name="ConfigureActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kstechnologies.NanoScan.DeviceInfoActivity"
+            android:name="DeviceInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kstechnologies.NanoScan.DeviceStatusActivity"
+            android:name="DeviceStatusActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kstechnologies.NanoScan.ScanConfActivity"
+            android:name="ScanConfActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.kstechnologies.NanoScan.StoredScanDataActivity"
+            android:name="StoredScanDataActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name="com.kstechnologies.NanoScan.ScanActivity"
+        <activity android:name="ScanActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name="com.kstechnologies.NanoScan.AboutActivity"
+        <activity android:name="AboutActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ActiveScanActivity"
+            android:name="com.gaohui.NanoScan.ActiveScanActivity"
             android:screenOrientation="portrait" />
     </application>
 

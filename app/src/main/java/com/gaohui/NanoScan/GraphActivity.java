@@ -1,9 +1,8 @@
-package com.kstechnologies.NanoScan;
+package com.gaohui.NanoScan;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -11,7 +10,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +31,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.renderer.XAxisRenderer;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 
 import java.io.BufferedReader;
@@ -653,7 +650,7 @@ public class GraphActivity extends BaseActivity {
      * @param mChart 为那个图标更新数据
      * @param xValues 横坐标是String类型
      * @param yValues 纵坐标是数字类型
-     * @param type 要显示的图表类型 {@link com.kstechnologies.NanoScan.GraphActivity.ChartType}
+     * @param type 要显示的图表类型 {@link GraphActivity.ChartType}
      */
     private void setData(LineChart mChart, ArrayList<String> xValues, ArrayList<Entry> yValues, ChartType type) {
 

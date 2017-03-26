@@ -1,4 +1,4 @@
-package com.kstechnologies.NanoScan;
+package com.gaohui.NanoScan;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

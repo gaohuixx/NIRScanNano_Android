@@ -1,10 +1,11 @@
-package com.kstechnologies.NanoScan;
+package com.gaohui.NanoScan;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 
 
 /**

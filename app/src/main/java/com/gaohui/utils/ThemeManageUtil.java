@@ -1,6 +1,7 @@
 package com.gaohui.utils;
 
-import com.kstechnologies.NanoScan.R;
+
+import com.gaohui.NanoScan.R;
 
 /**
  * Created by gaohui on 2017/3/13.

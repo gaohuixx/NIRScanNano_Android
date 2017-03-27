@@ -613,7 +613,7 @@ public class NanoBLEService extends Service {
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.i(TAG, "Received Scan Conf index:" + stringBuilder.toString());
+                    Log.i(TAG, "Received Scan Conf index:" + stringBuilder.toString());//TODO
 
                 scanConfIndex++;
                 scanConfList.add(data);

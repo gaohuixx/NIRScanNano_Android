@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,14 +40,14 @@ public class ScanConfActivity extends BaseActivity {
     private final BroadcastReceiver scanConfReceiver = new ScanConfReceiver();
     private final IntentFilter scanConfFilter = new IntentFilter(KSTNanoSDK.SCAN_CONF_DATA);
     private ScanConfAdapter scanConfAdapter;
-    private ArrayList<KSTNanoSDK.ScanConfiguration> configs = new ArrayList<>();
+    private ArrayList<KSTNanoSDK.ScanConfiguration> configs = new ArrayList<>();//代表那个列表对应的集合
     private ListView lv_configs;
     private final BroadcastReceiver disconnReceiver = new DisconnReceiver();
     private final IntentFilter disconnFilter = new IntentFilter(KSTNanoSDK.ACTION_GATT_DISCONNECTED);
     private BroadcastReceiver scanConfSizeReceiver;
     private BroadcastReceiver getActiveScanConfReceiver;
-    private int storedConfSize;
-    private int receivedConfSize;
+    private int storedConfSize;//Nano 中保存的配置数量
+    private int receivedConfSize;//己经接收的配置数量
 
     ProgressDialog barProgressDialog;
 
@@ -66,13 +67,28 @@ public class ScanConfActivity extends BaseActivity {
         actionBar.setTitle(R.string.stored_configurations);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        /* Initialize the receiver for the # of scan configurations
-         * When the configuration size is received, show the progress dialog.
-         */
+        lv_configs = (ListView) findViewById(R.id.lv_configs);
+
+        //为List 的item 添加监听，当点击时，发送设置active 配置广播
+        lv_configs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.i("gaohui", "gaohui：onItemClick: item被点击" + i);
+                byte[] index = {0, 0};
+                index[0] = (byte) configs.get(i).getScanConfigIndex();
+                Intent setActiveConfIntent = new Intent(KSTNanoSDK.SET_ACTIVE_CONF);
+                setActiveConfIntent.putExtra(KSTNanoSDK.EXTRA_SCAN_INDEX, index);
+                Log.i("gaohui", "gaohui：设置active索引为" + index + "-----" + index[0]);
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(setActiveConfIntent);
+            }
+        });
+
+         //初始化一个扫描配置接收器，当配置数量被接收的时候，显示进度条
         scanConfSizeReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 storedConfSize = intent.getIntExtra(KSTNanoSDK.EXTRA_CONF_SIZE, 0);
+                Log.i("gaohui", "gaohui：scanConfSizeReceiver: 接收到配置数量" + storedConfSize);
                 if (storedConfSize > 0) {
                     barProgressDialog = new ProgressDialog(ScanConfActivity.this, R.style.DialogTheme);
 
@@ -94,22 +110,21 @@ public class ScanConfActivity extends BaseActivity {
             }
         };
 
-        /* Initialize the receiver for the active scan configuration
-         * When the active configuration is received, set the color of the name of the active
-         * scan configuration to green
-         */
+         //初始化一个active 配置接收器，当接收到active 配置，设置active 配置的颜色为当前主题颜色
         getActiveScanConfReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 int index = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_ACTIVE_CONF)[0];
+                Log.i("gaohui", "gaohui：getActiveScanConfReceiver: 接收到active配置，index=" + index);
+                barProgressDialog.dismiss();//进度条消失
+                lv_configs.setAdapter(scanConfAdapter);
+                lv_configs.setVisibility(View.VISIBLE);//列表显示
 
-                barProgressDialog.dismiss();
-                lv_configs.setVisibility(View.VISIBLE);
-
-                for (KSTNanoSDK.ScanConfiguration c : scanConfAdapter.configs) {
+                for (KSTNanoSDK.ScanConfiguration c : configs) {
                     if (c.getScanConfigIndex() == index) {
+                        Log.i("gaohui", "gaohui：以设置索引" + index);
                         c.setActive(true);
-                        lv_configs.setAdapter(scanConfAdapter);
+
                     } else {
                         c.setActive(false);
                     }
@@ -117,10 +132,10 @@ public class ScanConfActivity extends BaseActivity {
             }
         };
 
-        //Send broadcast to retrieve the scan configurations
+        //发送一个获取扫描配置的广播，告诉别人我要获取扫描配置
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.GET_SCAN_CONF));
 
-        //register the necessary broadcast receivers
+        //注册所有广播接收器，一共四个
         LocalBroadcastManager.getInstance(mContext).registerReceiver(scanConfReceiver, scanConfFilter);
         LocalBroadcastManager.getInstance(mContext).registerReceiver(disconnReceiver, disconnFilter);
         LocalBroadcastManager.getInstance(mContext).registerReceiver(scanConfSizeReceiver, new IntentFilter(KSTNanoSDK.SCAN_CONF_SIZE));
@@ -128,11 +143,6 @@ public class ScanConfActivity extends BaseActivity {
     }
 
 
-    /*
-     * When the activity is destroyed, unregister the BroadcastReceivers
-     * handling receiving scan configurations, disconnect events, the # of configurations,
-     * and the active configuration
-     */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -144,44 +154,37 @@ public class ScanConfActivity extends BaseActivity {
 
 
 
-    /*
-     * Broadcast receiver for scan configurations. When the expected number of configurations are
-      * received, the dialog will be closed, and the list of configurations will be displayed.
+    /**
+     * 这个广播接收器用来接收扫描配置，当接收所有扫描配置接收完成后，进度条将关闭，并且将把所有配置列出来
      */
     private class ScanConfReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
 
+            //调用C语言方法将数据反序列化解析并封装成ScanConfiguration 对象
             KSTNanoSDK.ScanConfiguration scanConf = KSTNanoSDK.KSTNanoSDK_dlpSpecScanReadConfiguration(intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA));
-            lv_configs = (ListView) findViewById(R.id.lv_configs);
 
-            lv_configs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    byte[] index = {0, 0};
-                    index[0] = (byte) scanConfAdapter.configs.get(i).getScanConfigIndex();
-                    Intent setActiveConfIntent = new Intent(KSTNanoSDK.SET_ACTIVE_CONF);
-                    setActiveConfIntent.putExtra(KSTNanoSDK.EXTRA_SCAN_INDEX, index);
-                    LocalBroadcastManager.getInstance(mContext).sendBroadcast(setActiveConfIntent);
-                }
-            });
-
-            receivedConfSize++;
-            if (receivedConfSize == storedConfSize) {
+            configs.add(scanConf);//每接收到一个就把它存到集合里
+            receivedConfSize++;//己经接收的配置数量加一
+            Log.i("gaohui", "gaohui：ScanConfReceiver: 接收到配置，现在数量为" + receivedConfSize + "索引为：" + scanConf.getScanConfigIndex());
+            if (receivedConfSize == storedConfSize) {//如果己经接收的配置数量等于Nano 中保存的配置数量
+                //开始发广播准备获取当前active 配置
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.GET_ACTIVE_CONF));
+                scanConfAdapter = new ScanConfAdapter(mContext, configs);
+//                lv_configs.setAdapter(scanConfAdapter);
             } else {
-                barProgressDialog.setProgress(receivedConfSize);
+                barProgressDialog.setProgress(receivedConfSize);//更新进度条
             }
 
-            configs.add(scanConf);
-            scanConfAdapter = new ScanConfAdapter(mContext, configs);
-            lv_configs.setAdapter(scanConfAdapter);
+
+//            scanConfAdapter = new ScanConfAdapter(mContext, configs);
+//            lv_configs.setAdapter(scanConfAdapter);
         }
     }
 
     /**
-     * Custom adapter that holds {@link KSTNanoSDK.ScanConfiguration} objects for the listview
+     * listview 的每一行都是一个KSTNanoSDK.ScanConfiguration
      */
     public class ScanConfAdapter extends ArrayAdapter<KSTNanoSDK.ScanConfiguration> {
         private final ArrayList<KSTNanoSDK.ScanConfiguration> configs;
@@ -223,9 +226,11 @@ public class ScanConfActivity extends BaseActivity {
                 viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
                 viewHolder.serial.setText(config.getScanConfigSerialNumber());
                 if (config.isActive()) {
+                    Log.i("gaohui", "gaohui：setTextColor: 设置颜色为彩色" + viewHolder.scanType.getText());
                     viewHolder.scanType.setTextColor(ThemeManageUtil.getCurrentThemeColor());
                     SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, config.getConfigName());
                 } else {
+                    Log.i("gaohui", "gaohui：setTextColor: 设置颜色为灰色" + viewHolder.scanType.getText());
                     viewHolder.scanType.setTextColor(0xff888888);
                 }
             }

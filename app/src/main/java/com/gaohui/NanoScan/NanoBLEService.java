@@ -48,8 +48,8 @@ public class NanoBLEService extends Service {
 
     public static final long SCAN_PERIOD = 6000;
     ByteArrayOutputStream scanData = new ByteArrayOutputStream();
-    ByteArrayOutputStream refConf = new ByteArrayOutputStream();
-    ByteArrayOutputStream refMatrix = new ByteArrayOutputStream();
+    ByteArrayOutputStream refConf = new ByteArrayOutputStream();//校正系数，这个名字起的不是很合理，应该叫refCoef
+    ByteArrayOutputStream refMatrix = new ByteArrayOutputStream();//校正矩阵
     ByteArrayOutputStream scanConf = new ByteArrayOutputStream();
 
     //Scan and reference calibration information variables
@@ -481,7 +481,7 @@ public class NanoBLEService extends Service {
                     KSTNanoSDK.requestScanType(scanIndex);
                 }
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISRetScanType) {
-                final byte[] data = characteristic.getValue();
+                final byte[] data = characteristic.getValue();//这个扫描类型是直接从Characteristic 中读的
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X", byteChar));
@@ -538,7 +538,7 @@ public class NanoBLEService extends Service {
                     size = 0;
                     if (debug)
                         Log.i(TAG, "Done collecting scan data, sending broadcast");
-                    broadcastUpdate(KSTNanoSDK.SCAN_DATA, scanData.toByteArray());
+                    broadcastUpdate(KSTNanoSDK.SCAN_DATA, scanData.toByteArray());//扫描数据接收完成，发送广播
                 }
                 if (debug)
                     Log.i("__SIZE", "new ScanData size:" + scanData.size());
@@ -550,15 +550,15 @@ public class NanoBLEService extends Service {
                 if (debug)
                     Log.i(TAG, "Received Reference calibration coefficients:" + stringBuilder.toString());
 
-                if (data[0] == 0x00) {
+                if (data[0] == 0x00) {//第一次接收到执行这个
                     refConf.reset();
                     refSizeIndex = 0;
-                    refSize = (((data[2]) << 8) | (data[1] & 0xFF));
+                    refSize = (((data[2]) << 8) | (data[1] & 0xFF));//获取校验系数大小
                     Intent requestCalCoef = new Intent(KSTNanoSDK.ACTION_REQ_CAL_COEFF);
                     requestCalCoef.putExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE, refSize);
                     requestCalCoef.putExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE_PACKET, true);
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(requestCalCoef);
-                } else {
+                } else {//然后执行这个，和NewActivity 的广播接收器是对应的
                     int i;
                     for (i = 1; i < data.length; i++) {
                         refConf.write(data[i]);
@@ -573,7 +573,7 @@ public class NanoBLEService extends Service {
                     refSize = 0;
                     if (debug)
                         Log.i(TAG, "Done collecting reference, sending broadcast");
-                    KSTNanoSDK.requestRefCalMatrix();
+                    KSTNanoSDK.requestRefCalMatrix();//接收完之后就去请求校正矩阵
                 }
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGCISRetRefCalMatrix) {
                 final byte[] data = characteristic.getValue();
@@ -603,7 +603,7 @@ public class NanoBLEService extends Service {
 
                 if (refMatrix.size() == refMatrixSize) {
                     refSize = 0;
-                    if (debug)
+                    if (debug)//校正系数和校正矩阵都完事后就发送广播
                         Log.i(TAG, "Done collecting reference Matrix, sending broadcast");
                     broadcastUpdate(KSTNanoSDK.REF_CONF_DATA, refConf.toByteArray(), refMatrix.toByteArray());
                 }
@@ -663,7 +663,7 @@ public class NanoBLEService extends Service {
                 }
 
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSCISRetScanConfData) {
-                final byte[] data = characteristic.getValue();
+                final byte[] data = characteristic.getValue();// TODO: 2017/3/27
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
@@ -880,7 +880,7 @@ public class NanoBLEService extends Service {
         intent.putExtra(KSTNanoSDK.EXTRA_SCAN_NAME, scanName);//扫描名字
         intent.putExtra(KSTNanoSDK.EXTRA_SCAN_TYPE, scanType);//扫描类型
         intent.putExtra(KSTNanoSDK.EXTRA_SCAN_DATE, scanDate);//扫描日期
-        intent.putExtra(KSTNanoSDK.EXTRA_SCAN_FMT_VER, scanPktFmtVer);
+        intent.putExtra(KSTNanoSDK.EXTRA_SCAN_FMT_VER, scanPktFmtVer);//不知道他这个是干什么的
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
     }
 

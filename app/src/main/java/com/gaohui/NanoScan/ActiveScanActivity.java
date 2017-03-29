@@ -7,13 +7,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,39 +46,43 @@ public class ActiveScanActivity extends BaseActivity {
         mContext = this;
 
 
-        KSTNanoSDK.ScanConfiguration activeConf = null;
-        if(getIntent().getSerializableExtra("conf") != null){
+        KSTNanoSDK.ScanConfiguration activeConf = null;//定义一个ScanConfiguration 对象，从NewScanActivity 那里获取的
+        if(getIntent().getSerializableExtra("conf") != null){//如果这里获取不到那么activeConf 就为空
             activeConf = (KSTNanoSDK.ScanConfiguration) getIntent().getSerializableExtra("conf");
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
         this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
         if(activeConf != null) {
-            actionBar.setTitle(activeConf.getConfigName());
+            actionBar.setTitle(activeConf.getConfigName());//以配置名称作为标题，在getConfigName() 时，内部自动将byte[]转化为String
         }
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        lv_configs = (ListView) findViewById(R.id.lv_configs);
+        lv_configs = (ListView) findViewById(R.id.lv_configs);//取到activity_active_scan 布局里面唯一的一个ListView
 
-
+        Log.i("gaohui", "扫描类型是：" + activeConf.getScanType());
+        //如果这个扫描配置包含多个扫描，即多个section，那么它就是由多个section 组成的，将它拆成多个section 然后放到sections 集合里
+        //section 集合代表SlewScanConfAdapter 对应的ArrayList
+        //这个类型有三种Hadamard,Column，slew
         if(activeConf != null && activeConf.getScanType().equals("Slew")){
             int numSections = activeConf.getSlewNumSections();
             int i;
             for(i = 0; i < numSections; i++){
-                sections.add(new KSTNanoSDK.SlewScanSection(activeConf.getSectionScanType()[i],
-                        activeConf.getSectionWidthPx()[i],
-                        (activeConf.getSectionWavelengthStartNm()[i] & 0xFFFF),
-                        (activeConf.getSectionWavelengthEndNm()[i] & 0xFFFF),
-                        activeConf.getSectionNumPatterns()[i],
-                        activeConf.getSectionNumRepeats()[i],
-                        activeConf.getSectionExposureTime()[i]));
+                sections.add(new KSTNanoSDK.SlewScanSection(activeConf.getSectionScanType()[i],//类型，这个类型只有两种Hadamard,Column
+                        activeConf.getSectionWidthPx()[i],//宽度，单位是px
+                        (activeConf.getSectionWavelengthStartNm()[i] & 0xFFFF),//波长起始范围
+                        (activeConf.getSectionWavelengthEndNm()[i] & 0xFFFF),//波长结束范围
+                        activeConf.getSectionNumPatterns()[i],//NumPatterns
+                        activeConf.getSectionNumRepeats()[i],//重复次数
+                        activeConf.getSectionExposureTime()[i]));//曝光时间
             }
-            Log.i("__ACTIVE_CONF","Setting slew conf adapter");
+            Log.i("gaohui","设置 slewScanConfAdapter");
             slewScanConfAdapter = new SlewScanConfAdapter(mContext, sections);
             lv_configs.setAdapter(slewScanConfAdapter);
         }else{
-            configs.add(activeConf);
+            Log.i("gaohui","设置 scanConfAdapter");
+            configs.add(activeConf);//对应ListView 的那个数组，但是只有一个元素，正常也就只有一个元素，不知道为什么要弄成对应ListView
             scanConfAdapter = new ScanConfAdapter(mContext, configs);
             lv_configs.setAdapter(scanConfAdapter);
         }
@@ -128,24 +132,15 @@ public class ActiveScanActivity extends BaseActivity {
                 viewHolder.repeats = (TextView) convertView.findViewById(R.id.tv_repeats_value);
                 viewHolder.serial = (TextView) convertView.findViewById(R.id.tv_serial_value);
 
-                viewHolder.scanType.setVisibility(View.GONE);
-                LinearLayout ll_range_start = (LinearLayout)convertView.findViewById(R.id.ll_range_start);
-                LinearLayout ll_range_end = (LinearLayout)convertView.findViewById(R.id.ll_range_end);
-                LinearLayout ll_patterns= (LinearLayout)convertView.findViewById(R.id.ll_patterns);
-                LinearLayout ll_width = (LinearLayout)convertView.findViewById(R.id.ll_width);
-                ll_range_start.setVisibility(View.VISIBLE);
-                ll_range_end.setVisibility(View.VISIBLE);
-                ll_patterns.setVisibility(View.VISIBLE);
-                ll_width.setVisibility(View.VISIBLE);
-
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
             final KSTNanoSDK.ScanConfiguration config = getItem(position);
+            Log.i("gaohui", "ScanConfiguration-scanType: " + config.getSectionScanType());
             if (config != null) {
-                viewHolder.scanType.setText(config.getConfigName());
+                viewHolder.scanType.setText(config.getScanType());
                 viewHolder.rangeStart.setText(getString(R.string.range_start_value, config.getWavelengthStartNm()));
                 viewHolder.rangeEnd.setText(getString(R.string.range_end_value, config.getWavelengthEndNm()));
                 viewHolder.width.setText(getString(R.string.width_value, config.getWidthPx()));
@@ -192,13 +187,14 @@ public class ActiveScanActivity extends BaseActivity {
 
             final KSTNanoSDK.SlewScanSection config = getItem(position);
             if (config != null) {
+//                viewHolder.scanType.setText(config.getSectionScanType());
                 viewHolder.rangeStart.setText(getString(R.string.range_start_value, config.getWavelengthStartNm()));
                 viewHolder.rangeEnd.setText(getString(R.string.range_end_value, config.getWavelengthEndNm()));
                 viewHolder.width.setText(getString(R.string.width_value, config.getWidthPx()));
                 viewHolder.patterns.setText(getString(R.string.patterns_value, config.getNumPatterns()));
                 viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
             }
-            Log.i("gaohui", "scanType: " + config.getSectionScanType());
+            Log.i("gaohui", "SlewScanSection-scanType: " + config.getSectionScanType());
             Log.i("gaohui", "rangeStart: " + config.getWavelengthStartNm());
             Log.i("gaohui", "rangeEnd: " + config.getWavelengthEndNm());
             Log.i("gaohui", "width: " + config.getWidthPx());

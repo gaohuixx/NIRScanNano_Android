@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.gaohui.utils.NanoUtil;
 import com.gaohui.utils.ThemeManageUtil;
 import com.gaohui.utils.TimeUtil;
 import com.github.mikephil.charting.animation.Easing;
@@ -55,6 +56,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,6 +78,17 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  *
  * 这个界面也能显示图表，但是它是又单独写了一遍，和{@link GraphActivity} 没关系
  *
+ * 几个接收器的执行顺序：
+ * {@link notifyCompleteReceiver}   当连接上Nano 后触发，触发器后去设置时间{@link notifyCompleteReceiver}
+ * {@link requestCalCoeffReceiver}  当接收校正系数时触发，只是用来更新进度条
+ * {@link requestCalMatrixReceiver} 当接收到校正矩阵时，只是用来更新进度条
+ * {@link refReadyReceiver}         当校正系数和校正矩阵都接收完成后触发，用来将参考校正数据保存到本地，不过并没有用到
+ *
+ * {@link ScanStartedReceiver}      当点击扫描按钮时或者按Nano上的扫描键时触发，用来显示一个圆形进度条和按钮文字变为“扫描中...”
+ * {@link scanDataReadyReceiver}    当扫描完成后触发，这个干的事就比较多了，详情见下面的注释
+ *
+ * {@link DisconnReceiver}          当连接断开时触发，显示一个Toast，并震动1s
+ *
  * @author collinmast,gaohui
  */
 public class NewScanActivity extends BaseActivity {
@@ -94,12 +107,12 @@ public class NewScanActivity extends BaseActivity {
     private ArrayList<Entry> mReflectanceFloat;
     private ArrayList<Float> mWavelengthFloat;
 
-    private final BroadcastReceiver scanDataReadyReceiver = new scanDataReadyReceiver();
-    private final BroadcastReceiver refReadyReceiver = new refReadyReceiver();
     private final BroadcastReceiver notifyCompleteReceiver = new notifyCompleteReceiver();
-    private final BroadcastReceiver scanStartedReceiver = new ScanStartedReceiver();
     private final BroadcastReceiver requestCalCoeffReceiver = new requestCalCoeffReceiver();
     private final BroadcastReceiver requestCalMatrixReceiver = new requestCalMatrixReceiver();
+    private final BroadcastReceiver refReadyReceiver = new refReadyReceiver();
+    private final BroadcastReceiver scanStartedReceiver = new ScanStartedReceiver();
+    private final BroadcastReceiver scanDataReadyReceiver = new scanDataReadyReceiver();
     private final BroadcastReceiver disconnReceiver = new DisconnReceiver();
 
     private final IntentFilter scanDataReadyFilter = new IntentFilter(KSTNanoSDK.SCAN_DATA);
@@ -131,7 +144,7 @@ public class NewScanActivity extends BaseActivity {
     private TextView tv_scan_conf;
     private String preferredDevice;
     private LinearLayout ll_conf;
-    private KSTNanoSDK.ScanConfiguration activeConf;
+    private KSTNanoSDK.ScanConfiguration activeConf;//在这整个页面中代表着当前被选中的扫描配置
 
     private Menu mMenu;
 
@@ -151,18 +164,6 @@ public class NewScanActivity extends BaseActivity {
         calProgress.setVisibility(View.VISIBLE);
         connected = false;
 
-        ll_conf = (LinearLayout)findViewById(R.id.ll_conf);
-        ll_conf.setClickable(false);
-        ll_conf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(activeConf != null) {
-                    Intent activeConfIntent = new Intent(mContext, ActiveScanActivity.class);
-                    activeConfIntent.putExtra("conf",activeConf);
-                    startActivity(activeConfIntent);
-                }
-            }
-        });
 
         //从intent 中获取文件名并设置
         Intent intent = getIntent();
@@ -239,7 +240,13 @@ public class NewScanActivity extends BaseActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs); //获取TabLayout
         tabLayout.setupWithViewPager(mViewPager); //将TabLayout 和ViewPager 关联
 
-        tv_scan_conf.setText(SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, "Column 1"));
+        //他把当前配置的名称存在了数据库里
+//        tv_scan_conf.setText(SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, "Column 11111"));//Column 1是默认值
+
+        if (activeConf != null)
+            tv_scan_conf.setText(activeConf.getConfigName());
+        else
+            tv_scan_conf.setText(SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, "Column 11111"));
 
 
         mXValues = new ArrayList<>();
@@ -712,22 +719,43 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
-     * 由一个Activity 启动这个BroadcastReceiver，并传过来一些数据
-     * 自定义接收器用来处理扫描数据并且设置图表属性
+     * 当数据接收完毕后会触发这个广播接收器，然后依次执行以下几步：
+     * 1. 旋转进度条消失
+     * 2. 获取扫描数据，扫描类型，扫描时间
+     * 3. 获取参考校准对象{@link KSTNanoSDK.ReferenceCalibration}，可以从本地获取，也可以从Nano 中读取
+     * 4. 根据扫描数据和参考校准对象，获得扫描结果对象{@link KSTNanoSDK.ScanResults}，是利用JNI 调用C 语言函数
+     * 5. 根据扫描结果对象计算出吸收率，反射率，强度
+     * 6. 画图
+     * 7. 保存数据（如果设置了）
+     * 8. 继续扫描（如果设置了）
+     *
      */
     public class scanDataReadyReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "scanDataReadyReceiver.onReceive()");
+            Log.i(TAG, "gaohuixx:scanDataReadyReceiver.onReceive()");
             calProgress.setVisibility(View.GONE);
             btn_scan.setText(getString(R.string.scan));
             byte[] scanData = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA);//从Intent中获取数据
 
-            String scanType = intent.getStringExtra(KSTNanoSDK.EXTRA_SCAN_TYPE);//获取扫描类型
+//            String scanType = intent.getStringExtra(KSTNanoSDK.EXTRA_SCAN_TYPE);//好像不应该从Intent中获取扫描类型
+//            String scanType = activeConf.getScanType();//从activeConf 中获取扫描类型，只有三种：Hadamard，Column，Slew
+            String scanType = SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, "Column 1");//从数据库中获取当前配置名称
+
             String scanDate = intent.getStringExtra(KSTNanoSDK.EXTRA_SCAN_DATE);//17031800200720
             scanDate = TimeUtil.convertTime(scanDate);
 
-            KSTNanoSDK.ReferenceCalibration ref = KSTNanoSDK.ReferenceCalibration.currentCalibration.get(0);
+            //获取到参考校正数据对象，这个对象是一个全局变量，是当时我们接收完成后就有了的，我们直接获取，不是从本地读取的！
+            //就是说在本地保存的那个参考校正数据根本没用上。。。
+//            KSTNanoSDK.ReferenceCalibration ref = KSTNanoSDK.ReferenceCalibration.currentCalibration.get(0);
+            KSTNanoSDK.ReferenceCalibration ref = null;
+            try {
+                ref = NanoUtil.getRefCal(getResources().getAssets().open("refcals"));//通过我自己的方法从本地获取参考校正对象
+                Log.i(TAG, "ref.getRefCalCoefficients(): " + ref.getRefCalCoefficients());
+                Log.i(TAG, "ref.getRefCalMatrix(): " + ref.getRefCalMatrix());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             //利用参考校准系数和参考校准矩阵计算出扫描结果并封装成对象，计算过程调用的是C 语言写的函数
             results = KSTNanoSDK.KSTNanoSDK_dlpSpecScanInterpReference(scanData, ref.getRefCalCoefficients(), ref.getRefCalMatrix());
 
@@ -756,14 +784,9 @@ public class NewScanActivity extends BaseActivity {
             }
 
 
-            mViewPager.setAdapter(mViewPager.getAdapter());
+            mViewPager.setAdapter(mViewPager.getAdapter());//开始绘制光谱图
             mViewPager.invalidate();
 
-            if (scanType.equals("00")) { //只有两种扫描类型，这个和配置名称不是一回事
-                scanType = "Column";
-            } else {
-                scanType = "Hadamard";
-            }
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMddHHmmss", java.util.Locale.getDefault());
             String ts = simpleDateFormat.format(new Date());//这个是文件名中的显示
@@ -784,8 +807,8 @@ public class NewScanActivity extends BaseActivity {
             writeCSV(ts, results, saveOS);//ts 是170318200720，这个不用变，
             writeCSVDict(ts, scanType, scanDate, String.valueOf(minWavelength), String.valueOf(maxWavelength), String.valueOf(results.getLength()), String.valueOf(results.getLength()), "1", "2.00", saveOS);
 
+            //是否继续扫描，如果是就再扫
             SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.prefix, filePrefix.getText().toString());
-
             if (continuous) {
                 calProgress.setVisibility(View.VISIBLE);
                 btn_scan.setText(getString(R.string.scanning));
@@ -795,19 +818,20 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
-     * 自定义一个接收器用来返回引用校验被读的事件
+     * 自定义一个接收器接收返回参考校正数据
      *
      */
     public class refReadyReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "refReadyReceiver.onReceive()");
+            Log.i(TAG, "gaohuixx:refReadyReceiver.onReceive()");
             byte[] refCoeff = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_REF_COEF_DATA);
             byte[] refMatrix = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_REF_MATRIX_DATA);
             ArrayList<KSTNanoSDK.ReferenceCalibration> refCal = new ArrayList<>();
             refCal.add(new KSTNanoSDK.ReferenceCalibration(refCoeff, refMatrix));
-            KSTNanoSDK.ReferenceCalibration.writeRefCalFile(mContext, refCal);
+            KSTNanoSDK.ReferenceCalibration.writeRefCalFile(mContext, refCal);//把参考校正数据写到本地,是直接把对象给保存了
             calProgress.setVisibility(View.GONE);
+
         }
     }
 
@@ -817,7 +841,7 @@ public class NewScanActivity extends BaseActivity {
     public class ScanStartedReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "ScanStartedReceiver.onReceive()");
+            Log.i(TAG, "gaohuixx:ScanStartedReceiver.onReceive()");
             calProgress.setVisibility(View.VISIBLE);
             btn_scan.setText(getString(R.string.scanning));
         }
@@ -829,7 +853,7 @@ public class NewScanActivity extends BaseActivity {
     public class notifyCompleteReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "notifyCompleteReceiver.onReceive()");//发广播时也可以传参数啊！
+            Log.i(TAG, "gaohuixx:notifyCompleteReceiver.onReceive()");//发广播时也可以传参数啊！
             LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.SET_TIME));
         }
     }
@@ -1102,15 +1126,16 @@ public class NewScanActivity extends BaseActivity {
 
     /**
      * 自定义一个接收器用来接收calibration coefficient data.
+     * 这两个接收器都只是用来更新进度条的
      */
     public class requestCalCoeffReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "requestCalCoeffReceiver.onReceive():下载校准系数");
+            Log.i(TAG, "gaohuixx:requestCalCoeffReceiver.onReceive():下载校准系数");
             intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE, 0);
             Boolean size = intent.getBooleanExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE_PACKET, false);
-            if (size) {
+            if (size) {//第一次接收到执行这个
                 calProgress.setVisibility(View.INVISIBLE);
                 barProgressDialog = new ProgressDialog(NewScanActivity.this, R.style.DialogTheme);
 
@@ -1120,7 +1145,7 @@ public class NewScanActivity extends BaseActivity {
                 barProgressDialog.setMax(intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE, 0));
                 barProgressDialog.setCancelable(false);
                 barProgressDialog.show();
-            } else {
+            } else {//之后执行这个
                 barProgressDialog.setProgress(barProgressDialog.getProgress() + intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_COEFF_SIZE, 0));
             }
         }
@@ -1134,7 +1159,7 @@ public class NewScanActivity extends BaseActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "requestCalMatrixReceiver.onReceive():下载校准矩阵");
+            Log.i(TAG, "gaohuixx:requestCalMatrixReceiver.onReceive():下载校准矩阵");
             intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE, 0);
             Boolean size = intent.getBooleanExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE_PACKET, false);
             if (size) {
@@ -1144,14 +1169,14 @@ public class NewScanActivity extends BaseActivity {
                 barProgressDialog.setTitle(getString(R.string.dl_cal_matrix));
                 barProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 barProgressDialog.setProgress(0);
-                barProgressDialog.setMax(intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE, 0));
+                barProgressDialog.setMax(intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE, 0));//设置最大值
                 barProgressDialog.setCancelable(false);
                 barProgressDialog.show();
             } else {
                 barProgressDialog.setProgress(barProgressDialog.getProgress() + intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE, 0));
             }
             if (barProgressDialog.getProgress() == barProgressDialog.getMax()) {
-
+                //接收完之后就请求active 配置
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.REQUEST_ACTIVE_CONF));
             }
         }
@@ -1159,6 +1184,7 @@ public class NewScanActivity extends BaseActivity {
 
     /**
      * 自定义接收器用来处理扫描配置
+     * 在触发这个广播接收器的时候会把数据以 byte[] 的格式传过来
      */
     private class ScanConfReceiver extends BroadcastReceiver {
 

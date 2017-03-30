@@ -28,4 +28,20 @@ public class NanoUtil {
 
         return null;
     }
+
+    // byte[] 数组转 int ,字节数组长度是2
+    public static int indexToInt(byte[] indexByteArray)
+    {
+        int indexInt = indexByteArray[0] & 0xFF | (indexByteArray[1] & 0xFF) << 8;
+        return indexInt;
+    }
+
+    // int 数组转  byte[] ,字节数组长度是2
+    public static byte[] indexToByteArray(int indexInt)
+    {
+
+        byte[] indexByteArray = new byte[] { (byte) (indexInt & 0xFF), (byte) ((indexInt >> 8) & 0xFF), };
+
+        return indexByteArray;
+    }
 }

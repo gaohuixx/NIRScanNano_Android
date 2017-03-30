@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import com.gaohui.utils.NanoUtil;
 import com.gaohui.utils.ThemeManageUtil;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 import com.kstechnologies.nirscannanolibrary.SettingsManager;
@@ -30,6 +31,11 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  * 这个activity 控制着Nano保存扫描配置的视图，这些配置必须被分别地读取
  *
  * 警告：这个activity 使用了JNI函数调用，一定要保证它的名字和位置不被改变，，否则C 光谱库调用将失败
+ *
+ * 关于扫描配置索引：
+ * 1. Nano 中使用两个字节来代表一个扫描配置索引
+ * 2. 获取和设置Active 扫描配置都是以字节数组的形式传输的
+ * 3. 获取到扫描配置对象，通过对象的getScanConfigIndex() 获取到的是int 型
  *
  * @author collinmast,gaohui
  */
@@ -73,12 +79,11 @@ public class ScanConfActivity extends BaseActivity {
         lv_configs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.i("gaohui", "gaohui：onItemClick: item被点击" + i);
-                byte[] index = {0, 0};
-                index[0] = (byte) configs.get(i).getScanConfigIndex();
+                int indexInt = configs.get(i).getScanConfigIndex();//获取被点击的配置项的index，是int型的
+                byte[] indexByteArray = NanoUtil.indexToByteArray(indexInt);//将int 型的index 转成byte[] 型，为了发送
+
                 Intent setActiveConfIntent = new Intent(KSTNanoSDK.SET_ACTIVE_CONF);
-                setActiveConfIntent.putExtra(KSTNanoSDK.EXTRA_SCAN_INDEX, index);
-                Log.i("gaohui", "gaohui：设置active索引为" + index + "-----" + index[0]);
+                setActiveConfIntent.putExtra(KSTNanoSDK.EXTRA_SCAN_INDEX, indexByteArray);
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(setActiveConfIntent);
             }
         });
@@ -114,21 +119,24 @@ public class ScanConfActivity extends BaseActivity {
         getActiveScanConfReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                int index = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_ACTIVE_CONF)[0];
-                Log.i("gaohui", "gaohui：getActiveScanConfReceiver: 接收到active配置，index=" + index);
+                byte[] indexByteArray = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_ACTIVE_CONF);//两个字节长，0代表低位
+                int indexInt = NanoUtil.indexToInt(indexByteArray);//将接收到的byte[] 型的index 转成int 型，为了比较
+
+                Log.i("gaohui", "gaohui：getActiveScanConfReceiver: 接收到active配置，index=" + indexInt);
                 barProgressDialog.dismiss();//进度条消失
-                lv_configs.setAdapter(scanConfAdapter);
-                lv_configs.setVisibility(View.VISIBLE);//列表显示
 
                 for (KSTNanoSDK.ScanConfiguration c : configs) {
-                    if (c.getScanConfigIndex() == index) {
-                        Log.i("gaohui", "gaohui：以设置索引" + index);
+                    if (c.getScanConfigIndex() == indexInt) {
+                        Log.i("gaohui", "gaohui：以设置索引" + indexInt);
                         c.setActive(true);
 
                     } else {
                         c.setActive(false);
                     }
                 }
+
+                lv_configs.setAdapter(scanConfAdapter);
+                lv_configs.setVisibility(View.VISIBLE);//列表显示
             }
         };
 
@@ -172,14 +180,10 @@ public class ScanConfActivity extends BaseActivity {
                 //开始发广播准备获取当前active 配置
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.GET_ACTIVE_CONF));
                 scanConfAdapter = new ScanConfAdapter(mContext, configs);
-//                lv_configs.setAdapter(scanConfAdapter);
             } else {
                 barProgressDialog.setProgress(receivedConfSize);//更新进度条
             }
 
-
-//            scanConfAdapter = new ScanConfAdapter(mContext, configs);
-//            lv_configs.setAdapter(scanConfAdapter);
         }
     }
 

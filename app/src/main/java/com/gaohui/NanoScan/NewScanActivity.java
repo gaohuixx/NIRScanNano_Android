@@ -241,12 +241,7 @@ public class NewScanActivity extends BaseActivity {
         tabLayout.setupWithViewPager(mViewPager); //将TabLayout 和ViewPager 关联
 
         //他把当前配置的名称存在了数据库里
-//        tv_scan_conf.setText(SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, "Column 11111"));//Column 1是默认值
-
-        if (activeConf != null)
-            tv_scan_conf.setText(activeConf.getConfigName());
-        else
-            tv_scan_conf.setText(SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, "Column 11111"));
+        tv_scan_conf.setText(SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, "Column 1"));
 
 
         mXValues = new ArrayList<>();

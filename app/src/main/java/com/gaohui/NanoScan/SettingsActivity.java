@@ -29,6 +29,7 @@ public class SettingsActivity extends BaseActivity {
 
     private ToggleButton tb_temp;
     private ToggleButton tb_spatial;
+    private ToggleButton tb_refCal;
     private Button btn_set;
     private Button btn_forget;
     private AlertDialog alertDialog;
@@ -54,23 +55,12 @@ public class SettingsActivity extends BaseActivity {
         //获取UI元素的引用
         tb_temp = (ToggleButton) findViewById(R.id.tb_temp);//温度转换按钮
         tb_spatial = (ToggleButton) findViewById(R.id.tb_spatial);//空间频率转换按钮
+        tb_refCal = (ToggleButton) findViewById(R.id.tb_refCal);//参考校准数据来源转换按钮
         btn_set = (Button) findViewById(R.id.btn_set);//设置我的nano
         btn_forget = (Button) findViewById(R.id.btn_forget);//清除我的nano
-        tv_pref_nano = (TextView) findViewById(R.id.tv_pref_nano);
-    }
+        tv_pref_nano = (TextView) findViewById(R.id.tv_pref_nano);//已经设置的Nano
 
-    @Override//当重新开始此Activity的时候调用
-    public void onResume() {
-        super.onResume();
-
-        //初始化偏好设备
-        preferredNano = SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.preferredDevice, null);
-
-
-        //初始化切换按钮状态，创建事件监听器
-        tb_temp.setChecked(SettingsManager.getBooleanPref(this, SettingsManager.SharedPreferencesKeys.tempUnits, SettingsManager.CELSIUS));
-        tb_spatial.setChecked(SettingsManager.getBooleanPref(this, SettingsManager.SharedPreferencesKeys.spatialFreq, SettingsManager.WAVELENGTH));
-
+        //添加监听
         tb_temp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -85,13 +75,34 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
+        tb_refCal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SettingsManager.storeBooleanPref(mContext, "ReferenceCalibration", b);//true：Nano no：本地
+            }
+        });
+
         btn_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //调到新页面去选择一个Nano
+                //跳到新页面去选择一个Nano
                 startActivity(new Intent(mContext, ScanActivity.class));
             }
         });
+    }
+
+    @Override//当重新开始此Activity的时候调用
+    public void onResume() {
+        super.onResume();
+
+        //初始化偏好设备
+        preferredNano = SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.preferredDevice, null);
+
+        //初始化切换按钮状态
+        tb_temp.setChecked(SettingsManager.getBooleanPref(this, SettingsManager.SharedPreferencesKeys.tempUnits, SettingsManager.CELSIUS));
+        tb_spatial.setChecked(SettingsManager.getBooleanPref(this, SettingsManager.SharedPreferencesKeys.spatialFreq, SettingsManager.WAVELENGTH));
+        tb_refCal.setChecked(SettingsManager.getBooleanPref(this, "ReferenceCalibration", false));
+
 
         if(preferredNano == null){
             btn_forget.setEnabled(false);
@@ -107,7 +118,6 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
-        //Update set button and field based on whether a preferred nano has been set or not
         if (preferredNano != null) {
             btn_set.setVisibility(View.INVISIBLE);
             tv_pref_nano.setText(SettingsManager.getStringPref(mContext, SettingsManager.SharedPreferencesKeys.preferredDevice, null));

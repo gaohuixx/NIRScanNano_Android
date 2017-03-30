@@ -19,16 +19,16 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
         <RelativeLayout
-            android:id="@+id/rl_temperature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/dip8">
@@ -57,11 +57,9 @@
             android:id="@+id/view_temp_divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/px1"
-            android:layout_below="@id/rl_temperature"
             android:background="#8c8b8b" />
 
         <RelativeLayout
-            android:id="@+id/rl_freq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_temp_divider"
@@ -90,11 +88,39 @@
             android:id="@+id/view_freq_divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/px1"
-            android:layout_below="@id/rl_freq"
             android:background="#8c8b8b" />
 
         <RelativeLayout
-            android:id="@+id/rl_setNano"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dip8">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:text="参考校准数据来源"
+                android:textColor="@color/black" />
+
+            <ToggleButton
+                android:id="@+id/tb_refCal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:textOff="本地"
+                android:textOn="Nano" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px1"
+            android:layout_marginBottom="@dimen/dip8"
+            android:background="#8c8b8b" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_freq_divider"
@@ -131,14 +157,11 @@
             android:id="@+id/view_set_divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/px1"
-            android:layout_below="@id/rl_setNano"
             android:background="#8c8b8b" />
 
         <RelativeLayout
-            android:id="@+id/rl_clearNano"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/rl_setNano"
             android:paddingTop="@dimen/dip8">
 
             <Button
@@ -164,9 +187,8 @@
             android:id="@+id/view_clear_divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/px1"
-            android:layout_below="@id/rl_clearNano"
             android:layout_marginBottom="@dimen/dip8"
             android:background="#8c8b8b" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

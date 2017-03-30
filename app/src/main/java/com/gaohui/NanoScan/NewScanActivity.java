@@ -747,15 +747,22 @@ public class NewScanActivity extends BaseActivity {
 
             //获取到参考校正数据对象，这个对象是一个全局变量，是当时我们接收完成后就有了的，我们直接获取，不是从本地读取的！
             //就是说在本地保存的那个参考校正数据根本没用上。。。
-//            KSTNanoSDK.ReferenceCalibration ref = KSTNanoSDK.ReferenceCalibration.currentCalibration.get(0);
+
+            boolean b = SettingsManager.getBooleanPref(mContext, "ReferenceCalibration", false);//获取设置
             KSTNanoSDK.ReferenceCalibration ref = null;
-            try {
-                ref = NanoUtil.getRefCal(getResources().getAssets().open("refcals"));//通过我自己的方法从本地获取参考校正对象
-                Log.i(TAG, "ref.getRefCalCoefficients(): " + ref.getRefCalCoefficients());
-                Log.i(TAG, "ref.getRefCalMatrix(): " + ref.getRefCalMatrix());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+            if (b){
+                ref = KSTNanoSDK.ReferenceCalibration.currentCalibration.get(0);//获取Nano中的参考校正对象
+            }else{
+                try {
+                    ref = NanoUtil.getRefCal(getResources().getAssets().open("refcals"));//通过我自己的方法从本地获取参考校正对象
+                    Log.i(TAG, "ref.getRefCalCoefficients(): " + ref.getRefCalCoefficients());
+                    Log.i(TAG, "ref.getRefCalMatrix(): " + ref.getRefCalMatrix());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+
             //利用参考校准系数和参考校准矩阵计算出扫描结果并封装成对象，计算过程调用的是C 语言写的函数
             results = KSTNanoSDK.KSTNanoSDK_dlpSpecScanInterpReference(scanData, ref.getRefCalCoefficients(), ref.getRefCalMatrix());
 

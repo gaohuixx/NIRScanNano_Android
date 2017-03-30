@@ -47,16 +47,16 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
 public class NanoBLEService extends Service {
 
     public static final long SCAN_PERIOD = 6000;
-    ByteArrayOutputStream scanData = new ByteArrayOutputStream();
+    ByteArrayOutputStream scanData = new ByteArrayOutputStream();//扫描数据具体内容
     ByteArrayOutputStream refConf = new ByteArrayOutputStream();//校正系数，这个名字起的不是很合理，应该叫refCoef
     ByteArrayOutputStream refMatrix = new ByteArrayOutputStream();//校正矩阵
     ByteArrayOutputStream scanConf = new ByteArrayOutputStream();//一条扫描配置具体内容
 
-    //Scan and reference calibration information variables
-    int size;
-    int refSize;
+    //扫描和参考校准信息变量
+    int size;//扫描数据大小，就是字节数
+    int refSize;//校正系数大小，就是字节数
     int refSizeIndex;
-    int refMatrixSize;
+    int refMatrixSize;//校正矩阵大小，就是字节数
     int scanConfSize;//一个扫描配置的数据长度，就是字节数，如：155
     int scanConfIndexSize;//扫描配置索引数量
     int scanConfIndex;//当前扫描配置索引
@@ -67,7 +67,7 @@ public class NanoBLEService extends Service {
     private String scanDate;
     private String scanPktFmtVer;
 
-    //Device information variables
+    //设备信息变量
     private String manufName;
     private String modelNum;
     private String serialNum;
@@ -75,7 +75,7 @@ public class NanoBLEService extends Service {
     private String tivaRev;
     private String spectrumRev;
 
-    //Device status variables
+    //设备状态变量
     private int battLevel;
     private float temp;
     private float humidity;
@@ -84,7 +84,7 @@ public class NanoBLEService extends Service {
     private byte[] tempThresh;
     private byte[] humidThresh;
 
-    //Logic control flags
+    //逻辑控制标志
     private boolean readingStoredScans = false;
     private boolean scanStarted = false;
     private boolean activeConfRequested = false;
@@ -99,18 +99,11 @@ public class NanoBLEService extends Service {
         return mBinder;
     }
 
-    //Tag for logging events in the BluetoothLeService
     private static final String TAG = "gaohui";
 
-    //Instance of the Bluetooth Manager. This is used to retrieve the Bluetooth Adapter from the
-    // Android system
     private BluetoothManager mBluetoothManager;
-
-
-    //String containing the Address of the device we wish to connect to
     private String mBluetoothDeviceAddress;
 
-    //Array list that will hold all of the GATT characteristics retrieved from the connected device
     private ArrayList<byte[]> scanConfList = new ArrayList<>();//这里面存的是扫描配置索引
     private ArrayList<byte[]> storedScanList = new ArrayList<>();//保存在SD 卡中的数据
 

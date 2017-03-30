@@ -22,6 +22,11 @@ import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 
 import java.util.ArrayList;
 
+/**
+ * 由于对于Nano 的扫描配置参数的各个属性不是很明白，结构不是很清楚，而且我觉得他的程序也不是很好。最无语的是，这
+ * 里我改了一天，还不好使，总是出些奇怪的问题。所以我决定废弃这个页面！
+ */
+@Deprecated
 public class ActiveScanActivity extends BaseActivity {
 
     private static Context mContext;

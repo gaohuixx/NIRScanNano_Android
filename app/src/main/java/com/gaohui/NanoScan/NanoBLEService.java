@@ -618,23 +618,9 @@ public class NanoBLEService extends Service {
                 if (debug)
                     Log.i(TAG, "Received Scan Conf index:" + stringBuilder.toString());
 
-                scanConfIndex++;
-                scanConfList.add(data);
+                scanConfList.add(data);//这里一共就存了两行数据，索引的数据都在第二行
 
-                if(scanConfIndexSize == 1 && scanConfList.size() > 1) {//扫描配置数量等于1
-
-                    scanConfIndex = 1;
-                    byte[] confIndex = {0, 0};
-                    confIndex[0] = scanConfList.get(scanConfIndex)[1];
-                    confIndex[1] = scanConfList.get(scanConfIndex)[2];
-
-                    if (debug)
-                        Log.i(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
-                    KSTNanoSDK.requestScanConfiguration(confIndex);
-
-                }
-
-                if (scanConfIndex == scanConfIndexSize && scanConfIndexSize != 1) {//扫描配置数量不等于1
+                if (data[0] != 0x00){//data[0] == 0x00 说明是第一行
                     scanConfIndex = 1;
                     byte[] confIndex = {0, 0};
                     confIndex[0] = scanConfList.get(scanConfIndex)[1];
@@ -644,6 +630,8 @@ public class NanoBLEService extends Service {
                         Log.i(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
                     KSTNanoSDK.requestScanConfiguration(confIndex);
                 }
+
+
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSDISSDStoredScanIndicesListData) {
                 final byte[] data = characteristic.getValue();
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
@@ -691,12 +679,12 @@ public class NanoBLEService extends Service {
                         broadcastScanConfig(KSTNanoSDK.SCAN_CONF_DATA, scanConf.toByteArray());
 
                         if (scanConfIndex < scanConfIndexSize) {
-                            scanConfIndex++;
+                            scanConfIndex++;//当前要接收的第几个数据
                             byte[] confIndex = {0, 0};
                             if (debug)
                                 Log.i(TAG, "Retrieving scan at index:" + scanConfIndex + " Size is:" + scanConfList.size());
-                            confIndex[0] = scanConfList.get(1)[scanConfIndex + 1];
-                            confIndex[1] = scanConfList.get(1)[scanConfIndex + 2];
+                            confIndex[0] = scanConfList.get(1)[2 * scanConfIndex - 1];
+                            confIndex[1] = scanConfList.get(1)[2 * scanConfIndex];
                             if (debug)
                                 Log.i(TAG, "Writing request for scan conf at index:" + confIndex[0] + "-" + confIndex[1]);
                             KSTNanoSDK.requestScanConfiguration(confIndex);

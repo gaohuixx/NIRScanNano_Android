@@ -180,6 +180,7 @@ public class ScanConfActivity extends BaseActivity {
             receivedConfSize++;//己经接收的配置数量加一
             if (receivedConfSize == storedConfSize) {//如果己经接收的配置数量等于Nano 中保存的配置数量
                 //开始发广播准备获取当前active 配置
+                barProgressDialog.setProgress(receivedConfSize);//更新进度条
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.GET_ACTIVE_CONF));
                 scanConfAdapter = new ScanConfAdapter(mContext, configs);
             } else {

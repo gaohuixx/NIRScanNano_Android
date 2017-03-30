@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +37,11 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  * 1. Nano 中使用两个字节来代表一个扫描配置索引
  * 2. 获取和设置Active 扫描配置都是以字节数组的形式传输的
  * 3. 获取到扫描配置对象，通过对象的getScanConfigIndex() 获取到的是int 型
+ *
+ * 这页的几个广播接收器执行顺序：
+ * {@link scanConfSizeReceiver} ：接收扫描配置的数量，显示进度条 ScanConfReceiver
+ * {@link ScanConfReceiver} ：接收每一个扫描配置，没接收一个，更新下进度条。全部接收完成后，发广播，准备获取active 配置
+ * {@link getActiveScanConfReceiver} ：接收active 配置
  *
  * @author collinmast,gaohui
  */
@@ -69,7 +75,7 @@ public class ScanConfActivity extends BaseActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
         this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
-        android.support.v7.app.ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
+        ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
         actionBar.setTitle(R.string.stored_configurations);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -93,7 +99,6 @@ public class ScanConfActivity extends BaseActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 storedConfSize = intent.getIntExtra(KSTNanoSDK.EXTRA_CONF_SIZE, 0);
-                Log.i("gaohui", "gaohui：scanConfSizeReceiver: 接收到配置数量" + storedConfSize);
                 if (storedConfSize > 0) {
                     barProgressDialog = new ProgressDialog(ScanConfActivity.this, R.style.DialogTheme);
 
@@ -122,12 +127,10 @@ public class ScanConfActivity extends BaseActivity {
                 byte[] indexByteArray = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_ACTIVE_CONF);//两个字节长，0代表低位
                 int indexInt = NanoUtil.indexToInt(indexByteArray);//将接收到的byte[] 型的index 转成int 型，为了比较
 
-                Log.i("gaohui", "gaohui：getActiveScanConfReceiver: 接收到active配置，index=" + indexInt);
                 barProgressDialog.dismiss();//进度条消失
 
                 for (KSTNanoSDK.ScanConfiguration c : configs) {
                     if (c.getScanConfigIndex() == indexInt) {
-                        Log.i("gaohui", "gaohui：以设置索引" + indexInt);
                         c.setActive(true);
 
                     } else {
@@ -175,7 +178,6 @@ public class ScanConfActivity extends BaseActivity {
 
             configs.add(scanConf);//每接收到一个就把它存到集合里
             receivedConfSize++;//己经接收的配置数量加一
-            Log.i("gaohui", "gaohui：ScanConfReceiver: 接收到配置，现在数量为" + receivedConfSize + "索引为：" + scanConf.getScanConfigIndex());
             if (receivedConfSize == storedConfSize) {//如果己经接收的配置数量等于Nano 中保存的配置数量
                 //开始发广播准备获取当前active 配置
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.GET_ACTIVE_CONF));
@@ -230,11 +232,9 @@ public class ScanConfActivity extends BaseActivity {
                 viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
                 viewHolder.serial.setText(config.getScanConfigSerialNumber());
                 if (config.isActive()) {
-                    Log.i("gaohui", "gaohui：setTextColor: 设置颜色为彩色" + viewHolder.scanType.getText());
                     viewHolder.scanType.setTextColor(ThemeManageUtil.getCurrentThemeColor());
                     SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, config.getConfigName());
                 } else {
-                    Log.i("gaohui", "gaohui：setTextColor: 设置颜色为灰色" + viewHolder.scanType.getText());
                     viewHolder.scanType.setTextColor(0xff888888);
                 }
             }

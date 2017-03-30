@@ -240,42 +240,8 @@ public class GraphActivity extends BaseActivity {
             }
         }
 
-        //下面这一堆代码都是用来获取最大最小值的，没用啊
-/*        float minWavelength = mWavelengthFloat.get(0);
-        float maxWavelength = mWavelengthFloat.get(0);
-
-        for (Float f : mWavelengthFloat) {
-            if (f < minWavelength) minWavelength = f;
-            if (f > maxWavelength) maxWavelength = f;
-        }
-
-        float minAbsorbance = mAbsorbanceFloat.get(0).getVal();
-        float maxAbsorbance = mAbsorbanceFloat.get(0).getVal();
-
-        for (Entry e : mAbsorbanceFloat) {
-            if (e.getVal() < minAbsorbance) minAbsorbance = e.getVal();
-            if (e.getVal() > maxAbsorbance) maxAbsorbance = e.getVal();
-        }
-
-        float minReflectance = mReflectanceFloat.get(0).getVal();
-        float maxReflectance = mReflectanceFloat.get(0).getVal();
-
-        for (Entry e : mReflectanceFloat) {
-            if (e.getVal() < minReflectance) minReflectance = e.getVal();
-            if (e.getVal() > maxReflectance) maxReflectance = e.getVal();
-        }
-
-        float minIntensity = mIntensityFloat.get(0).getVal();
-        float maxIntensity = mIntensityFloat.get(0).getVal();
-
-        for (Entry e : mIntensityFloat) {
-            if (e.getVal() < minIntensity) minIntensity = e.getVal();
-            if (e.getVal() > maxIntensity) maxIntensity = e.getVal();
-        }*/
-
         //注意：对于那些默认的数据，它是通过 ScanListDictionary 这个类来获取“详情”数据，数据是写死的！
         //这里就是获取每个文件对应的 “详情” 数据，如：aspirin
-//        ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionary(this).getScanList(fileName);
         ArrayList<KSTNanoSDK.ScanListManager> graphList = new ScanListDictionaryUtil().getScanList(fileName);
         ScanListAdapter mAdapter;
         if (graphList != null) {    //这是默认数据的列表
@@ -367,7 +333,6 @@ public class GraphActivity extends BaseActivity {
 
 
     /**
-     *
      * 为下方的listview 自定义一个adapter
      * 这个List 每一个元素就是一个KSTNanoSDK.ScanListManager
      */

@@ -50,16 +50,16 @@ public class NanoBLEService extends Service {
     ByteArrayOutputStream scanData = new ByteArrayOutputStream();
     ByteArrayOutputStream refConf = new ByteArrayOutputStream();//校正系数，这个名字起的不是很合理，应该叫refCoef
     ByteArrayOutputStream refMatrix = new ByteArrayOutputStream();//校正矩阵
-    ByteArrayOutputStream scanConf = new ByteArrayOutputStream();
+    ByteArrayOutputStream scanConf = new ByteArrayOutputStream();//一条扫描配置具体内容
 
     //Scan and reference calibration information variables
     int size;
     int refSize;
     int refSizeIndex;
     int refMatrixSize;
-    int scanConfSize;
-    int scanConfIndexSize;
-    int scanConfIndex;
+    int scanConfSize;//一个扫描配置的数据长度，就是字节数，如：155
+    int scanConfIndexSize;//扫描配置索引数量
+    int scanConfIndex;//当前扫描配置索引
     int storedSDScanSize;
     private String scanName;
     private byte[] storedScanName;
@@ -111,8 +111,8 @@ public class NanoBLEService extends Service {
     private String mBluetoothDeviceAddress;
 
     //Array list that will hold all of the GATT characteristics retrieved from the connected device
-    private ArrayList<byte[]> scanConfList = new ArrayList<>();
-    private ArrayList<byte[]> storedScanList = new ArrayList<>();
+    private ArrayList<byte[]> scanConfList = new ArrayList<>();//这里面存的是扫描配置索引
+    private ArrayList<byte[]> storedScanList = new ArrayList<>();//保存在SD 卡中的数据
 
     private static BroadcastReceiver mDataReceiver;
     private static BroadcastReceiver mInfoRequestReceiver;
@@ -386,7 +386,7 @@ public class NanoBLEService extends Service {
                     intent.putExtra(KSTNanoSDK.EXTRA_DEV_STATUS, devStatus);
                     intent.putExtra(KSTNanoSDK.EXTRA_ERR_STATUS, errStatus);
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-                } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSCIS_NUM_STORED_CONF)) {
+                } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSCIS_NUM_STORED_CONF)) {//Nano 返回扫描配置数量
                     byte[] data = characteristic.getValue();
 
                     scanConfIndex = 0;
@@ -397,7 +397,7 @@ public class NanoBLEService extends Service {
                     if (debug)
                         Log.i(TAG, "Num stored scan configs:" + scanConfIndexSize);
 
-                    KSTNanoSDK.requestStoredConfigurationList();
+                    KSTNanoSDK.requestStoredConfigurationList();//紧接着就去请求所有扫描配置
                 } else if (characteristic.getUuid().equals(KSTNanoSDK.NanoGATT.GSDIS_NUM_SD_STORED_SCANS)) {
                     byte[] data = characteristic.getValue();
 
@@ -608,17 +608,20 @@ public class NanoBLEService extends Service {
                     broadcastUpdate(KSTNanoSDK.REF_CONF_DATA, refConf.toByteArray(), refMatrix.toByteArray());
                 }
             } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSCISRetStoredConfList) {
-                final byte[] data = characteristic.getValue();
+                //Nano返回扫描配置数据索引，如果数据量少的话就只会返回来两次
+                //第一次：返回数据量大小，即字节数
+                //第二次：开始返回具体索引，每个索引占两个字节，一次最多返回20个字节，而且第一个字节代表是第几次，所以第二次就能返回9个配置，所以我说两次就够了，如果再多可能就需要第三次了
+                final byte[] data = characteristic.getValue();// TODO: 2017/3/30
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
                 for (byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 if (debug)
-                    Log.i(TAG, "Received Scan Conf index:" + stringBuilder.toString());//TODO
+                    Log.i(TAG, "Received Scan Conf index:" + stringBuilder.toString());
 
                 scanConfIndex++;
                 scanConfList.add(data);
 
-                if(scanConfIndexSize == 1 && scanConfList.size() > 1) {
+                if(scanConfIndexSize == 1 && scanConfList.size() > 1) {//扫描配置数量等于1
 
                     scanConfIndex = 1;
                     byte[] confIndex = {0, 0};
@@ -631,7 +634,7 @@ public class NanoBLEService extends Service {
 
                 }
 
-                if (scanConfIndex == scanConfIndexSize && scanConfIndexSize != 1) {
+                if (scanConfIndex == scanConfIndexSize && scanConfIndexSize != 1) {//扫描配置数量不等于1
                     scanConfIndex = 1;
                     byte[] confIndex = {0, 0};
                     confIndex[0] = scanConfList.get(scanConfIndex)[1];
@@ -662,7 +665,7 @@ public class NanoBLEService extends Service {
                     KSTNanoSDK.requestScanName(indexData);
                 }
 
-            } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSCISRetScanConfData) {
+            } else if (characteristic == KSTNanoSDK.NanoGattCharacteristic.mBleGattCharGSCISRetScanConfData) {//Nano 返回一条扫描配置数据，具体数据内容
                 final byte[] data = characteristic.getValue();// TODO: 2017/3/27
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
                 for (byte byteChar : data)
@@ -672,7 +675,7 @@ public class NanoBLEService extends Service {
 
                 if (data[0] == 0x00) {
                     scanConf.reset();
-                    scanConfSize = (((data[2]) << 8) | (data[1] & 0xFF));
+                    scanConfSize = (((data[2]) << 8) | (data[1] & 0xFF));//第一行是数据的大小
                 } else {
                     int i;
                     for (i = 1; i < data.length; i++) {
@@ -680,9 +683,9 @@ public class NanoBLEService extends Service {
                     }
                 }
 
-                if (scanConf.size() == scanConfSize) {
-                    if (!activeConfRequested) {
-                        scanConfSize = 0;
+                if (scanConf.size() == scanConfSize) {//扫描配置数据接收完毕
+                    if (!activeConfRequested) {//如果这个配置不是active 配置
+                        scanConfSize = 0;//接收完之后，scanConfSize 归零
                         if (debug)
                             Log.i(TAG, "Done collecting scanConfiguration, sending broadcast");
                         broadcastScanConfig(KSTNanoSDK.SCAN_CONF_DATA, scanConf.toByteArray());
@@ -700,7 +703,7 @@ public class NanoBLEService extends Service {
                         } else {
                             scanConfIndex = 0;
                         }
-                    } else {
+                    } else {    //如果这个配置是active 配置
                         scanConfSize = 0;
                         if (debug)
                             Log.i(TAG, "Done collecting active scanConfiguration");

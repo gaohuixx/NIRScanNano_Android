@@ -210,12 +210,12 @@ public class ScanConfActivity extends BaseActivity {
 
                 viewHolder = new ViewHolder();
                 viewHolder.scanType = (TextView) convertView.findViewById(R.id.tv_scan_type);
-                viewHolder.rangeStart = (TextView) convertView.findViewById(R.id.tv_range_start_value);
-                viewHolder.rangeEnd = (TextView) convertView.findViewById(R.id.tv_range_end_value);
-                viewHolder.width = (TextView) convertView.findViewById(R.id.tv_width_value);
-                viewHolder.patterns = (TextView) convertView.findViewById(R.id.tv_patterns_value);
-                viewHolder.repeats = (TextView) convertView.findViewById(R.id.tv_repeats_value);
-                viewHolder.serial = (TextView) convertView.findViewById(R.id.tv_serial_value);
+//                viewHolder.rangeStart = (TextView) convertView.findViewById(R.id.tv_range_start_value);
+//                viewHolder.rangeEnd = (TextView) convertView.findViewById(R.id.tv_range_end_value);
+//                viewHolder.width = (TextView) convertView.findViewById(R.id.tv_width_value);
+//                viewHolder.patterns = (TextView) convertView.findViewById(R.id.tv_patterns_value);
+//                viewHolder.repeats = (TextView) convertView.findViewById(R.id.tv_repeats_value);
+//                viewHolder.serial = (TextView) convertView.findViewById(R.id.tv_serial_value);
 
                 convertView.setTag(viewHolder);
             } else {
@@ -225,12 +225,12 @@ public class ScanConfActivity extends BaseActivity {
             final KSTNanoSDK.ScanConfiguration config = getItem(position);
             if (config != null) {
                 viewHolder.scanType.setText(config.getConfigName());
-                viewHolder.rangeStart.setText(getString(R.string.range_start_value, config.getWavelengthStartNm()));
-                viewHolder.rangeEnd.setText(getString(R.string.range_end_value, config.getWavelengthEndNm()));
-                viewHolder.width.setText(getString(R.string.width_value, config.getWidthPx()));
-                viewHolder.patterns.setText(getString(R.string.patterns_value, config.getNumPatterns()));
-                viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
-                viewHolder.serial.setText(config.getScanConfigSerialNumber());
+//                viewHolder.rangeStart.setText(getString(R.string.range_start_value, config.getWavelengthStartNm()));
+//                viewHolder.rangeEnd.setText(getString(R.string.range_end_value, config.getWavelengthEndNm()));
+//                viewHolder.width.setText(getString(R.string.width_value, config.getWidthPx()));
+//                viewHolder.patterns.setText(getString(R.string.patterns_value, config.getNumPatterns()));
+//                viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
+//                viewHolder.serial.setText(config.getScanConfigSerialNumber());
                 if (config.isActive()) {
                     viewHolder.scanType.setTextColor(ThemeManageUtil.getCurrentThemeColor());
                     SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, config.getConfigName());

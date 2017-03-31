@@ -496,16 +496,14 @@ public class GraphActivity extends BaseActivity {
      * @param mChart 为那个图标更新数据
      * @param xValues 横坐标是String类型
      * @param yValues 纵坐标是数字类型
-     * @param type 要显示的图表类型 {@link GraphActivity.ChartType}
      */
     private void setData(LineChart mChart, ArrayList<String> xValues, ArrayList<Entry> yValues) {
 
         int themeColor = ThemeManageUtil.getCurrentThemeColor();
 
-            // create a dataset and give it a type
             LineDataSet lineDataSet = new LineDataSet(yValues, displayName);
 
-            // set the line to be drawn like this "- - - - - -"
+            //设置线型为这样的 "- - - - - -"
             lineDataSet.enableDashedLine(10f, 5f, 0f);
             lineDataSet.enableDashedHighlightLine(10f, 5f, 0f);
             lineDataSet.setColor(themeColor); //设置线的颜色

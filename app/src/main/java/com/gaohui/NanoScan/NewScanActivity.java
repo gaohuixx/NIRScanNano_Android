@@ -375,167 +375,54 @@ public class NewScanActivity extends BaseActivity {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             ViewGroup layout = (ViewGroup) inflater.inflate(customPagerEnum.getLayoutResId(), collection, false);
             collection.addView(layout);
+            LineChart mChart = null;
 
-            if (customPagerEnum.getLayoutResId() == R.layout.page_graph_intensity) {//如果是强度视图
-                LineChart mChart = (LineChart) layout.findViewById(R.id.lineChartInt);
-                mChart.setDrawGridBackground(false);
-
-                mChart.setDescription("");//设置表格的描述
-
-                mChart.setTouchEnabled(true);// 设置是否可以触摸
-
-                mChart.setDragEnabled(true);// 是否可以拖拽
-                mChart.setScaleEnabled(true);// 是否可以缩放
-
-                // 如果不能，缩放缩放可能会被单独作用与X 轴，Y 轴
-                mChart.setPinchZoom(true);
-
-                // X 轴限制线
-                LimitLine llXAxis = new LimitLine(10f, "Index 10");
-                llXAxis.setLineWidth(4f);
-                llXAxis.enableDashedLine(10f, 10f, 0f);//虚线
-                llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-                llXAxis.setTextSize(10f);
-
-                XAxis xAxis = mChart.getXAxis();//获取X 轴
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-                YAxis leftAxis = mChart.getAxisLeft();//获取Y 轴
-                leftAxis.removeAllLimitLines(); //重置所有限制线，以避免重叠线
-
-                mChart.setAutoScaleMinMaxEnabled(true);
-
-                leftAxis.setStartAtZero(true);
-                leftAxis.enableGridDashedLine(10f, 10f, 0f);
-
-                leftAxis.setDrawLimitLinesBehindData(true);
-
-                mChart.getAxisRight().setEnabled(false);
-
-                // 设置数据
-                setData(mChart, mXValues, mIntensityFloat, ChartType.INTENSITY);
-
-                mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
-
-                // 获取图例 (只有在设置了数据才可以)
-                Legend l = mChart.getLegend();
-
-                // 修改图例 ...
-                l.setForm(Legend.LegendForm.LINE);
-                mChart.getLegend().setEnabled(false);
-                return layout;
-            } else if (customPagerEnum.getLayoutResId() == R.layout.page_graph_absorbance) {//如果是吸收率视图
-
-                LineChart mChart = (LineChart) layout.findViewById(R.id.lineChartAbs);
-                mChart.setDrawGridBackground(false);
-
-                // 无描述文本
-                mChart.setDescription("");
-
-                // 开启触摸手势
-                mChart.setTouchEnabled(true);
-
-                // 启用缩放和拖动
-                mChart.setDragEnabled(true);
-                mChart.setScaleEnabled(true);
-
-                //如果是false，那么缩放将会是分别地在x 轴，和y 轴上
-                mChart.setPinchZoom(true);
-
-                // x 轴限制线
-                LimitLine llXAxis = new LimitLine(10f, "Index 10");
-                llXAxis.setLineWidth(4f);
-                llXAxis.enableDashedLine(10f, 10f, 0f);
-                llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-                llXAxis.setTextSize(10f);
-
-                XAxis xAxis = mChart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-                YAxis leftAxis = mChart.getAxisLeft();
-                leftAxis.removeAllLimitLines(); //重置所有限制线来避免重叠线
-
-                mChart.setAutoScaleMinMaxEnabled(true);
-
-                leftAxis.setStartAtZero(false);
-                leftAxis.enableGridDashedLine(10f, 10f, 0f);
-
-                // 限制线在数据后面被画出，而不是在上面
-                leftAxis.setDrawLimitLinesBehindData(true);
-
-                mChart.getAxisRight().setEnabled(false);
-
-
-                // 添加数据
-                setData(mChart, mXValues, mAbsorbanceFloat, ChartType.ABSORBANCE);
-
-                mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
-
-                // 获取图例，只能在设置了数据后才能这样做
-                Legend l = mChart.getLegend();
-
-                // 修改图例 ...
-                l.setForm(Legend.LegendForm.LINE);
-                mChart.getLegend().setEnabled(false);
-
-                return layout;
-            } else if (customPagerEnum.getLayoutResId() == R.layout.page_graph_reflectance) {//如果是反射率视图
-
-                LineChart mChart = (LineChart) layout.findViewById(R.id.lineChartRef);
-                mChart.setDrawGridBackground(false);
-
-                // no description text
-                mChart.setDescription("");
-
-                // enable touch gestures
-                mChart.setTouchEnabled(true);
-
-                // enable scaling and dragging
-                mChart.setDragEnabled(true);
-                mChart.setScaleEnabled(true);
-
-                // if disabled, scaling can be done on x- and y-axis separately
-                mChart.setPinchZoom(true);
-
-                // x-axis limit line
-                LimitLine llXAxis = new LimitLine(10f, "Index 10");
-                llXAxis.setLineWidth(4f);
-                llXAxis.enableDashedLine(10f, 10f, 0f);
-                llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
-                llXAxis.setTextSize(10f);
-
-                XAxis xAxis = mChart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-
-                YAxis leftAxis = mChart.getAxisLeft();
-                leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
-
-                mChart.setAutoScaleMinMaxEnabled(true);
-
-                leftAxis.setStartAtZero(false);
-                leftAxis.enableGridDashedLine(10f, 10f, 0f);
-
-                // limit lines are drawn behind data (and not on top)
-                leftAxis.setDrawLimitLinesBehindData(true);
-
-                mChart.getAxisRight().setEnabled(false);
-
-
-                // add data
-                setData(mChart, mXValues, mReflectanceFloat, ChartType.REFLECTANCE);
-
-                mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
-
-                // get the legend (only possible after setting data)
-                Legend l = mChart.getLegend();
-
-                // modify the legend ...
-                l.setForm(Legend.LegendForm.LINE);
-                mChart.getLegend().setEnabled(false);
-                return layout;
-            } else {
-                return layout;
+            if (customPagerEnum.getLayoutResId() == R.layout.page_graph_intensity) {
+                mChart = (LineChart) layout.findViewById(R.id.lineChartInt);
+                setData(mChart, mXValues, mIntensityFloat);
+            } else if (customPagerEnum.getLayoutResId() == R.layout.page_graph_absorbance) {
+                mChart = (LineChart) layout.findViewById(R.id.lineChartAbs);
+                setData(mChart, mXValues, mAbsorbanceFloat);
+            } else if (customPagerEnum.getLayoutResId() == R.layout.page_graph_reflectance) {
+                mChart = (LineChart) layout.findViewById(R.id.lineChartRef);
+                setData(mChart, mXValues, mReflectanceFloat);
             }
+
+            mChart.setDrawGridBackground(false);
+            mChart.setDescription("");//设置表格的描述
+            mChart.setTouchEnabled(true);//设置是否可以触摸
+            mChart.setDragEnabled(true);//设置是否可以拖拽
+            mChart.setScaleEnabled(true);//设置是否可以缩放
+            mChart.setPinchZoom(true);// 如果为false，缩放缩放可能会被单独作用与X 轴，Y 轴
+
+            // X 轴限制线
+            LimitLine llXAxis = new LimitLine(10f, "Index 10");
+            llXAxis.setLineWidth(4f);
+            llXAxis.enableDashedLine(10f, 10f, 0f);
+            llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+            llXAxis.setTextSize(10f);
+
+            XAxis xAxis = mChart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+            YAxis leftAxis = mChart.getAxisLeft();
+            leftAxis.removeAllLimitLines(); //重置所有限制线，以避免重叠线
+            leftAxis.setStartAtZero(false); //纵坐标从0 开始绘制
+            leftAxis.enableGridDashedLine(10f, 10f, 0f);
+            leftAxis.setDrawLimitLinesBehindData(true);
+
+            mChart.setAutoScaleMinMaxEnabled(true);
+            mChart.getAxisRight().setEnabled(false);
+            mChart.animateX(2500, Easing.EasingOption.EaseInOutQuart);
+
+            Legend l = mChart.getLegend();
+            l.setForm(Legend.LegendForm.LINE);
+
+            if (customPagerEnum.getLayoutResId() == R.layout.page_graph_intensity) {
+                leftAxis.setStartAtZero(true);//强度图从0 开始绘制
+            }
+
+            return layout;
         }
 
         /*
@@ -577,120 +464,39 @@ public class NewScanActivity extends BaseActivity {
 
     }
 
-    private void setData(LineChart mChart, ArrayList<String> xValues, ArrayList<Entry> yValues, ChartType type) {
+    /**
+     * 为一个指定的图表设置X 轴，Y 轴数据
+     * @param mChart 为那个图标更新数据
+     * @param xValues 横坐标是String类型
+     * @param yValues 纵坐标是数字类型
+     */
+    private void setData(LineChart mChart, ArrayList<String> xValues, ArrayList<Entry> yValues) {
 
         int themeColor = ThemeManageUtil.getCurrentThemeColor();
 
-        //针对三种图分别都要写一段代码
-        if (type == ChartType.REFLECTANCE) {
-            // 创建一个数据集并给它一个类型
-            LineDataSet set1 = new LineDataSet(yValues, fileName);
+        LineDataSet lineDataSet = new LineDataSet(yValues, fileName);
 
-            // 画出像 "- - - - - -" 这样的线
-            set1.enableDashedLine(10f, 5f, 0f);
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(themeColor);
-            set1.setCircleColor(themeColor);
-            set1.setLineWidth(1f);
-            set1.setCircleSize(3f);
-            set1.setDrawCircleHole(true);
-            set1.setValueTextSize(9f);
-            set1.setFillAlpha(65);
-            set1.setFillColor(themeColor);
-            set1.setDrawFilled(true);
+        //设置线型为这样的 "- - - - - -"
+        lineDataSet.enableDashedLine(10f, 5f, 0f);
+        lineDataSet.enableDashedHighlightLine(10f, 5f, 0f);
+        lineDataSet.setColor(themeColor); //设置线的颜色
+        lineDataSet.setCircleColor(themeColor); //设置圆圈的颜色
+        lineDataSet.setLineWidth(1f); //设置线宽
+        lineDataSet.setCircleSize(3f); //设置圆圈大小
+        lineDataSet.setDrawCircleHole(true);
+        lineDataSet.setValueTextSize(9f);
+        lineDataSet.setFillAlpha(65); //设置填充的透明度
+        lineDataSet.setFillColor(themeColor); //设置填充颜色
+        lineDataSet.setDrawFilled(true); //设置是否填充
 
-            ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-            dataSets.add(set1); // 添加数据集
+        ArrayList<LineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(lineDataSet);
 
-            // 用这个数据集创建一个数据对象
-            LineData data = new LineData(xValues, dataSets);
+        LineData data = new LineData(xValues, dataSets);//设置横坐标数据值，和纵坐标及数据样式
 
-            // 发送数据
-            mChart.setData(data);
+        mChart.setData(data);
 
-            mChart.setMaxVisibleValueCount(20);
-        } else if (type == ChartType.ABSORBANCE) {
-            // 创建一个数据集并且给它一个类型
-            LineDataSet set1 = new LineDataSet(yValues, fileName);
-
-            // 画出像 "- - - - - -" 这样的线
-            set1.enableDashedLine(10f, 5f, 0f);
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(themeColor);
-            set1.setCircleColor(themeColor);
-            set1.setLineWidth(1f);
-            set1.setCircleSize(3f);
-            set1.setDrawCircleHole(true);
-            set1.setValueTextSize(9f);
-            set1.setFillAlpha(65);
-            set1.setFillColor(themeColor);
-            set1.setDrawFilled(true);
-
-            ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-            dataSets.add(set1); // add the datasets
-
-            // create a data object with the datasets
-            LineData data = new LineData(xValues, dataSets);
-
-            // set data
-            mChart.setData(data);
-
-            mChart.setMaxVisibleValueCount(20);
-        } else if (type == ChartType.INTENSITY) {
-            // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName);
-
-            // set the line to be drawn like this "- - - - - -"
-            set1.enableDashedLine(10f, 5f, 0f);
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(themeColor);
-            set1.setCircleColor(themeColor);
-            set1.setLineWidth(1f);
-            set1.setCircleSize(3f);
-            set1.setDrawCircleHole(true);
-            set1.setValueTextSize(9f);
-            set1.setFillAlpha(65);
-            set1.setFillColor(themeColor);
-            set1.setDrawFilled(true);
-
-            ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-            dataSets.add(set1); // add the datasets
-
-            // create a data object with the datasets
-            LineData data = new LineData(xValues, dataSets);
-
-            // set data
-            mChart.setData(data);
-
-            mChart.setMaxVisibleValueCount(20);
-        } else {
-            // create a dataset and give it a type
-            LineDataSet set1 = new LineDataSet(yValues, fileName);
-
-            // set the line to be drawn like this "- - - - - -"
-            set1.enableDashedLine(10f, 5f, 0f);
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
-            set1.setColor(themeColor);
-            set1.setCircleColor(themeColor);
-            set1.setLineWidth(1f);
-            set1.setCircleSize(3f);
-            set1.setDrawCircleHole(true);
-            set1.setValueTextSize(9f);
-            set1.setFillAlpha(65);
-            set1.setFillColor(themeColor);
-            set1.setDrawFilled(true);
-
-            ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-            dataSets.add(set1); // add the datasets
-
-            // create a data object with the datasets
-            LineData data = new LineData(xValues, dataSets);
-
-            // set data
-            mChart.setData(data);
-
-            mChart.setMaxVisibleValueCount(10);
-        }
+        mChart.setMaxVisibleValueCount(20);
     }
 
     /**

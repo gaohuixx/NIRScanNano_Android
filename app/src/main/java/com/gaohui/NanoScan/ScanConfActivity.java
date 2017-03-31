@@ -11,7 +11,6 @@ import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -258,7 +257,7 @@ public class ScanConfActivity extends BaseActivity {
 
     /**
      * 这个广播接收器处理连接断开事件。如果Nano 的连接断开， 这个activity 会立刻结束，并且将
-     * 返回到{@link ScanListActivity} ，同时弹出一条信息告知用户连接已经断开
+     * 返回到{@link MainActivity} ，同时弹出一条信息告知用户连接已经断开
      */
     public class DisconnReceiver extends BroadcastReceiver {
 

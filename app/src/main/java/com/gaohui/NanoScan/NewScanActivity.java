@@ -56,7 +56,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1220,7 +1219,7 @@ public class NewScanActivity extends BaseActivity {
     }
     /**
      *
-     * 广播接收器处理断开连接事件，一旦Nano 连接断开，这个activity 会结束并返回到{@link ScanListActivity}，
+     * 广播接收器处理断开连接事件，一旦Nano 连接断开，这个activity 会结束并返回到{@link MainActivity}，
      * 同时显示一条message 告诉用户连接已经断开
      * 当Nano 断开连接后大约12s 后才能触发这个广播
      *

@@ -82,7 +82,7 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
                 break;
         }
         ThemeManageUtil.currentTheme = theme;
-        startActivity(new Intent(getContext(), ScanListActivity.class));
+        startActivity(new Intent(getContext(), MainActivity.class));
         getActivity().finish();
     }
 }

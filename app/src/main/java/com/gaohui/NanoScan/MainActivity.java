@@ -44,7 +44,7 @@ import java.util.ArrayList;
  * 通过这个activity，用户能够开启扫描程序{@link NewScanActivity}，
  * 去info视图{@link InfoActivity}，或者查看曾经的扫描数据{@link GraphActivity}
  */
-public class ScanListActivity extends BaseActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String TAG = "gaohui";
     private ArrayList<String> csvFiles = new ArrayList<>();
@@ -65,7 +65,7 @@ public class ScanListActivity extends BaseActivity {
 
         mContext = this;
 
-        setContentView(R.layout.activity_scan_list);//设置布局
+        setContentView(R.layout.activity_main);//设置布局
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();//获取本地蓝牙适配器
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar

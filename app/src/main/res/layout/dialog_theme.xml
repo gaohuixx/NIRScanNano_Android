@@ -178,7 +178,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="深沉褐"
+                android:text="默认青"
                 android:textColor="@color/color8_primary_light" />
 
         </android.support.v7.widget.CardView>

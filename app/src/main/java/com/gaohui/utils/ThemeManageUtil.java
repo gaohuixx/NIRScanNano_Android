@@ -1,6 +1,9 @@
 package com.gaohui.utils;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import com.gaohui.NanoScan.R;
 
 /**
@@ -33,7 +36,7 @@ public class ThemeManageUtil {
             case R.style.Color7:
                 return 0xff2d2d2d;
             case R.style.Color8:
-                return 0xffaf967b;
+                return 0xff07afaf;
             case R.style.Color9:
                 return 0xff8091b0;
         }
@@ -69,4 +72,19 @@ public class ThemeManageUtil {
         return R.color.default_primary;
     }
 
+
+
+    public static void setCurrentThemeToPreferenceManager(int currentTheme) {
+        ThemeManageUtil.currentTheme = currentTheme;
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ContextUtil.getInstance()).edit();
+        editor.putInt("NanoCurrentTheme", currentTheme);
+        editor.apply();
+    }
+
+    public static int getCurrentThemeFromPreferenceManager() {
+        Context context = ContextUtil.getInstance();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        ThemeManageUtil.currentTheme = preferences.getInt("NanoCurrentTheme", R.style.AppTheme);
+        return ThemeManageUtil.currentTheme;
+    }
 }

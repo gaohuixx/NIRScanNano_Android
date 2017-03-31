@@ -286,20 +286,6 @@ public class NewScanActivity extends BaseActivity {
         return true;
     }
 
-    /**
-     * 监听Back键按下事件
-     * 注意:
-     * super.onBackPressed()会自动调用finish()方法,关闭
-     * 当前Activity.
-     * 若要屏蔽Back键盘,注释该行代码即可
-     */
-    @Override
-    public void onBackPressed() {
-        confirmDialog();
-        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        vibrator.vibrate(500);//震动1s
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.i(TAG, "onOptionsItemSelected()");
@@ -310,9 +296,13 @@ public class NewScanActivity extends BaseActivity {
             Intent configureIntent = new Intent(mContext, ConfigureActivity.class);
             startActivity(configureIntent);
         }else if (id == android.R.id.home) {
-            confirmDialog();
-            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            vibrator.vibrate(500);//震动1s
+            if (connected == true){
+                confirmDialog();
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(500);//震动1s
+            }else{
+                finish();
+            }
         }
 
         return true;

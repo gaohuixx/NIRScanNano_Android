@@ -2,7 +2,9 @@ package com.gaohui.NanoScan;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.gaohui.utils.ThemeManageUtil;
+import com.kstechnologies.nirscannanolibrary.SettingsManager;
 
 
 /**
@@ -81,8 +84,8 @@ public class ThemeDialog extends DialogFragment implements View.OnClickListener 
                 theme = R.style.AppTheme;
                 break;
         }
-        ThemeManageUtil.currentTheme = theme;
-        startActivity(new Intent(getContext(), MainActivity.class));
+        ThemeManageUtil.setCurrentThemeToPreferenceManager(theme);//将被选中的主题保存到PreferenceManager
+        startActivity(new Intent(getContext(), MainActivity.class));//回到主页
         getActivity().finish();
     }
 }

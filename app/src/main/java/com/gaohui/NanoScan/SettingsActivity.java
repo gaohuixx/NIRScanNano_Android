@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.kstechnologies.nirscannanolibrary.SettingsManager;
@@ -35,6 +36,7 @@ public class SettingsActivity extends BaseActivity {
     private AlertDialog alertDialog;
     private TextView tv_pref_nano;
     private String preferredNano;
+    private boolean tb_refCal_flag;
 
     private static Context mContext;
 
@@ -78,6 +80,8 @@ public class SettingsActivity extends BaseActivity {
         tb_refCal.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b && tb_refCal_flag)
+                    Toast.makeText(mContext, "一旦您这样选择，请先保证您的Nano已经正确校准，否则请选择本地", Toast.LENGTH_LONG).show();
                 SettingsManager.storeBooleanPref(mContext, "ReferenceCalibration", b);//true：Nano no：本地
             }
         });
@@ -101,8 +105,9 @@ public class SettingsActivity extends BaseActivity {
         //初始化切换按钮状态
         tb_temp.setChecked(SettingsManager.getBooleanPref(this, SettingsManager.SharedPreferencesKeys.tempUnits, SettingsManager.CELSIUS));
         tb_spatial.setChecked(SettingsManager.getBooleanPref(this, SettingsManager.SharedPreferencesKeys.spatialFreq, SettingsManager.WAVELENGTH));
+        tb_refCal_flag = false;//这样做是为了防止进入设置页面时也会提示
         tb_refCal.setChecked(SettingsManager.getBooleanPref(this, "ReferenceCalibration", false));
-
+        tb_refCal_flag = true;
 
         if(preferredNano == null){
             btn_forget.setEnabled(false);

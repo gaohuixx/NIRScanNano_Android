@@ -393,7 +393,7 @@ public class NewScanActivity extends BaseActivity {
 
                 mChart.setDescription("");//设置表格的描述
 
-                mChart.setTouchEnabled(true);//// 设置是否可以触摸
+                mChart.setTouchEnabled(true);// 设置是否可以触摸
 
                 mChart.setDragEnabled(true);// 是否可以拖拽
                 mChart.setScaleEnabled(true);// 是否可以缩放

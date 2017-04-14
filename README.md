@@ -1,50 +1,26 @@
-# NIRScan Nano Project Description
+# 关于这个项目
 
-The purpose of this project is to provide the simplest possible template for developers to create their own native Android app for communicating with the Texas Instruments' NIRScan Nano Product.
+这个项目是本人的毕设作品，是基于KST公司的开源项目[NIRScanNano_Android](https://github.com/kstechnologies/NIRScanNano_Android)进行的二次开发，主要是美化了界面，修改了几个bug，添加了几个小功能。在界面部分主要参考了[GithubTrends](https://github.com/laowch/GithubTrends)这个项目，在此一并表示感谢。
 
-This project allows the user to scan for and connect to the NanoScan using Bluetooth Low Energy (BLE).  It is feature poor, and the intent is for you to take the KSTNanoSDK.java files, add it to your own product, and use this SDK as an easy means of communicating with the NanoScan. 
+# 和原项目相比更新之处
+1. 修改了界面，加入了沉浸式状态栏，侧边抽屉栏，使用AppBar代替ActionBar。所有Activity继承自我写的BaseActivity，而BaseActivity继承自AppCompatActivity
+2. 加入了几个小功能，开启/关闭蓝牙，选择主题，关于页面，以及可以选择参考校准数据来源功能
+3. 修改了几个Bug，首先就是我的荣耀6手机偶尔连接不上Nano，测量方法这个参数显示不合适的问题，当扫描配置大于2的时候的bug，当扫描配置索引变成两个字节时的bug，当选择了偏好设备后，连接会出问题的bug
+4. 优化了部分重复代码，主要是绘图那块的
+5. 重构了java文件的包名，修改了发布时的包名
+6. 汉化
 
-Please consider searching on the TODO pragma marks throughout this code to see where we are taking it next. Our understanding of the NIRScan Nano, the firmware, the hardware, and the basic business logic of interacting with the device has all been under development and very dynamic.  There are "less than ideal" things in this source, but we believe it's in a great state to let you build great things!  Tell us what you're doing with this source via [email](mailto://sensing@kstechnologies.com)  or [Twitter](http://www.twitter.com/kstechnologies) .
 
-# Compatibility
+# 兼容性
 
 * Android 5.0+ (Lollipop / SDK 21)
-* Requires Bluetooth Low Energy (BLE) Radio
-* Requires TI NIRScanNano EVM running Firmware v2.0+
+* 需要您的手机支持BLE
 
-# Build Requirements
+# 构建要求
 
 * nirscannanolibrary.aar (1)
 * NanoBLEService.java
 * MPAndroidChart (2)
-
-(1) In order to get the source code for the Spectrum C Librarym which is built into the nirscannanolibrary.aar, you must execute a Non-Disclosure Agreement directly with Texas Instruments.
-(2) This is an awesome open source project created by Philipp Jahoda and is designed for building beautiful graphcs and charts for Android.  Please see [Phil's github repo](https://github.com/PhilJay/MPAndroidChart) for more information.
-
-If you just want to test out the app and get data as fast as possible, consider just downloading the compiled version of this app, [available for free on the Google Play Store](https://play.google.com/store/apps/details?id=com.kstechnologies.NanoScan) .
-
-# Version
-
-*  Version 1.0, Build 8
-*  Opencsv 3.6
-*  MPAndroidChart
-*  Android Studio 1.5.1
-
-# First Steps
-
-*  After executing a Non-Disclosure Agreement directly with Texas Instruments and obtaining the Spectrum C Library source files, use the NDK to compile libdlpspectrum according to the Android.mk and Application.mk files. The interface.c file is used to provide a JNI wrapper around the Spectrum C Library. Add JNI functions here to extend the app's usage of the Spectrum C library.
-
-*  Import libdlpspectrum.so into the project and include the KSTNanoSDK and NanoBLEService files.
-
-* Use the NanoBLEService as a template for interacting with the Nano over BLE, and the KSTNanoSDK as a way to issue specific commands to the Nano.
-
-# Contact Information
-
-Please [contact KST](mailto://sensing@kstechnologies.com) for any questions you may have regarding this SDK or for requesting custom hardware, firmware, app, or cloud development work based on TI's DLP Technology.  You can also [visit the KS Technologies website](http://www.kstechnologies.com) for more information about our company.
-
-# FAQ
-
-tbd
 
 # License
 

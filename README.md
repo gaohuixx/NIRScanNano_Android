@@ -2,6 +2,9 @@
 
 这个项目是本人的毕设作品，是基于KST公司的开源项目[NIRScanNano_Android](https://github.com/kstechnologies/NIRScanNano_Android)进行的二次开发，主要是美化了界面，修改了几个bug，添加了几个小功能。在界面部分主要参考了[GithubTrends](https://github.com/laowch/GithubTrends)这个项目，在此一并表示感谢。
 
+# 下载
+[点此下载APK文件](https://github.com/gaohuixx/NIRScanNano_Android/raw/master/app/app-release.apk)
+
 # 和原项目相比更新之处
 1. 修改了界面，加入了沉浸式状态栏，侧边抽屉栏，使用AppBar代替ActionBar。所有Activity继承自我写的BaseActivity，而BaseActivity继承自AppCompatActivity
 2. 加入了几个小功能，开启/关闭蓝牙，选择主题，关于页面，以及可以选择参考校准数据来源功能

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.gaohui.NanoScan">
+    package="com.gaohui.nano">
 
     <!--申请权限-->
     <uses-permission android:name="android.permission.BLUETOOTH" /><!--这两个是蓝牙相关的权限-->
@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.gaohui.nano.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -30,50 +30,50 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="InfoActivity"
+            android:name="com.gaohui.nano.InfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="SettingsActivity"
+            android:name="com.gaohui.nano.SettingsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="GraphActivity"
+            android:name="com.gaohui.nano.GraphActivity"
             android:screenOrientation="portrait" />
 
         <service
-            android:name="NanoBLEService"
+            android:name="com.gaohui.nano.NanoBLEService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="NewScanActivity"
+            android:name="com.gaohui.nano.NewScanActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
         <!-- android:windowSoftInputMode="adjustPan" -->
         <!-- 当前窗口的内容将自动移动以便当前焦点从不被键盘覆盖和用户能总是看到输入内容的部分 -->
         <activity
-            android:name="ConfigureActivity"
+            android:name="com.gaohui.nano.ConfigureActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="DeviceInfoActivity"
+            android:name="com.gaohui.nano.DeviceInfoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="DeviceStatusActivity"
+            android:name="com.gaohui.nano.DeviceStatusActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ScanConfActivity"
+            android:name="com.gaohui.nano.ScanConfActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="StoredScanDataActivity"
+            android:name="com.gaohui.nano.StoredScanDataActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name="ScanActivity"
+        <activity android:name="com.gaohui.nano.ScanActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name="AboutActivity"
+        <activity android:name="com.gaohui.nano.AboutActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.gaohui.NanoScan.ActiveScanActivity"
+            android:name="com.gaohui.nano.ActiveScanActivity"
             android:screenOrientation="portrait" />
     </application>
 

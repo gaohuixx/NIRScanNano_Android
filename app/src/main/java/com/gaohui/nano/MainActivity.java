@@ -1,4 +1,4 @@
-package com.gaohui.NanoScan;
+package com.gaohui.nano;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;

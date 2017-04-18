@@ -1,4 +1,4 @@
-package com.gaohui.NanoScan;
+package com.gaohui.nano;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;

@@ -1,4 +1,4 @@
-package com.gaohui.NanoScan;
+package com.gaohui.nano;
 
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;

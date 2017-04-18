@@ -4,7 +4,7 @@ package com.gaohui.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import com.gaohui.NanoScan.R;
+import com.gaohui.nano.R;
 
 /**
  * Created by gaohui on 2017/3/13.

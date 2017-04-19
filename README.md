@@ -1,6 +1,6 @@
 # 关于这个项目
 
-这个项目是本人的毕设作品，是基于KST公司的开源项目[NIRScanNano_Android](https://github.com/kstechnologies/NIRScanNano_Android)进行的二次开发，主要是美化了界面，修改了几个bug，添加了几个小功能。在界面部分主要参考了[GithubTrends](https://github.com/laowch/GithubTrends)这个项目，在此一并表示感谢。
+这个项目是本人的毕设作品，是基于KST公司的开源项目[NIRScanNano_Android](https://github.com/kstechnologies/NIRScanNano_Android)进行的二次开发，主要是美化了界面，修改了几个bug，添加了几个小功能。绘图部分使用的是[MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)这个项目，在界面部分主要参考了[GithubTrends](https://github.com/laowch/GithubTrends)这个项目，在此一并表示感谢。
 
 # 下载
 [点此下载APK文件](https://git.oschina.net/gaohuixx/nirscannano_android/raw/master/app/app-release.apk)

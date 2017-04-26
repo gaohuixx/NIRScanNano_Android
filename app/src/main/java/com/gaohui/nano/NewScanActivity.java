@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.kyleduo.switchbutton.SwitchButton;
 import com.opencsv.CSVWriter;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 import com.kstechnologies.nirscannanolibrary.SettingsManager;
@@ -128,9 +129,9 @@ public class NewScanActivity extends BaseActivity {
     private ProgressBar calProgress;
     private KSTNanoSDK.ScanResults results;
     private EditText filePrefix;
-    private ToggleButton btn_os;
-    private ToggleButton btn_sd;
-    private ToggleButton btn_continuous;
+    private SwitchButton btn_os;
+    private SwitchButton btn_sd;
+    private SwitchButton btn_continuous;
     private Button btn_scan;
 
     private NanoBLEService mNanoBLEService;
@@ -180,11 +181,15 @@ public class NewScanActivity extends BaseActivity {
 
         //设置UI元素和事件处理器
         filePrefix = (EditText) findViewById(R.id.et_prefix);//文件名前缀
-        btn_os = (ToggleButton) findViewById(R.id.btn_saveOS);//保存到安卓设备
-        btn_sd = (ToggleButton) findViewById(R.id.btn_saveSD);//保存到SD卡
-        btn_continuous = (ToggleButton) findViewById(R.id.btn_continuous);//继续扫描么
+        btn_os = (SwitchButton) findViewById(R.id.btn_saveOS);//保存到安卓设备
+        btn_sd = (SwitchButton) findViewById(R.id.btn_saveSD);//保存到SD卡
+        btn_continuous = (SwitchButton) findViewById(R.id.btn_continuous);//继续扫描么
         btn_scan = (Button) findViewById(R.id.btn_scan);//扫描
         tv_scan_conf = (TextView) findViewById(R.id.tv_scan_conf);//扫描配置
+
+        btn_os.setTintColor(ThemeManageUtil.getCurrentThemeColor());//将SwitchButton 颜色设置为主题颜色
+        btn_sd.setTintColor(ThemeManageUtil.getCurrentThemeColor());
+        btn_continuous.setTintColor(ThemeManageUtil.getCurrentThemeColor());
 
         btn_os.setChecked(SettingsManager.getBooleanPref(mContext, SettingsManager.SharedPreferencesKeys.saveOS, false));
         btn_sd.setChecked(SettingsManager.getBooleanPref(mContext, SettingsManager.SharedPreferencesKeys.saveSD, false));

@@ -336,7 +336,7 @@ public class MainActivity extends BaseActivity {
         if (!bluetoothAdapter.isEnabled()) {
             boolean state = bluetoothAdapter.enable();  //打开蓝牙，需要BLUETOOTH_ADMIN权限
             if(state){
-                Toast.makeText(mContext, "正在开启蓝牙", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "正在开启蓝牙. . .", Toast.LENGTH_SHORT).show();
                 bluetoothState = true;
             }
             else

@@ -34,6 +34,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.0.1'
     compile 'com.opencsv:opencsv:3.6'
     compile 'com.baoyz.swipemenulistview:library:1.3.0'
+    compile 'com.kyleduo.switchbutton:library:1.4.5'
     compile project(':MPChartLib')
     compile (name: 'nirscannanolibrary', ext:'aar')
 }

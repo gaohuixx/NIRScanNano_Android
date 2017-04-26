@@ -121,7 +121,8 @@
                         android:id="@+id/ll_sd"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/ll_prefix">
+                        android:layout_below="@id/ll_prefix"
+                        android:gravity="center|center_horizontal|center_vertical">
 
                         <TextView
                             android:id="@+id/tv_saveSD"
@@ -131,12 +132,13 @@
                             android:text="@string/save_to_sd"
                             android:textAppearance="?android:textAppearanceMedium" />
 
-                        <ToggleButton
+                        <com.kyleduo.switchbutton.SwitchButton
                             android:id="@+id/btn_saveSD"
+                            style="@style/SwitchButtonStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dip40"
-                            android:textOff="No"
-                            android:textOn="Yes" />
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            app:kswTintColor="#FF5449"/>
 
                     </LinearLayout>
 
@@ -150,7 +152,8 @@
                         android:id="@+id/ll_os"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/ll_sd">
+                        android:layout_below="@id/ll_sd"
+                        android:gravity="center|center_horizontal|center_vertical">
 
                         <TextView
                             android:id="@+id/tv_saveOS"
@@ -160,12 +163,13 @@
                             android:text="@string/save_to_android"
                             android:textAppearance="?android:textAppearanceMedium" />
 
-                        <ToggleButton
+                        <com.kyleduo.switchbutton.SwitchButton
                             android:id="@+id/btn_saveOS"
+                            style="@style/SwitchButtonStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dip40"
-                            android:textOff="No"
-                            android:textOn="Yes" />
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            app:kswTintColor="#FF5449"/>
 
                     </LinearLayout>
 
@@ -178,8 +182,9 @@
                     <LinearLayout
                         android:id="@+id/ll_continuous"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/dip40"
-                        android:layout_below="@id/ll_os">
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ll_os"
+                        android:gravity="center|center_horizontal|center_vertical">
 
                         <TextView
                             android:id="@+id/tv_continuous"
@@ -189,12 +194,13 @@
                             android:text="@string/cont_scan"
                             android:textAppearance="?android:textAppearanceMedium" />
 
-                        <ToggleButton
+                        <com.kyleduo.switchbutton.SwitchButton
                             android:id="@+id/btn_continuous"
+                            style="@style/SwitchButtonStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dip40"
-                            android:textOff="No"
-                            android:textOn="Yes" />
+                            android:layout_height="wrap_content"
+                            android:checked="true"
+                            app:kswTintColor="#FF5449"/>
 
                     </LinearLayout>
 

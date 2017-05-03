@@ -31,6 +31,7 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.gaohui.utils.DBUtil;
 import com.gaohui.utils.ThemeManageUtil;
 
 import java.io.File;
@@ -80,6 +81,8 @@ public class MainActivity extends BaseActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         mContext.registerReceiver(bluetoothStateChangeReceiver, filter);
+
+        DBUtil.copyDBToDatabases(mContext);
 
     }
 

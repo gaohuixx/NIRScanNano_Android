@@ -104,7 +104,7 @@
     <string name="prefix">文件名前缀</string>
     <string name="data">数据</string>
     <string name="nano">Nano</string>
-    <string name="save_to_sd">保存到SD卡么?</string>
+    <string name="save_to_sd">保存到光谱仪么?</string>
     <string name="save_to_android">保存到安卓设备么?</string>
     <string name="cont_scan">继续扫描么?</string>
     <string name="scan_conf">扫描配置</string>

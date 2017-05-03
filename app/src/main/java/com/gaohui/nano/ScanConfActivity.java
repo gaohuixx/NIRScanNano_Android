@@ -11,6 +11,7 @@ import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,10 +43,16 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  * {@link ScanConfReceiver} ：接收每一个扫描配置，没接收一个，更新下进度条。全部接收完成后，发广播，准备获取active 配置
  * {@link getActiveScanConfReceiver} ：接收active 配置
  *
+ * 问题：
+ * 现在的问题是获取Active 扫描配置索引有问题，高字节始终为0，比如正常Active 扫描配置的索引是：0F 01
+ * 而获取到的却是0F 00，高字节始终为0，我觉得这可能是光谱仪本身的bug，它的芯片内部编程出了错
+ * 不过设置Active 扫描配置索引时是没问题的，直接发送0F 01 就可以把这条配置设置为Active
+ *
  * @author collinmast,gaohui
  */
 public class ScanConfActivity extends BaseActivity {
 
+    private static final String TAG = "gaohui";
     private static Context mContext;
 
     private final BroadcastReceiver scanConfReceiver = new ScanConfReceiver();
@@ -93,7 +100,7 @@ public class ScanConfActivity extends BaseActivity {
             }
         });
 
-         //初始化一个扫描配置接收器，当配置数量被接收的时候，显示进度条
+         //初始化一个扫描配置数量接收器，当配置数量被接收的时候，显示进度条
         scanConfSizeReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -119,7 +126,7 @@ public class ScanConfActivity extends BaseActivity {
             }
         };
 
-         //初始化一个active 配置接收器，当接收到active 配置，设置active 配置的颜色为当前主题颜色
+         //初始化一个active 配置接收器，当接收到active 配置索引，设置active 配置的颜色为当前主题颜色
         getActiveScanConfReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -129,7 +136,7 @@ public class ScanConfActivity extends BaseActivity {
                 barProgressDialog.dismiss();//进度条消失
 
                 for (KSTNanoSDK.ScanConfiguration c : configs) {
-                    if (c.getScanConfigIndex() == indexInt) {
+                    if ((c.getScanConfigIndex() & 0xff) == indexInt) {//由于bug，active 的index 高字节始终为0，所以暂时这么写
                         c.setActive(true);
 
                     } else {
@@ -166,6 +173,7 @@ public class ScanConfActivity extends BaseActivity {
 
     /**
      * 这个广播接收器用来接收扫描配置，当接收所有扫描配置接收完成后，进度条将关闭，并且将把所有配置列出来
+     * 然后开始获取Active配置，发送广播：KSTNanoSDK.GET_ACTIVE_CONF，service 执行KSTNanoSDK.getActiveConf() 方法
      */
     private class ScanConfReceiver extends BroadcastReceiver {
 
@@ -174,6 +182,18 @@ public class ScanConfActivity extends BaseActivity {
 
             //调用C语言方法将数据反序列化解析并封装成ScanConfiguration 对象
             KSTNanoSDK.ScanConfiguration scanConf = KSTNanoSDK.KSTNanoSDK_dlpSpecScanReadConfiguration(intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA));
+
+            Log.i("gaohui", "接受到一条扫描配置，索引是: " + scanConf.getScanConfigIndex());
+            Log.d(TAG, "扫描配置: " + scanConf.getScanConfigIndex());
+            Log.d(TAG, "扫描配置: " + scanConf.getScanConfigSerialNumber());
+            Log.d(TAG, "扫描配置: " + scanConf.getConfigName());
+            Log.d(TAG, "扫描配置: " + scanConf.getScanType());
+            Log.d(TAG, "扫描配置: " + scanConf.getWavelengthStartNm());
+            Log.d(TAG, "扫描配置: " + scanConf.getWavelengthEndNm());
+            Log.d(TAG, "扫描配置: " + scanConf.getWidthPx());
+            Log.d(TAG, "扫描配置: " + scanConf.getNumPatterns());
+            Log.d(TAG, "扫描配置: " + scanConf.getNumRepeats());
+            Log.d(TAG, "扫描配置: " + scanConf.getSectionExposureTime());
 
             configs.add(scanConf);//每接收到一个就把它存到集合里
             receivedConfSize++;//己经接收的配置数量加一

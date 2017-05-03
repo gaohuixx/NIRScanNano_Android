@@ -67,13 +67,13 @@ import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 import com.kstechnologies.nirscannanolibrary.SettingsManager;
 
 /**
- * 一旦发生了连接，这个Activity将控制这个Nano，这个Activity允许用户去初始化一个扫描，也允许用户访问其它的“只连
- * 接”设置。当这个Activity被启动的时候，app将扫描一个preferred设备，{@link NanoBLEService#SCAN_PERIOD}，
+ * 一旦发生了连接，这个Activity将控制这个Nano，这个Activity 允许用户去初始化一个扫描，也允许用户访问其它的“只连
+ * 接”设置。当这个Activity 被启动的时候，app将扫描一个preferred 设备，{@link NanoBLEService#SCAN_PERIOD}，
  * 如果没有发现，它将开始另一个"open"，去扫描任何Nano
- * 如果一个偏好Nano还没有被设置，它将开启一个单独的扫描。如果在扫描结束的时候，一个Nano还没有被发现，一个信息将
+ * 如果一个偏好Nano 还没有被设置，它将开启一个单独的扫描。如果在扫描结束的时候，一个Nano 还没有被发现，一个信息将
  * 被显示给用户，来告诉用户出错信息，并且这个Activity将完毕
  *
- * 警告：这个Activity使用了JNI函数调用来完成和Spectrum（光谱）C语言库的通信，这个Activity的名字和结构保持不变
+ * 警告：这个Activity使用了JNI 函数调用来完成和Spectrum（光谱）C 语言库的通信，这个Activity 的名字和结构保持不变
  * 是非常重要的，否则它的功能将会不好使
  *
  * 这个界面也能显示图表，但是它是又单独写了一遍，和{@link GraphActivity} 没关系
@@ -82,7 +82,11 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  * {@link notifyCompleteReceiver}   当连接上Nano 后触发，触发器后去设置时间{@link notifyCompleteReceiver}
  * {@link requestCalCoeffReceiver}  当接收校正系数时触发，只是用来更新进度条
  * {@link requestCalMatrixReceiver} 当接收到校正矩阵时，只是用来更新进度条
- * {@link refReadyReceiver}         当校正系数和校正矩阵都接收完成后触发，用来将参考校正数据保存到本地，不过并没有用到
+ * {@link refReadyReceiver}         当校正系数和校正矩阵都接收完成后触发，进度条消失，按钮可用，将参考校正数据保存到本地，不过并没有用到
+ * {@link ScanConfReceiver}         当校正矩阵接收完成后，发送广播接收请求ACTIVE_CONF，用的是：KSTNanoSDK.REQUEST_ACTIVE_CONF
+ *                                  当active 配置返回时触发此接收器，做一些更新，然后就没事了。获取active 配置会有问题
+ *                                  获取active 配置的索引没问题，但是这个索引是错的，如果利用这个错误的索用去获取详细配置，就会什么都不返回
+ *                                  如果你的程序是需要这个返回结果的话，就会一直在那等着，然后就卡在那里了
  *
  * {@link ScanStartedReceiver}      当点击扫描按钮时或者按Nano上的扫描键时触发，用来显示一个圆形进度条和按钮文字变为“扫描中...”
  * {@link scanDataReadyReceiver}    当扫描完成后触发，这个干的事就比较多了，详情见下面的注释
@@ -124,7 +128,8 @@ public class NewScanActivity extends BaseActivity {
     private final IntentFilter scanStartedFilter = new IntentFilter(NanoBLEService.ACTION_SCAN_STARTED);
 
     private final BroadcastReceiver scanConfReceiver = new ScanConfReceiver();
-    private final IntentFilter scanConfFilter = new IntentFilter(KSTNanoSDK.SCAN_CONF_DATA);
+//    private final IntentFilter scanConfFilter = new IntentFilter(KSTNanoSDK.SCAN_CONF_DATA);
+    private final IntentFilter scanConfFilter = new IntentFilter("NewScan:getActiveConfig");
 
     private ProgressBar calProgress;
     private KSTNanoSDK.ScanResults results;
@@ -185,6 +190,8 @@ public class NewScanActivity extends BaseActivity {
         btn_sd = (SwitchButton) findViewById(R.id.btn_saveSD);//保存到SD卡
         btn_continuous = (SwitchButton) findViewById(R.id.btn_continuous);//继续扫描么
         btn_scan = (Button) findViewById(R.id.btn_scan);//扫描
+        //由于我把获取active 具体配置那段代码注释掉了，所以一开始它是不会刷新的，所以一开始它显示的是有可能错误的
+        //不过只要你到扫描配置页面中去过，就相当于刷新了一下，它显示的就正确了
         tv_scan_conf = (TextView) findViewById(R.id.tv_scan_conf);//扫描配置
 
         btn_os.setTintColor(ThemeManageUtil.getCurrentThemeColor());//将SwitchButton 颜色设置为主题颜色
@@ -577,7 +584,7 @@ public class NewScanActivity extends BaseActivity {
             }
 
             //还是获取最大值与最小值，获取最大最小波长还有点用，但是后面获取反射率那些就没用了
-            float minWavelength = mWavelengthFloat.get(0);
+            float minWavelength = mWavelengthFloat.get(0);//这是为了显示起始波长，结束波长用的
             float maxWavelength = mWavelengthFloat.get(0);
 
             for (Float f : mWavelengthFloat) {
@@ -634,6 +641,11 @@ public class NewScanActivity extends BaseActivity {
             KSTNanoSDK.ReferenceCalibration.writeRefCalFile(mContext, refCal);//把参考校正数据写到本地,是直接把对象给保存了
             calProgress.setVisibility(View.GONE);
 
+            barProgressDialog.dismiss();
+            btn_scan.setClickable(true);//此时按钮可用
+
+            mMenu.findItem(R.id.action_config).setEnabled(true);
+
         }
     }
 
@@ -662,10 +674,9 @@ public class NewScanActivity extends BaseActivity {
 
     /**
      * 把扫描数据写到CSV 文件中
-     * Write scan data to CSV file
-     * @param currentTime the current time to save
+     * @param currentTime 当前时间
      * @param scanResults the {@link KSTNanoSDK.ScanResults} structure to save
-     * @param saveOS boolean indicating if the CSV file should be saved to the OS
+     * @param saveOS 是否保存到手机
      */
     private void writeCSV(String currentTime, KSTNanoSDK.ScanResults scanResults, boolean saveOS) {
 
@@ -689,7 +700,7 @@ public class NewScanActivity extends BaseActivity {
                     int intens = scanResults.getUncalibratedIntensity()[csvIndex];
                     float absorb = (-1) * (float) Math.log10((double) scanResults.getUncalibratedIntensity()[csvIndex] / (double) scanResults.getIntensity()[csvIndex]);
                     float reflect = (float) results.getUncalibratedIntensity()[csvIndex] / results.getIntensity()[csvIndex];
-                    data.add(new String[]{String.valueOf(waves), String.valueOf(intens), String.valueOf(absorb), String.valueOf(reflect)});
+                    data.add(new String[]{String.valueOf(waves), String.valueOf(intens), String.valueOf(absorb), String.valueOf(reflect)});//这里要的都是文本型数据
                 }
                 writer.writeAll(data);
                 writer.close();
@@ -978,8 +989,8 @@ public class NewScanActivity extends BaseActivity {
                 barProgressDialog.setProgress(barProgressDialog.getProgress() + intent.getIntExtra(KSTNanoSDK.EXTRA_REF_CAL_MATRIX_SIZE, 0));
             }
             if (barProgressDialog.getProgress() == barProgressDialog.getMax()) {
-                //接收完之后就请求active 配置
-                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.REQUEST_ACTIVE_CONF));
+                //接收完之后就请求active 配置，由于请求active 配置会出问题，所以就先不执行这步了
+//                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.REQUEST_ACTIVE_CONF));
             }
         }
     }
@@ -987,6 +998,7 @@ public class NewScanActivity extends BaseActivity {
     /**
      * 自定义接收器用来处理扫描配置
      * 在触发这个广播接收器的时候会把数据以 byte[] 的格式传过来
+     * 遇到这条广播时触发: KSTNanoSDK.SCAN_CONF_DATA
      */
     private class ScanConfReceiver extends BroadcastReceiver {
 
@@ -1005,15 +1017,10 @@ public class NewScanActivity extends BaseActivity {
             //调用C 语言函数将获取到的数据解析并封装成KSTNanoSDK.ScanConfiguration 对象
             KSTNanoSDK.ScanConfiguration scanConf = KSTNanoSDK.KSTNanoSDK_dlpSpecScanReadConfiguration(intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA));
 
-            activeConf = scanConf;
+            activeConf = scanConf;//获取到配置名称
 
-            barProgressDialog.dismiss();
-            btn_scan.setClickable(true);//此时按钮可用
-
-            mMenu.findItem(R.id.action_config).setEnabled(true);
-
-            SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, scanConf.getConfigName());
-            tv_scan_conf.setText(scanConf.getConfigName());
+            SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, scanConf.getConfigName());//把配置名称保存
+            tv_scan_conf.setText(scanConf.getConfigName());//更新显示
 
 
         }

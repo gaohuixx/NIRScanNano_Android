@@ -7,7 +7,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.gaohui.NanoScan"
+        applicationId "com.gaohui.nanoscan"
         minSdkVersion 21
         targetSdkVersion 22
         versionCode 13

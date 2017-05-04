@@ -259,7 +259,7 @@ public class GraphActivity extends BaseActivity {
     //设置菜单
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_graph, menu);
+//        getMenuInflater().inflate(R.menu.menu_graph, menu);//把分享功能去掉了
         return true;
     }
 

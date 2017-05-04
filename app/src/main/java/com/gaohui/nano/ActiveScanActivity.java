@@ -69,7 +69,7 @@ public class ActiveScanActivity extends BaseActivity {
         Log.i("gaohui", "扫描类型是：" + activeConf.getScanType());
         //如果这个扫描配置包含多个扫描，即多个section，那么它就是由多个section 组成的，将它拆成多个section 然后放到sections 集合里
         //section 集合代表SlewScanConfAdapter 对应的ArrayList
-        //这个类型有三种Hadamard,Column，slew
+        //这个类型有三种Hadamard, Column, slew
         if(activeConf != null && activeConf.getScanType().equals("Slew")){
             int numSections = activeConf.getSlewNumSections();
             int i;

@@ -739,7 +739,6 @@ public class NanoBLEService extends Service {
                         if (debug)
                             Log.i(TAG, "Done collecting active scanConfiguration");
                         broadcastScanConfig(KSTNanoSDK.SCAN_CONF_DATA, scanConf.toByteArray());
-//                        broadcastScanConfig("NewScan:getActiveConfig", scanConf.toByteArray());
                         scanConfIndex = 0;
                         activeConfRequested = false;
                     }

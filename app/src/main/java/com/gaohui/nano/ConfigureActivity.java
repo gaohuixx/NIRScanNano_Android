@@ -63,6 +63,7 @@ public class ConfigureActivity extends BaseActivity {
                         break;
                     case 2:
                         Intent confIntent = new Intent(mContext, ScanConfActivity.class);
+                        confIntent.putExtra("title", R.string.stored_configurations);
                         startActivity(confIntent);
                         break;
                     case 3:

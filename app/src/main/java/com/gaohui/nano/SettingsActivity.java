@@ -18,6 +18,13 @@ import android.widget.ToggleButton;
 
 import com.kstechnologies.nirscannanolibrary.SettingsManager;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 /**
  *
  * 这个avtivity 控制着一个全局设置视图，这些设置不需要一个Nano 先连接上
@@ -33,6 +40,7 @@ public class SettingsActivity extends BaseActivity {
     private ToggleButton tb_refCal;
     private Button btn_set;
     private Button btn_forget;
+    private Button btn_export;
     private AlertDialog alertDialog;
     private TextView tv_pref_nano;
     private String preferredNano;
@@ -61,6 +69,7 @@ public class SettingsActivity extends BaseActivity {
         btn_set = (Button) findViewById(R.id.btn_set);//设置我的nano
         btn_forget = (Button) findViewById(R.id.btn_forget);//清除我的nano
         tv_pref_nano = (TextView) findViewById(R.id.tv_pref_nano);//已经设置的Nano
+        btn_export = (Button) findViewById(R.id.btn_export);//已经设置的Nano
 
         //添加监听
         tb_temp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -93,6 +102,18 @@ public class SettingsActivity extends BaseActivity {
                 startActivity(new Intent(mContext, ScanActivity.class));
             }
         });
+
+        btn_export.setOnClickListener(new View.OnClickListener() {//点击导出数据库
+            @Override
+            public void onClick(View view) {
+                btn_export.setEnabled(false);
+//                Toast.makeText(mContext, "正在导出数据库. . .", Toast.LENGTH_LONG).show();
+                exportDB();
+                Toast.makeText(mContext, "导出成功，位置如下：本地存储/Nano/db/Nano_export.db", Toast.LENGTH_LONG).show();
+                btn_export.setEnabled(true);
+            }
+        });
+
     }
 
     @Override//当重新开始此Activity的时候调用
@@ -204,5 +225,32 @@ public class SettingsActivity extends BaseActivity {
         alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
+    }
+
+    public void exportDB(){
+
+        File file = new File(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/db");
+        if(!file.exists())
+            file.mkdirs();
+
+        String dbExport = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/Nano/db/Nano_export.db";
+
+        try {
+            InputStream myInput = new FileInputStream("/data/data/com.gaohui.nanoscan/databases/Nano.db");
+            OutputStream myOutput = new FileOutputStream(dbExport);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = myInput.read(buffer)) > 0) {
+                myOutput.write(buffer, 0, length);
+            }
+
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

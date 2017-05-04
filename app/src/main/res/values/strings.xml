@@ -101,12 +101,12 @@
     <string name="serial_sn">Nano SN</string>
 
     <string name="scan">开始扫描</string>
-    <string name="prefix">文件名前缀</string>
+    <string name="prefix">实验名称</string>
     <string name="data">数据</string>
     <string name="nano">Nano</string>
-    <string name="save_to_sd">保存到光谱仪么?</string>
-    <string name="save_to_android">保存到安卓设备么?</string>
-    <string name="cont_scan">继续扫描么?</string>
+    <string name="save_to_sd">保存到光谱仪</string>
+    <string name="save_to_android">保存到手机</string>
+    <string name="cont_scan">继续扫描</string>
     <string name="scan_conf">扫描配置</string>
     <string name="col_1">Column 1</string>
     <string name="hadamard">Hadamard</string>
@@ -122,8 +122,8 @@
     <string name="temp_value_f">%1$s&#x2109;</string>
     <string name="humid_value">%1$s%%RH</string>
 
-    <string name="stored_configurations">已保存的扫描配置</string>
-    <string name="reading_configurations">读取扫描配置中...</string>
+    <string name="stored_configurations">Nano中保存的扫描配置</string>
+    <string name="reading_configurations">读取扫描配置中. . .</string>
     <string name="stored_scan_data">Nano中保存的扫描数据</string>
     <string name="reading_sd_card">正在读取Nano中的SD卡...</string>
 

@@ -26,6 +26,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.gaohui.utils.DBUtil;
 import com.gaohui.utils.NanoUtil;
 import com.gaohui.utils.ThemeManageUtil;
 import com.gaohui.utils.TimeUtil;
@@ -128,8 +130,9 @@ public class NewScanActivity extends BaseActivity {
     private final IntentFilter scanStartedFilter = new IntentFilter(NanoBLEService.ACTION_SCAN_STARTED);
 
     private final BroadcastReceiver scanConfReceiver = new ScanConfReceiver();
-//    private final IntentFilter scanConfFilter = new IntentFilter(KSTNanoSDK.SCAN_CONF_DATA);
-    private final IntentFilter scanConfFilter = new IntentFilter("NewScan:getActiveConfig");
+    private final IntentFilter scanConfFilter = new IntentFilter("ActiveConfigBroadcast");
+//    private final IntentFilter scanConfFilter = new IntentFilter("NewScan:getActiveConfig");
+//    private final IntentFilter scanConfFilter = new IntentFilter("ActiveConfigBroadcast");
 
     private ProgressBar calProgress;
     private KSTNanoSDK.ScanResults results;
@@ -318,6 +321,22 @@ public class NewScanActivity extends BaseActivity {
         }
 
         return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            if (connected == true){
+                confirmDialog();
+                Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                vibrator.vibrate(500);//震动1s
+            }else{
+                finish();
+            }
+        }
+
+        return false;
+
     }
 
     /**
@@ -616,6 +635,32 @@ public class NewScanActivity extends BaseActivity {
             writeCSV(ts, results, saveOS);//ts 是170318200720，这个不用变，
             writeCSVDict(ts, scanType, scanDate, String.valueOf(minWavelength), String.valueOf(maxWavelength), String.valueOf(results.getLength()), String.valueOf(results.getLength()), "1", "2.00", saveOS);
 
+
+            int id = DBUtil.queryScanConfbyName(tv_scan_conf.getText().toString());
+            Log.i(TAG, "name= " + tv_scan_conf.getText().toString());
+            Log.i(TAG, "id= " + id);
+            if(id > 0){//如果光谱仪此次扫描所用的扫描配置在手机的数据库中已经保存了，那么就直接把结果存入数据库
+
+                String prefix = filePrefix.getText().toString();
+                if (prefix.equals("")) {
+                    prefix = "Nano";
+                }
+                String experimentName = prefix + ts;
+                String wavelength = NanoUtil.convertFloatResultToText(mWavelengthFloat);
+                String reflectance = NanoUtil.convertEntryResultToText(mReflectanceFloat);
+                String absorbance = NanoUtil.convertEntryResultToText(mAbsorbanceFloat);
+                String intensity = NanoUtil.convertEntryResultToText(mIntensityFloat);
+
+                Log.i(TAG, "experimentName= " + experimentName);
+                Log.i(TAG, "wavelength= " + wavelength);
+                Log.i(TAG, "reflectance= " + reflectance);
+                Log.i(TAG, "absorbance= " + absorbance);
+                Log.i(TAG, "intensity= " + intensity);
+
+                DBUtil.insertExperimentResult(experimentName, wavelength, reflectance, absorbance, intensity, id);
+            }
+
+
             //是否继续扫描，如果是就再扫
             SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.prefix, filePrefix.getText().toString());
             if (continuous) {
@@ -643,8 +688,11 @@ public class NewScanActivity extends BaseActivity {
 
             barProgressDialog.dismiss();
             btn_scan.setClickable(true);//此时按钮可用
-
             mMenu.findItem(R.id.action_config).setEnabled(true);
+
+            Intent configureIntent = new Intent(mContext, ScanConfActivity.class);
+            configureIntent.putExtra("title", "请选择一种扫描配置");
+            startActivity(configureIntent);
 
         }
     }
@@ -996,32 +1044,20 @@ public class NewScanActivity extends BaseActivity {
     }
 
     /**
-     * 自定义接收器用来处理扫描配置
-     * 在触发这个广播接收器的时候会把数据以 byte[] 的格式传过来
-     * 遇到这条广播时触发: KSTNanoSDK.SCAN_CONF_DATA
+     * 自定义接收器用来Active 扫描配置, 接受的是具体内容，不是索引。这个广播现在是我自己定义，自己来发
+     * 遇到这条广播时触发: "ActiveConfigBroadcast"
      */
     private class ScanConfReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "ScanConfReceiver.onReceive():处理扫描配置");
-
-            byte[] smallArray = intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA);
-            byte[] addArray = new byte[smallArray.length * 3];
-            byte[] largeArray = new byte[smallArray.length + addArray.length];
-
-            System.arraycopy(smallArray, 0, largeArray, 0, smallArray.length);
-            System.arraycopy(addArray, 0, largeArray, smallArray.length, addArray.length);
-
-            Log.w("_JNI","largeArray Size: "+ largeArray.length);
             //调用C 语言函数将获取到的数据解析并封装成KSTNanoSDK.ScanConfiguration 对象
             KSTNanoSDK.ScanConfiguration scanConf = KSTNanoSDK.KSTNanoSDK_dlpSpecScanReadConfiguration(intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA));
 
-            activeConf = scanConf;//获取到配置名称
+            activeConf = scanConf;
 
             SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, scanConf.getConfigName());//把配置名称保存
             tv_scan_conf.setText(scanConf.getConfigName());//更新显示
-
 
         }
     }

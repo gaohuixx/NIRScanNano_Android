@@ -190,6 +190,17 @@
             android:layout_marginBottom="@dimen/dip8"
             android:background="#8c8b8b" />
 
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/btn_export"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dip8"
+            app:theme="@style/ButtonTheme"
+            android:text="导出数据库"
+            android:textSize="22dp"
+            android:textColor="@color/white" />
+
 
     </LinearLayout>
 </LinearLayout>

@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.gaohui.utils.NanoUtil;
 import com.gaohui.utils.ThemeManageUtil;
@@ -39,7 +41,7 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  * 3. 获取到扫描配置对象，通过对象的getScanConfigIndex() 获取到的是int 型
  *
  * 这页的几个广播接收器执行顺序：
- * {@link scanConfSizeReceiver} ：接收扫描配置的数量，显示进度条 ScanConfReceiver
+ * {@link scanConfSizeReceiver} ：接收扫描配置的数量，显示进度条 ScanConfReceiver，service 接收完数量后自动去请求全部详细配置
  * {@link ScanConfReceiver} ：接收每一个扫描配置，没接收一个，更新下进度条。全部接收完成后，发广播，准备获取active 配置
  * {@link getActiveScanConfReceiver} ：接收active 配置
  *
@@ -66,6 +68,7 @@ public class ScanConfActivity extends BaseActivity {
     private BroadcastReceiver getActiveScanConfReceiver;
     private int storedConfSize;//Nano 中保存的配置数量
     private int receivedConfSize;//己经接收的配置数量
+    private Map map = new HashMap();//这个集合用来存放每个配置最原始的二进制数据
 
     ProgressDialog barProgressDialog;
 
@@ -79,10 +82,13 @@ public class ScanConfActivity extends BaseActivity {
 
         mContext = this;
 
+        Intent intent = getIntent();
+        String title = intent.getStringExtra("title");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //1. 获取到toolbar
         this.setSupportActionBar(toolbar); //2. 将toolbar 设置为ActionBar
         ActionBar actionBar = this.getSupportActionBar(); // 3. 正常获取ActionBar
-        actionBar.setTitle(R.string.stored_configurations);
+        actionBar.setTitle(title);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         lv_configs = (ListView) findViewById(R.id.lv_configs);
@@ -93,6 +99,8 @@ public class ScanConfActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 int indexInt = configs.get(i).getScanConfigIndex();//获取被点击的配置项的index，是int型的
                 byte[] indexByteArray = NanoUtil.indexToByteArray(indexInt);//将int 型的index 转成byte[] 型，为了发送
+
+                Toast.makeText(mContext, "选择 " + configs.get(i).getConfigName() + " 作为扫描配置", Toast.LENGTH_SHORT).show();
 
                 Intent setActiveConfIntent = new Intent(KSTNanoSDK.SET_ACTIVE_CONF);
                 setActiveConfIntent.putExtra(KSTNanoSDK.EXTRA_SCAN_INDEX, indexByteArray);
@@ -139,13 +147,19 @@ public class ScanConfActivity extends BaseActivity {
                     if ((c.getScanConfigIndex() & 0xff) == indexInt) {//由于bug，active 的index 高字节始终为0，所以暂时这么写
                         c.setActive(true);
 
+                        Intent sendActiveConfIntent = new Intent("ActiveConfigBroadcast");//我手动去发这个广播
+                        sendActiveConfIntent.putExtra(KSTNanoSDK.EXTRA_DATA, (byte[]) map.get(c.getScanConfigIndex()));
+                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(sendActiveConfIntent);
+
                     } else {
                         c.setActive(false);
                     }
                 }
 
-                lv_configs.setAdapter(scanConfAdapter);
+                lv_configs.setAdapter(scanConfAdapter);//刷新列表
                 lv_configs.setVisibility(View.VISIBLE);//列表显示
+
+
             }
         };
 
@@ -182,23 +196,12 @@ public class ScanConfActivity extends BaseActivity {
 
             //调用C语言方法将数据反序列化解析并封装成ScanConfiguration 对象
             KSTNanoSDK.ScanConfiguration scanConf = KSTNanoSDK.KSTNanoSDK_dlpSpecScanReadConfiguration(intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA));
-
-            Log.i("gaohui", "接受到一条扫描配置，索引是: " + scanConf.getScanConfigIndex());
-            Log.d(TAG, "扫描配置: " + scanConf.getScanConfigIndex());
-            Log.d(TAG, "扫描配置: " + scanConf.getScanConfigSerialNumber());
-            Log.d(TAG, "扫描配置: " + scanConf.getConfigName());
-            Log.d(TAG, "扫描配置: " + scanConf.getScanType());
-            Log.d(TAG, "扫描配置: " + scanConf.getWavelengthStartNm());
-            Log.d(TAG, "扫描配置: " + scanConf.getWavelengthEndNm());
-            Log.d(TAG, "扫描配置: " + scanConf.getWidthPx());
-            Log.d(TAG, "扫描配置: " + scanConf.getNumPatterns());
-            Log.d(TAG, "扫描配置: " + scanConf.getNumRepeats());
-            Log.d(TAG, "扫描配置: " + scanConf.getSectionExposureTime());
+            map.put(scanConf.getScanConfigIndex(), intent.getByteArrayExtra(KSTNanoSDK.EXTRA_DATA));
 
             configs.add(scanConf);//每接收到一个就把它存到集合里
             receivedConfSize++;//己经接收的配置数量加一
             if (receivedConfSize == storedConfSize) {//如果己经接收的配置数量等于Nano 中保存的配置数量
-                //开始发广播准备获取当前active 配置
+                //开始发广播准备获取当前active 配置索引
                 barProgressDialog.setProgress(receivedConfSize);//更新进度条
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(KSTNanoSDK.GET_ACTIVE_CONF));
                 scanConfAdapter = new ScanConfAdapter(mContext, configs);
@@ -230,13 +233,6 @@ public class ScanConfActivity extends BaseActivity {
 
                 viewHolder = new ViewHolder();
                 viewHolder.scanType = (TextView) convertView.findViewById(R.id.tv_scan_type);
-//                viewHolder.rangeStart = (TextView) convertView.findViewById(R.id.tv_range_start_value);
-//                viewHolder.rangeEnd = (TextView) convertView.findViewById(R.id.tv_range_end_value);
-//                viewHolder.width = (TextView) convertView.findViewById(R.id.tv_width_value);
-//                viewHolder.patterns = (TextView) convertView.findViewById(R.id.tv_patterns_value);
-//                viewHolder.repeats = (TextView) convertView.findViewById(R.id.tv_repeats_value);
-//                viewHolder.serial = (TextView) convertView.findViewById(R.id.tv_serial_value);
-
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -245,15 +241,10 @@ public class ScanConfActivity extends BaseActivity {
             final KSTNanoSDK.ScanConfiguration config = getItem(position);
             if (config != null) {
                 viewHolder.scanType.setText(config.getConfigName());
-//                viewHolder.rangeStart.setText(getString(R.string.range_start_value, config.getWavelengthStartNm()));
-//                viewHolder.rangeEnd.setText(getString(R.string.range_end_value, config.getWavelengthEndNm()));
-//                viewHolder.width.setText(getString(R.string.width_value, config.getWidthPx()));
-//                viewHolder.patterns.setText(getString(R.string.patterns_value, config.getNumPatterns()));
-//                viewHolder.repeats.setText(getString(R.string.repeats_value, config.getNumRepeats()));
-//                viewHolder.serial.setText(config.getScanConfigSerialNumber());
                 if (config.isActive()) {
                     viewHolder.scanType.setTextColor(ThemeManageUtil.getCurrentThemeColor());
                     SettingsManager.storeStringPref(mContext, SettingsManager.SharedPreferencesKeys.scanConfiguration, config.getConfigName());
+
                 } else {
                     viewHolder.scanType.setTextColor(0xff888888);
                 }
@@ -263,16 +254,10 @@ public class ScanConfActivity extends BaseActivity {
     }
 
     /**
-     * View holder for the {@link KSTNanoSDK.ScanConfiguration} class
+     * {@link KSTNanoSDK.ScanConfiguration} 的辅助类
      */
     private class ViewHolder {
         private TextView scanType;
-        private TextView rangeStart;
-        private TextView rangeEnd;
-        private TextView width;
-        private TextView patterns;
-        private TextView repeats;
-        private TextView serial;
     }
 
     /**

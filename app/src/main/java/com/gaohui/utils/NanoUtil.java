@@ -1,10 +1,12 @@
 package com.gaohui.utils;
 
+import com.github.mikephil.charting.data.Entry;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 
 /**
  * Created by gaohui on 2017/3/29.
@@ -43,5 +45,30 @@ public class NanoUtil {
         byte[] indexByteArray = new byte[] { (byte) (indexInt & 0xFF), (byte) ((indexInt >> 8) & 0xFF), };
 
         return indexByteArray;
+    }
+
+    public static String convertEntryResultToText(ArrayList<Entry> result){
+
+        StringBuilder sb = new StringBuilder();
+        for(Entry entry : result){
+            float f = entry.getVal();
+            sb.append(f);
+            sb.append(" ");//这样的话最后会多出一个空格
+        }
+
+        return sb.toString().trim();//去掉最后多出的空格
+
+    }
+
+    public static String convertFloatResultToText(ArrayList<Float> result){
+
+        StringBuilder sb = new StringBuilder();
+        for(float f : result){
+            sb.append(f);
+            sb.append(" ");//这样的话最后会多出一个空格
+        }
+
+        return sb.toString().trim();//去掉最后多出的空格
+
     }
 }

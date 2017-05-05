@@ -636,28 +636,48 @@ public class NewScanActivity extends BaseActivity {
             writeCSVDict(ts, scanType, scanDate, String.valueOf(minWavelength), String.valueOf(maxWavelength), String.valueOf(results.getLength()), String.valueOf(results.getLength()), "1", "2.00", saveOS);
 
 
-            int id = DBUtil.queryScanConfbyName(tv_scan_conf.getText().toString());
-            Log.i(TAG, "name= " + tv_scan_conf.getText().toString());
+            int id = DBUtil.queryScanConfbyName(tv_scan_conf.getText().toString());//根据配置名称查询出id
+            String prefix = filePrefix.getText().toString();
+            if (prefix.equals("")) {
+                prefix = "Nano";
+            }
+            String experimentName = prefix + ts;
+            String wavelength = NanoUtil.convertFloatResultToText(mWavelengthFloat);
+            String reflectance = NanoUtil.convertEntryResultToText(mReflectanceFloat);
+            String absorbance = NanoUtil.convertEntryResultToText(mAbsorbanceFloat);
+            String intensity = NanoUtil.convertEntryResultToText(mIntensityFloat);
             Log.i(TAG, "id= " + id);
+
             if(id > 0){//如果光谱仪此次扫描所用的扫描配置在手机的数据库中已经保存了，那么就直接把结果存入数据库
-
-                String prefix = filePrefix.getText().toString();
-                if (prefix.equals("")) {
-                    prefix = "Nano";
-                }
-                String experimentName = prefix + ts;
-                String wavelength = NanoUtil.convertFloatResultToText(mWavelengthFloat);
-                String reflectance = NanoUtil.convertEntryResultToText(mReflectanceFloat);
-                String absorbance = NanoUtil.convertEntryResultToText(mAbsorbanceFloat);
-                String intensity = NanoUtil.convertEntryResultToText(mIntensityFloat);
-
-                Log.i(TAG, "experimentName= " + experimentName);
-                Log.i(TAG, "wavelength= " + wavelength);
-                Log.i(TAG, "reflectance= " + reflectance);
-                Log.i(TAG, "absorbance= " + absorbance);
-                Log.i(TAG, "intensity= " + intensity);
-
                 DBUtil.insertExperimentResult(experimentName, wavelength, reflectance, absorbance, intensity, id);
+            }else {//如果id 不大于0，说明此配置在手机的数据库中还没有保存过，那么就先保存
+                String configName = activeConf.getConfigName();
+                int numOfScan = activeConf.getNumRepeats();
+                int numOfSection = activeConf.getSlewNumSections();
+                if (numOfSection == 0)
+                    numOfSection = 1;
+
+                int scanConfigId = DBUtil.insertScanConfig(configName, numOfScan, numOfSection);
+
+                for (int i = 0; i < numOfSection; i++){
+                    int sectionNo = i + 1;
+                    String method = null;
+                    if (activeConf.getSectionScanType()[i] == 0)
+                        method = "Column";
+                    else
+                        method = "Hadamard";
+                    int start = activeConf.getSectionWavelengthStartNm()[i];
+                    int end = activeConf.getSectionWavelengthEndNm()[i];
+                    int width = activeConf.getSectionWidthPx()[i];
+                    int digitalResolution = activeConf.getSectionNumPatterns()[i];
+                    int exposureTime = activeConf.getSectionExposureTime()[i];
+
+                    DBUtil.insertSectionConfig(scanConfigId, sectionNo, method, start, end, width, digitalResolution, exposureTime);
+
+                }
+
+                DBUtil.insertExperimentResult(experimentName, wavelength, reflectance, absorbance, intensity, scanConfigId);
+
             }
 
 

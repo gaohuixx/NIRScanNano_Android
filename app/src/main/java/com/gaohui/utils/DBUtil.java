@@ -88,7 +88,25 @@ public class DBUtil {
 
     }
 
+    public static int insertScanConfig(String configName, int numOfScan, int numOfSection){
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DB_NAME, null);
 
+        db.execSQL("insert into scan_config(config_name,num_of_scans_to_average,num_of_section) values(?,?,?)", new String[]{configName, numOfScan+"", numOfSection+""});
+
+        Cursor cursor = db.rawQuery("select seq from sqlite_sequence where name='scan_config'", null);
+        cursor.moveToNext();
+        int seq = cursor.getInt(cursor.getColumnIndex("seq"));//获取scan_config 表的最新id
+        db.close();
+        return seq;
+    }
+
+    public static void insertSectionConfig(int scanConfigId, int sectionNo, String method, int start, int end, int width, int digitalResolution, int exposureTime){
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DB_NAME, null);
+        db.execSQL("insert into section_config(scan_config_id,section_no,method,start,end,width,digital_resolution,exposure_time) values(?,?,?,?,?,?,?,?)", new String[]{scanConfigId+"", sectionNo+"", method, start+"", end+"", width+"", digitalResolution+"", exposureTime+""});
+
+        db.close();
+
+    }
 
 
 }

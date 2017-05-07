@@ -29,8 +29,8 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
 
 /**
  *
- * 这个Activity 通过BLE 扫描寻找Nano 设备，这允许用户指定一个偏爱的Nano来为将来使用，
- * 这个偏爱的Nano 将被优先连接当同时找到多台设备的时候
+ * 这个Activity 通过BLE 扫描寻找Nano 设备，这允许用户指定一个特定的Nano 来为将来使用，
+ * 这个首选的Nano 将被优先连接当同时找到多台设备的时候
  *
  * @author collinmast,gaohui
  */

@@ -39,7 +39,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.gaohui.utils.DBUtil;
 import com.gaohui.utils.NanoUtil;
@@ -137,6 +136,7 @@ public class NewScanActivity extends BaseActivity {
     private ProgressBar calProgress;
     private KSTNanoSDK.ScanResults results;
     private EditText filePrefix;
+    private EditText sampleNameEditText;//et_sample
     private SwitchButton btn_os;
     private SwitchButton btn_sd;
     private SwitchButton btn_continuous;
@@ -189,6 +189,7 @@ public class NewScanActivity extends BaseActivity {
 
         //设置UI元素和事件处理器
         filePrefix = (EditText) findViewById(R.id.et_prefix);//文件名前缀
+        sampleNameEditText = (EditText) findViewById(R.id.et_sample);//样本名称
         btn_os = (SwitchButton) findViewById(R.id.btn_saveOS);//保存到安卓设备
         btn_sd = (SwitchButton) findViewById(R.id.btn_saveSD);//保存到SD卡
         btn_continuous = (SwitchButton) findViewById(R.id.btn_continuous);//继续扫描么
@@ -637,11 +638,18 @@ public class NewScanActivity extends BaseActivity {
 
 
             int id = DBUtil.queryScanConfbyName(tv_scan_conf.getText().toString());//根据配置名称查询出id
+
             String prefix = filePrefix.getText().toString();
             if (prefix.equals("")) {
                 prefix = "Nano";
             }
             String experimentName = prefix + ts;
+
+            String sampleName = sampleNameEditText.getText().toString();
+            if (sampleName.equals("")) {
+                sampleName = "sample";
+            }
+
             String wavelength = NanoUtil.convertFloatResultToText(mWavelengthFloat);
             String reflectance = NanoUtil.convertEntryResultToText(mReflectanceFloat);
             String absorbance = NanoUtil.convertEntryResultToText(mAbsorbanceFloat);
@@ -649,7 +657,7 @@ public class NewScanActivity extends BaseActivity {
             Log.i(TAG, "id= " + id);
 
             if(id > 0){//如果光谱仪此次扫描所用的扫描配置在手机的数据库中已经保存了，那么就直接把结果存入数据库
-                DBUtil.insertExperimentResult(experimentName, wavelength, reflectance, absorbance, intensity, id);
+                DBUtil.insertExperimentResult(experimentName, sampleName, wavelength, reflectance, absorbance, intensity, id);
             }else {//如果id 不大于0，说明此配置在手机的数据库中还没有保存过，那么就先保存
                 String configName = activeConf.getConfigName();
                 int numOfScan = activeConf.getNumRepeats();
@@ -676,7 +684,7 @@ public class NewScanActivity extends BaseActivity {
 
                 }
 
-                DBUtil.insertExperimentResult(experimentName, wavelength, reflectance, absorbance, intensity, scanConfigId);
+                DBUtil.insertExperimentResult(experimentName, sampleName, wavelength, reflectance, absorbance, intensity, scanConfigId);
 
             }
 

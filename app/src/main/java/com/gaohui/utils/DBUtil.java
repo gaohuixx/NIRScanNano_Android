@@ -71,7 +71,7 @@ public class DBUtil {
         return -1;//如果没有查到结果就返回-1
     }
 
-    public static void insertExperimentResult(String experimentName, String wavelength, String reflectance, String absorbance, String intensity, int scanConfId){
+    public static void insertExperimentResult(String experimentName, String sampleName,String wavelength, String reflectance, String absorbance, String intensity, int scanConfId){
         SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(DB_PATH + DB_NAME, null);
         Cursor cursor = db.rawQuery("select seq from sqlite_sequence where name='experiment_message'", null);
         cursor.moveToNext();
@@ -82,7 +82,7 @@ public class DBUtil {
         db.execSQL("insert into experiment_message(date,experiment_name) values(?,?)", new String[]{new Date().toLocaleString(), experimentName});
 
         //向sample_data 表中插入一条记录
-        db.execSQL("insert into sample_data(experiment_id,sample_no,wavelength,reflectance,absorbance,intensity,scan_config_id) values(?,?,?,?,?,?,?)", new String[]{experimentId, "1", wavelength, reflectance, absorbance, intensity, scanConfId + ""});
+        db.execSQL("insert into sample_data(experiment_id,sample_no,sample_name,wavelength,reflectance,absorbance,intensity,scan_config_id) values(?,?,?,?,?,?,?,?)", new String[]{experimentId, "1", sampleName, wavelength, reflectance, absorbance, intensity, scanConfId + ""});
 
         db.close();//关闭数据库
 

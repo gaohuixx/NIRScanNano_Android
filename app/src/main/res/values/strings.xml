@@ -33,8 +33,8 @@
 
     <string name="temperature">温度</string>
     <string name="spatial_freq">光谱横坐标显示格式</string>
-    <string name="set_nano">设置我的Nano</string>
-    <string name="clear_nano">清除我的Nano</string>
+    <string name="set_nano">设置首选Nano</string>
+    <string name="clear_nano">清除首选Nano</string>
     <string name="go">设置!</string>
     <string name="forget">清除</string>
 
@@ -145,8 +145,8 @@
     <string name="dl_cal_matrix">下载校准矩阵</string>
     <string name="select_nano">选择Nano</string>
     <string name="nano_confirmation_title">您确定么?</string>
-    <string name="nano_confirmation_msg">您确定想要设置MAC地址为：%1$s 的Nano作为您的主设备么?</string>
-    <string name="nano_forget_msg">您确定您想要取消MAC地址为：%1$s 的Nano作为您的主设备么?</string>
+    <string name="nano_confirmation_msg">您确定想要设置MAC地址为：%1$s 的Nano作为您的首选设备么?</string>
+    <string name="nano_forget_msg">您确定您想要取消MAC地址为：%1$s 的Nano作为您的首选设备么?</string>
     <string name="cancel">取消</string>
     <string name="no_sd_scans">SD卡中没有保存扫描数据!</string>
 

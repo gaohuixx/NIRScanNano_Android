@@ -193,6 +193,8 @@ public class GraphActivity extends BaseActivity {
             }
         }
 
+        graphDict = new ArrayList<>();//将原来的清空
+
         if (dictReader != null) {
             try {
                 String line;

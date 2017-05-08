@@ -82,7 +82,7 @@
     <string-array name="configure_options">
         <item>设备信息</item>
         <item>设备状态</item>
-        <item>已保存的扫描配置</item>
+        <item>Nano中保存的扫描配置</item>
         <item>Nano中保存的扫描数据</item>
     </string-array>
 

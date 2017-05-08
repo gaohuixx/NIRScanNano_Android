@@ -643,7 +643,7 @@ public class NewScanActivity extends BaseActivity {
             if (prefix.equals("")) {
                 prefix = "Nano";
             }
-            String experimentName = prefix + ts;
+            String experimentName = prefix;
 
             String sampleName = sampleNameEditText.getText().toString();
             if (sampleName.equals("")) {
